@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Calendar,
+  CalendarClock,
   Gamepad2,
   Goal,
   Menu,
@@ -23,6 +24,7 @@ import { cn } from "@/lib/utils";
 const LINKS = [
   { href: "/", label: "Home", icon: Goal },
   { href: "/teams", label: "Teams", icon: Users },
+  { href: "/fixtures", label: "Fixtures", icon: CalendarClock },
   { href: "/quiz", label: "Quiz", icon: Gamepad2 },
   { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { href: "/daily-challenge", label: "Daily", icon: Calendar },

@@ -74,3 +74,42 @@ export interface QuizResultRecord {
   accuracy: number;
   type: "standard" | "daily";
 }
+
+export type MatchStatus =
+  | "scheduled"
+  | "live"
+  | "finished"
+  | "postponed"
+  | "cancelled";
+
+export type MatchStage =
+  | "group"
+  | "round_of_32"
+  | "round_of_16"
+  | "quarter"
+  | "semi"
+  | "third_place"
+  | "final";
+
+export type GroupMatchday = 1 | 2 | 3;
+
+export interface FixtureVenue {
+  name: string;
+  city: string;
+  country: "USA" | "Canada" | "Mexico";
+}
+
+export interface Fixture {
+  id: string;
+  homeTeamId: string;
+  awayTeamId: string;
+  group?: GroupLetter;
+  matchday?: GroupMatchday;
+  stage: MatchStage;
+  kickoffUtc: string;
+  venue: FixtureVenue;
+  status: MatchStatus;
+  score?: { home: number; away: number };
+  /** Knockout rounds only — label when teams are TBD */
+  label?: string;
+}

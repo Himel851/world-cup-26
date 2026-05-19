@@ -49,3 +49,24 @@ export function clamp(value: number, min: number, max: number) {
 export function formatNumber(n: number): string {
   return n.toLocaleString("en-US");
 }
+
+export function formatKickoffUtc(iso: string, opts?: Intl.DateTimeFormatOptions): string {
+  return new Date(iso).toLocaleString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+    ...opts,
+  });
+}
+
+export function formatKickoffDate(iso: string): string {
+  return new Date(iso).toLocaleDateString(undefined, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}

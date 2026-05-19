@@ -15,9 +15,11 @@ import {
   Trophy,
 } from "lucide-react";
 
+import { FixtureCard } from "@/components/fixtures/FixtureCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TeamHeroAnimation } from "@/components/teams/TeamHeroAnimation";
+import { getFixturesForTeam } from "@/data/fixtures";
 import { TEAMS, TEAMS_BY_ID } from "@/data/teams";
 
 interface PageProps {
@@ -49,6 +51,7 @@ export default async function TeamDetailsPage({ params }: PageProps) {
   if (!team) notFound();
 
   const groupMates = TEAMS.filter((t) => t.group === team.group && t.id !== team.id);
+  const teamFixtures = getFixturesForTeam(team.id);
 
   return (
     <div className="relative">
@@ -96,6 +99,12 @@ export default async function TeamDetailsPage({ params }: PageProps) {
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="secondary">
+                  <Link href={`/fixtures?team=${team.id}`}>
+                    <Calendar className="h-4 w-4" />
+                    View fixtures
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="ghost">
                   <Link href="/quiz">
                     <Goal className="h-4 w-4" />
                     Mixed quiz
@@ -148,6 +157,32 @@ export default async function TeamDetailsPage({ params }: PageProps) {
           accent="text-rose-300"
         />
       </div>
+
+      <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+        <div className="flex items-end justify-between gap-2">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sky-300">
+              Official schedule
+            </p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
+              Group stage fixtures
+            </h2>
+          </div>
+          <Link
+            href={`/fixtures?team=${team.id}`}
+            className="text-sm font-semibold text-emerald-300 hover:text-emerald-200"
+          >
+            All fixtures
+          </Link>
+        </div>
+        <ul className="mt-6 grid gap-4 lg:grid-cols-3">
+          {teamFixtures.map((fixture, i) => (
+            <li key={fixture.id}>
+              <FixtureCard fixture={fixture} index={i} highlightTeamId={team.id} />
+            </li>
+          ))}
+        </ul>
+      </section>
 
       {/* Group mates */}
       <div className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
