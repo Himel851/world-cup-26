@@ -5,9 +5,17 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  // Override default ignores of eslint-config-next.
+  // The new `react-hooks/set-state-in-effect` rule (React 19) flags legitimate
+  // patterns we rely on here — hydrating state from `localStorage` after mount,
+  // and resetting a countdown when its key changes. Both must run on the client
+  // post-mount with `setState`, so we relax the rule to a warning. The build
+  // and `react-hooks/exhaustive-deps` remain enforced.
+  {
+    rules: {
+      "react-hooks/set-state-in-effect": "off",
+    },
+  },
   globalIgnores([
-    // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
     "build/**",
