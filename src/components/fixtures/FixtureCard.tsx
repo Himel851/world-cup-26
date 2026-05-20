@@ -43,16 +43,16 @@ function TeamRow({
     <Link
       href={`/teams/${team.id}`}
       className={cn(
-        "flex min-w-0 flex-1 items-center gap-2.5 rounded-xl p-2 transition-colors hover:bg-white/[0.06]",
+        "flex min-w-0 flex-1 items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-white/[0.06] sm:gap-2.5 sm:rounded-xl sm:p-2",
         side === "away" && "flex-row-reverse text-right",
         isHighlight && "bg-emerald-400/10 ring-1 ring-emerald-400/25",
       )}
     >
-      <div className="relative h-9 w-12 shrink-0 overflow-hidden rounded-md ring-1 ring-white/10">
-        <Image src={team.flag} alt="" fill sizes="48px" className="object-cover" />
+      <div className="relative h-8 w-10 shrink-0 overflow-hidden rounded-md ring-1 ring-white/10 sm:h-9 sm:w-12">
+        <Image src={team.flag} alt="" fill sizes="(max-width:640px) 40px, 48px" className="object-cover" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-bold">{team.name}</p>
+        <p className="truncate text-xs font-bold sm:text-sm">{team.name}</p>
         {/* <p className="truncate text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">
           {side === "home" ? "Home" : "Away"}
         </p> */}
@@ -84,25 +84,25 @@ export function FixtureCard({
       viewport={{ once: true, margin: "-24px" }}
       transition={{ duration: 0.4, delay: Math.min(index * 0.03, 0.35) }}
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-xl transition-colors hover:border-emerald-400/30 sm:p-5",
+        "relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-xl transition-colors hover:border-emerald-400/30 sm:p-5",
         fixture.stage === "final" && "border-amber-400/30 hover:border-amber-400/50",
         className,
       )}
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-col gap-2 border-b border-white/10 pb-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-2 sm:pb-3">
+        <div className="flex min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
           {fixture.group && (
-            <Badge variant="outline" className="text-[10px] uppercase tracking-widest">
+            <Badge variant="outline" className="text-[9px] uppercase tracking-widest sm:text-[10px]">
               Group {fixture.group}
             </Badge>
           )}
           {fixture.matchday && (
-            <Badge variant="secondary" className="text-[10px] uppercase tracking-widest">
+            <Badge variant="secondary" className="text-[9px] uppercase tracking-widest sm:text-[10px]">
               MD {fixture.matchday}
             </Badge>
           )}
           {fixture.stage !== "group" && (
-            <Badge variant="accent" className="text-[10px] uppercase tracking-widest">
+            <Badge variant="accent" className="max-w-full text-[9px] uppercase tracking-widest sm:text-[10px]">
               {STAGE_LABEL[fixture.stage]}
             </Badge>
           )}
@@ -114,30 +114,33 @@ export function FixtureCard({
                   ? "primary"
                   : "default"
             }
-            className="text-[10px] uppercase tracking-widest"
+            className="text-[9px] uppercase tracking-widest sm:text-[10px]"
           >
             {statusLabel}
           </Badge>
         </div>
-        <time dateTime={fixture.kickoffUtc} className="text-xs font-semibold text-emerald-300">
+        <time
+          dateTime={fixture.kickoffUtc}
+          className="shrink-0 text-[11px] font-semibold tabular-nums text-emerald-300 sm:text-xs"
+        >
           {formatKickoffUtc(fixture.kickoffUtc)}
         </time>
       </div>
 
       {isKnockoutMilestone ? (
-        <motion.div className="mt-4 flex items-center gap-3 py-2">
-          <span className="grid h-12 w-12 place-items-center rounded-xl bg-amber-400/15 text-amber-300 ring-1 ring-amber-400/30">
-            <Trophy className="h-6 w-6" />
+        <motion.div className="mt-3 flex items-center gap-2.5 py-1 sm:mt-4 sm:gap-3 sm:py-2">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-amber-400/15 text-amber-300 ring-1 ring-amber-400/30 sm:h-12 sm:w-12 sm:rounded-xl">
+            <Trophy className="h-5 w-5 sm:h-6 sm:w-6" />
           </span>
-          <div>
-            <p className="text-lg font-bold tracking-tight">{fixture.label}</p>
-            <p className="text-sm text-[var(--muted-foreground)]">
+          <div className="min-w-0">
+            <p className="text-base font-bold leading-tight tracking-tight sm:text-lg">{fixture.label}</p>
+            <p className="text-xs text-muted-foreground sm:text-sm">
               Teams confirmed after the group stage
             </p>
           </div>
         </motion.div>
       ) : (
-        <div className="mt-4 flex items-center gap-2">
+        <div className="mt-3 flex items-center gap-1.5 sm:mt-4 sm:gap-2">
           <TeamRow
             teamId={fixture.homeTeamId}
             side="home"
@@ -164,9 +167,9 @@ export function FixtureCard({
         </div>
       )}
 
-      <p className="mt-4 flex items-center gap-1.5 text-xs text-[var(--muted-foreground)]">
-        <MapPin className="h-3.5 w-3.5 shrink-0 text-sky-300/80" />
-        <span>
+      <p className="mt-3 flex items-start gap-1.5 text-[11px] leading-snug text-muted-foreground sm:mt-4 sm:items-center sm:text-xs">
+        <MapPin className="mt-0.5 h-3 w-3 shrink-0 text-sky-300/80 sm:mt-0 sm:h-3.5 sm:w-3.5" />
+        <span className="min-w-0 break-words">
           {fixture.venue.name} · {fixture.venue.city}, {fixture.venue.country}
         </span>
       </p>

@@ -105,7 +105,7 @@ export default async function TeamDetailsPage({ params }: PageProps) {
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="ghost">
-                  <Link href="/quiz">
+                  <Link href="/quiz?type=mixed">
                     <Goal className="h-4 w-4" />
                     Mixed quiz
                   </Link>
