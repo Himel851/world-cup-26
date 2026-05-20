@@ -8,6 +8,7 @@ import { FixtureCard } from "@/components/fixtures/FixtureCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { GROUPS, TEAMS } from "@/data/teams";
 import { cn, formatKickoffDate } from "@/lib/utils";
 import type { Fixture, GroupLetter, GroupMatchday } from "@/types";
@@ -165,10 +166,10 @@ export function FixturesExplorer({
 
             <div className="flex flex-wrap items-center gap-2">
               <SlidersHorizontal className="hidden h-4 w-4 text-[var(--muted-foreground)] sm:block" />
-              <select
+              <Select
                 value={teamId}
                 onChange={(e) => setTeamId(e.target.value)}
-                className="h-10 rounded-xl border border-white/10 bg-white/[0.04] px-3 text-sm font-medium outline-none ring-emerald-400/40 focus:ring-2"
+                className="h-10 w-auto min-w-[10.5rem] font-medium ring-emerald-400/40 focus-visible:ring-2"
                 aria-label="Filter by team"
               >
                 <option value="">All teams</option>
@@ -179,16 +180,16 @@ export function FixturesExplorer({
                       {t.name}
                     </option>
                   ))}
-              </select>
-              <select
+              </Select>
+              <Select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortMode)}
-                className="h-10 rounded-xl border border-white/10 bg-white/[0.04] px-3 text-sm font-medium outline-none ring-emerald-400/40 focus:ring-2"
+                className="h-10 w-auto min-w-[10.5rem] font-medium ring-emerald-400/40 focus-visible:ring-2"
                 aria-label="Sort fixtures"
               >
                 <option value="date">Sort by date</option>
                 <option value="group">Sort by group</option>
-              </select>
+              </Select>
               {hasFilters && (
                 <Button variant="ghost" size="sm" onClick={clearAll}>
                   Clear
@@ -246,13 +247,7 @@ export function FixturesExplorer({
           <span className="font-semibold text-[var(--foreground)]">
             {filtered.length}
           </span>{" "}
-          {view === "knockout"
-            ? filtered.length === 1
-              ? "round"
-              : "rounds"
-            : filtered.length === 1
-              ? "match"
-              : "matches"}
+          {filtered.length === 1 ? "match" : "matches"}
           {teamId && view === "group" && TEAMS.find((t) => t.id === teamId) && (
             <>
               {" "}
@@ -263,10 +258,15 @@ export function FixturesExplorer({
             </>
           )}
         </p>
-        {view === "group" && (
+        {view === "group" ? (
           <Badge variant="outline" className="gap-1">
             <CalendarDays className="h-3 w-3" />
-            Jun 11 – 28, 2026
+            Group stage · Jun 12–28, 2026
+          </Badge>
+        ) : (
+          <Badge variant="outline" className="gap-1">
+            <CalendarDays className="h-3 w-3" />
+            Knockouts · Jun 29 – Jul 20, 2026
           </Badge>
         )}
       </div>

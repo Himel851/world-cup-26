@@ -7,7 +7,7 @@ const NAV_GROUPS = [
     links: [
       { href: "/quiz", label: "Random Quiz" },
       { href: "/daily-challenge", label: "Daily Challenge" },
-      { href: "/leaderboard", label: "Leaderboard" },
+      // { href: "/leaderboard", label: "Leaderboard" },
     ],
   },
   {

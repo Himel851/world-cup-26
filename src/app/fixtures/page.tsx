@@ -40,11 +40,11 @@ export default async function FixturesPage({ searchParams }: PageProps) {
         <h1 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">
           World Cup 2026 fixtures
         </h1>
-        <p className="mt-3 max-w-2xl text-[var(--muted-foreground)]">
+        {/* <p className="mt-3 max-w-2xl text-[var(--muted-foreground)]">
           Group stage opens 11 June with Mexico vs South Africa. All 72 group
           matches are listed with venues and kickoff times. Knockout rounds run
           through the final on 19 July at MetLife Stadium.
-        </p>
+        </p> */}
         <div className="mt-5 flex flex-wrap gap-3">
           <Button asChild variant="secondary" size="sm">
             <Link href="/teams">Browse teams</Link>

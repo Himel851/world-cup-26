@@ -136,6 +136,40 @@ html, body {
   color: var(--foreground);
 }
 
+/* Native form controls (esp. Windows Chrome/Edge <select> popover) follow color-scheme */
+html.dark {
+  color-scheme: dark;
+}
+
+html.light {
+  color-scheme: light;
+}
+
+/*
+ * Native <option> styling is inconsistent (esp. Windows Chrome).
+ * Force readable light text on dark rows in dark mode.
+ */
+html.dark select {
+  color: #f4f6fb;
+}
+
+html.dark select option {
+  background-color: #121826;
+  /* Win/Chrome often ignores option color unless forced */
+  color: #ffffff !important;
+}
+
+html.dark select option:checked,
+html.dark select option:hover {
+  background-color: #1a2234;
+  color: #ffffff !important;
+}
+
+html.light select option {
+  background-color: var(--popover);
+  color: var(--popover-foreground);
+}
+
 body {
   font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;

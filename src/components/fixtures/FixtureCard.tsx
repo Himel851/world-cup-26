@@ -53,9 +53,9 @@ function TeamRow({
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-bold">{team.name}</p>
-        <p className="truncate text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">
+        {/* <p className="truncate text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">
           {side === "home" ? "Home" : "Away"}
-        </p>
+        </p> */}
       </div>
     </Link>
   );

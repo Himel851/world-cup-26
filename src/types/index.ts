@@ -106,6 +106,7 @@ export interface Fixture {
   group?: GroupLetter;
   matchday?: GroupMatchday;
   stage: MatchStage;
+  /** ISO 8601 datetime; data uses Bangladesh local wall time with `+06:00` offset. */
   kickoffUtc: string;
   venue: FixtureVenue;
   status: MatchStatus;

@@ -50,20 +50,25 @@ export function formatNumber(n: number): string {
   return n.toLocaleString("en-US");
 }
 
+/** All fixtures are authored and displayed in Bangladesh Standard Time (UTC+6, no DST). */
+export const FIXTURE_KICKOFF_TIMEZONE = "Asia/Dhaka" as const;
+
 export function formatKickoffUtc(iso: string, opts?: Intl.DateTimeFormatOptions): string {
   return new Date(iso).toLocaleString(undefined, {
+    timeZone: FIXTURE_KICKOFF_TIMEZONE,
     weekday: "short",
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
-    timeZoneName: "short",
+    // timeZoneName: "short",
     ...opts,
   });
 }
 
 export function formatKickoffDate(iso: string): string {
   return new Date(iso).toLocaleDateString(undefined, {
+    timeZone: FIXTURE_KICKOFF_TIMEZONE,
     weekday: "long",
     month: "long",
     day: "numeric",
