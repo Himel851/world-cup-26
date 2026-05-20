@@ -22,15 +22,15 @@ export default async function TeamsPage({ searchParams }: PageProps) {
       : "All";
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 lg:px-8">
-      <header className="mb-8">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
+    <div className="mx-auto max-w-7xl px-4 pb-16 pt-6 sm:px-6 sm:pt-10 lg:px-8">
+      <header className="mb-4 sm:mb-8">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300 sm:text-xs sm:tracking-[0.2em]">
           FIFA World Cup 2026 · 48 Nations
         </p>
-        <h1 className="mt-2 text-4xl font-black tracking-tight sm:text-5xl">
+        <h1 className="mt-1.5 text-2xl font-black tracking-tight sm:mt-2 sm:text-4xl lg:text-5xl">
           National <span className="text-gradient">Teams</span>
         </h1>
-        <p className="mt-3 max-w-2xl text-[var(--muted-foreground)]">
+        <p className="mt-2 line-clamp-2 max-w-2xl text-xs text-muted-foreground sm:mt-3 sm:line-clamp-none sm:text-base">
           Search by name, captain or continent. Filter by continent and group draw, then dive into
           each side&apos;s profile.
         </p>

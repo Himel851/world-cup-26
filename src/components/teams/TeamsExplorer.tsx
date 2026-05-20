@@ -7,6 +7,7 @@ import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { TeamCard } from "@/components/teams/TeamCard";
 import { CONTINENTS, GROUPS } from "@/data/teams";
 import { cn } from "@/lib/utils";
@@ -55,28 +56,28 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
   const hasFilters = query || continent !== "All" || group !== "All" || sort !== "ranking";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 sm:space-y-6">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="rounded-3xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-xl sm:p-6"
+        className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-xl sm:rounded-3xl sm:p-6"
       >
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-          <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-foreground)]" />
+        <div className="flex flex-col gap-2.5 sm:gap-4 lg:flex-row lg:items-center">
+          <div className="relative min-w-0 flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground max-sm:h-3.5 max-sm:w-3.5" />
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search team, captain or continent…"
-              className="pl-10"
+              className="h-10 pl-9 text-sm sm:h-11 sm:pl-10"
               aria-label="Search teams"
             />
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-[var(--muted-foreground)] hover:bg-white/5"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground hover:bg-white/5"
                 aria-label="Clear search"
               >
                 <X className="h-3.5 w-3.5" />
@@ -84,7 +85,7 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-2 max-sm:w-full">
             <FilterGroup
               label="Sort"
               icon={SlidersHorizontal}
@@ -97,7 +98,7 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
               onChange={(v) => setSort(v as SortMode)}
             />
             {hasFilters && (
-              <Button variant="ghost" size="sm" onClick={clearAll}>
+              <Button variant="ghost" size="sm" onClick={clearAll} className="max-sm:ml-auto shrink-0">
                 <X className="h-3.5 w-3.5" />
                 Reset
               </Button>
@@ -105,51 +106,48 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Chip
-            active={continent === "All"}
-            onClick={() => setContinent("All")}
+        <div className="mt-2 grid grid-cols-2 gap-2 sm:mt-4 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
+          <Select
+            value={continent === "All" ? "" : continent}
+            onChange={(e) =>
+              setContinent(e.target.value === "" ? "All" : (e.target.value as Continent))
+            }
+            className="min-w-0 h-9 w-full text-sm font-medium ring-emerald-400/40 focus-visible:ring-2 sm:h-10 sm:w-auto sm:min-w-48"
+            aria-label="Filter by continent"
           >
-            All continents
-          </Chip>
-          {CONTINENTS.map((c) => (
-            <Chip
-              key={c}
-              active={continent === c}
-              onClick={() => setContinent(continent === c ? "All" : c)}
-            >
-              {c}
-            </Chip>
-          ))}
-        </div>
-
-        <div className="mt-2 flex flex-wrap gap-2">
-          <Chip
-            active={group === "All"}
-            onClick={() => setGroup("All")}
-            tone="secondary"
+            <option value="">All continents</option>
+            {CONTINENTS.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </Select>
+          <Select
+            value={group === "All" ? "" : group}
+            onChange={(e) =>
+              setGroup(e.target.value === "" ? "All" : (e.target.value as GroupLetter))
+            }
+            className="min-w-0 h-9 w-full text-sm font-medium ring-sky-400/40 focus-visible:ring-2 sm:h-10 sm:w-auto sm:min-w-44"
+            aria-label="Filter by World Cup group"
           >
-            All groups
-          </Chip>
-          {GROUPS.map((g) => (
-            <Chip
-              key={g}
-              tone="secondary"
-              active={group === g}
-              onClick={() => setGroup(group === g ? "All" : g)}
-            >
-              Group {g}
-            </Chip>
-          ))}
+            <option value="">All groups</option>
+            {GROUPS.map((g) => (
+              <option key={g} value={g}>
+                Group {g}
+              </option>
+            ))}
+          </Select>
         </div>
       </motion.div>
 
-      <div className="flex items-center justify-between text-sm text-[var(--muted-foreground)]">
-        <p>
-          Showing <span className="font-bold text-[var(--foreground)]">{filtered.length}</span>{" "}
-          of {teams.length} nations
+      <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground sm:text-sm">
+        <p className="min-w-0">
+          Showing <span className="font-bold text-foreground">{filtered.length}</span> of{" "}
+          {teams.length} nations
         </p>
-        <Badge variant="outline">FIFA WC 2026</Badge>
+        <Badge variant="outline" className="shrink-0 text-[10px] sm:text-xs">
+          FIFA WC 2026
+        </Badge>
       </div>
 
       <AnimatePresence mode="popLayout">
@@ -172,7 +170,7 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
         ) : (
           <motion.div
             key="grid"
-            className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+            className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4"
           >
             {filtered.map((team, i) => (
               <TeamCard key={team.id} team={team} index={i} />
@@ -194,9 +192,9 @@ interface FilterGroupProps {
 
 function FilterGroup({ label, icon: Icon, value, options, onChange }: FilterGroupProps) {
   return (
-    <div className="flex items-center gap-1 rounded-xl border border-white/10 bg-white/[0.04] p-1 backdrop-blur-md">
+    <div className="flex max-sm:w-full items-center gap-0.5 overflow-x-auto rounded-lg border border-white/10 bg-white/[0.04] p-0.5 backdrop-blur-md sm:gap-1 sm:rounded-xl sm:p-1">
       {Icon && (
-        <span className="hidden items-center gap-1.5 px-2 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-foreground)] sm:inline-flex">
+        <span className="hidden shrink-0 items-center gap-1.5 px-2 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground md:inline-flex">
           <Icon className="h-3.5 w-3.5" />
           {label}
         </span>
@@ -207,10 +205,10 @@ function FilterGroup({ label, icon: Icon, value, options, onChange }: FilterGrou
           type="button"
           onClick={() => onChange(o.value)}
           className={cn(
-            "rounded-lg px-3 py-1.5 text-xs font-semibold transition-all",
+            "shrink-0 rounded-md px-2 py-1 text-[11px] font-semibold transition-all sm:rounded-lg sm:px-3 sm:py-1.5 sm:text-xs",
             value === o.value
               ? "bg-emerald-400/20 text-emerald-200 ring-1 ring-emerald-400/30"
-              : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]",
+              : "text-muted-foreground hover:text-foreground",
           )}
         >
           {o.label}
@@ -220,28 +218,5 @@ function FilterGroup({ label, icon: Icon, value, options, onChange }: FilterGrou
   );
 }
 
-interface ChipProps {
-  active: boolean;
-  onClick: () => void;
-  tone?: "primary" | "secondary";
-  children: React.ReactNode;
-}
 
-function Chip({ active, onClick, tone = "primary", children }: ChipProps) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "rounded-full border px-3 py-1 text-xs font-semibold transition-all",
-        active
-          ? tone === "primary"
-            ? "border-emerald-400/40 bg-emerald-400/15 text-emerald-200"
-            : "border-sky-400/40 bg-sky-400/15 text-sky-200"
-          : "border-white/10 bg-white/[0.04] text-[var(--muted-foreground)] hover:border-white/20 hover:text-[var(--foreground)]",
-      )}
-    >
-      {children}
-    </button>
-  );
-}
+
