@@ -43,16 +43,22 @@ function TeamRow({
     <Link
       href={`/teams/${team.id}`}
       className={cn(
-        "flex min-w-0 flex-1 items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-white/[0.06] sm:gap-2.5 sm:rounded-xl sm:p-2",
+        "flex min-h-10 min-w-0 w-full flex-1 items-center gap-1.5 rounded-md px-0.5 py-0 transition-colors hover:bg-white/6 sm:min-h-0 sm:gap-2.5 sm:rounded-xl sm:p-2",
         side === "away" && "flex-row-reverse text-right",
-        isHighlight && "bg-emerald-400/10 ring-1 ring-emerald-400/25",
+        isHighlight &&
+          "rounded-md bg-emerald-400/10 ring-1 ring-emerald-400/25 sm:rounded-xl",
       )}
     >
-      <div className="relative h-8 w-10 shrink-0 overflow-hidden rounded-md ring-1 ring-white/10 sm:h-9 sm:w-12">
-        <Image src={team.flag} alt="" fill sizes="(max-width:640px) 40px, 48px" className="object-cover" />
+      <div className="relative h-7 w-9 shrink-0 overflow-hidden rounded-md ring-1 ring-white/10 sm:h-9 sm:w-12">
+        <Image src={team.flag} alt="" fill sizes="(max-width:640px) 36px, 48px" className="object-cover" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-xs font-bold sm:text-sm">{team.name}</p>
+        <p
+          className="line-clamp-2 text-[11px] font-bold leading-snug tracking-tight wrap-anywhere sm:text-sm sm:leading-tight"
+          title={team.name}
+        >
+          {team.name}
+        </p>
         {/* <p className="truncate text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">
           {side === "home" ? "Home" : "Away"}
         </p> */}
@@ -84,7 +90,7 @@ export function FixtureCard({
       viewport={{ once: true, margin: "-24px" }}
       transition={{ duration: 0.4, delay: Math.min(index * 0.03, 0.35) }}
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-xl transition-colors hover:border-emerald-400/30 sm:p-5",
+        "relative overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-3 backdrop-blur-xl transition-colors hover:border-emerald-400/30 sm:p-5",
         fixture.stage === "final" && "border-amber-400/30 hover:border-amber-400/50",
         className,
       )}
@@ -140,21 +146,21 @@ export function FixtureCard({
           </div>
         </motion.div>
       ) : (
-        <div className="mt-3 flex items-center gap-1.5 sm:mt-4 sm:gap-2">
+        <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1 sm:mt-4 sm:gap-2">
           <TeamRow
             teamId={fixture.homeTeamId}
             side="home"
             isHighlight={highlightTeamId === fixture.homeTeamId}
           />
-          <div className="flex shrink-0 flex-col items-center px-1">
+          <div className="flex shrink-0 flex-col items-center justify-center px-0.5 py-px sm:px-1">
             {fixture.score ? (
-              <p className="text-xl font-black tabular-nums tracking-tight">
+              <p className="text-lg font-black tabular-nums tracking-tight sm:text-xl">
                 {fixture.score.home}
-                <span className="mx-1 text-[var(--muted-foreground)]">–</span>
+                <span className="mx-0.5 text-muted-foreground sm:mx-1">–</span>
                 {fixture.score.away}
               </p>
             ) : (
-              <span className="rounded-lg bg-white/[0.06] px-2.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
+              <span className="rounded-md bg-white/6 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground sm:rounded-lg sm:px-2.5 sm:py-1 sm:text-xs sm:tracking-[0.2em]">
                 vs
               </span>
             )}
@@ -169,7 +175,7 @@ export function FixtureCard({
 
       <p className="mt-3 flex items-start gap-1.5 text-[11px] leading-snug text-muted-foreground sm:mt-4 sm:items-center sm:text-xs">
         <MapPin className="mt-0.5 h-3 w-3 shrink-0 text-sky-300/80 sm:mt-0 sm:h-3.5 sm:w-3.5" />
-        <span className="min-w-0 break-words">
+        <span className="min-w-0 wrap-break-word">
           {fixture.venue.name} · {fixture.venue.city}, {fixture.venue.country}
         </span>
       </p>

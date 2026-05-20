@@ -21,7 +21,7 @@ export default function DailyChallengePage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
-      <header className="mb-8 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl sm:p-10">
+      {/* <header className="mb-8 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl sm:p-10">
         <div className="pointer-events-none absolute inset-x-4 top-4 h-px bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent" />
         <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">
           <CalendarDays className="h-3.5 w-3.5" />
@@ -45,7 +45,7 @@ export default function DailyChallengePage() {
             <Link href="/leaderboard">View leaderboard</Link>
           </Button>
         </div>
-      </header>
+      </header> */}
 
       <DailyChallengeClient />
     </div>

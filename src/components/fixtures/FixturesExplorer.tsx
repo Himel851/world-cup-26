@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CalendarDays, ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
+import { CalendarDays, ChevronDown, Search, SlidersHorizontal, Sparkles, X } from "lucide-react";
 
 import { FixtureCard } from "@/components/fixtures/FixtureCard";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +12,7 @@ import { Select } from "@/components/ui/select";
 import { GROUPS, TEAMS } from "@/data/teams";
 import { cn, formatKickoffDate } from "@/lib/utils";
 import type { Fixture, GroupLetter, GroupMatchday } from "@/types";
+import Link from "next/link";
 
 interface FixturesExplorerProps {
   fixtures: Fixture[];
@@ -299,6 +300,13 @@ export function FixturesExplorer({
         >
           Knockout phase
         </button>
+
+        <Link  href="/quiz">
+          <Button variant="secondary" size="sm">
+            <Sparkles className="h-4 w-4" />
+            Play Quiz
+          </Button>
+        </Link>
       </div>
 
       {view === "group" && (
