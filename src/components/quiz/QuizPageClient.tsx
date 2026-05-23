@@ -62,6 +62,7 @@ const SINGLE_TYPE_CARDS = [
     badge: "10 QUESTIONS",
     tone: "emerald" as QuizCardTone,
     metadata: "Single category · ~3 min · Timed rounds",
+    choiceHint: "Ten questions",
   },
   {
     type: "captain" as const,
@@ -73,6 +74,7 @@ const SINGLE_TYPE_CARDS = [
     badge: "10 QUESTIONS",
     tone: "cyan" as QuizCardTone,
     metadata: "Single category · ~3 min · Timed rounds",
+    choiceHint: "Ten questions",
   },
   {
     type: "ranking" as const,
@@ -85,6 +87,7 @@ const SINGLE_TYPE_CARDS = [
     badge: "10 QUESTIONS",
     tone: "violet" as QuizCardTone,
     metadata: "Single category · ~3 min · Timed rounds",
+    choiceHint: "Ten questions",
   },
   {
     type: "continent" as const,
@@ -96,6 +99,7 @@ const SINGLE_TYPE_CARDS = [
     badge: "10 QUESTIONS",
     tone: "amber" as QuizCardTone,
     metadata: "Single category · ~3 min · Timed rounds",
+    choiceHint: "Ten questions",
   },
   {
     type: "group" as const,
@@ -107,6 +111,19 @@ const SINGLE_TYPE_CARDS = [
     badge: "10 QUESTIONS",
     tone: "rose" as QuizCardTone,
     metadata: "Single category · ~3 min · Timed rounds",
+    choiceHint: "Ten questions",
+  },
+  {
+    type: "mixed" as const,
+    title: "Mixed quiz",
+    description: "Every mode in one run — flags, captains, rankings, and more.",
+    href: "/quiz?type=mixed",
+    icon: Sparkles,
+    accent: "from-emerald-400/15 via-violet-500/18 to-cyan-500/12",
+    badge: "10 QUESTIONS",
+    tone: "spectrum" as QuizCardTone,
+    metadata: "All categories · ~3 min · Rotating types",
+    choiceHint: "Ten mixed questions",
   },
 ];
 
@@ -181,7 +198,7 @@ export function QuizPageClient({ typeParam, teamParam }: QuizPageClientProps) {
                 World Cup Challenge
               </p>
               <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                {SINGLE_TYPE_CARDS.length + 1} modes · Live data
+                {SINGLE_TYPE_CARDS.length} modes · Live data
               </p>
             </div>
 
@@ -189,24 +206,8 @@ export function QuizPageClient({ typeParam, teamParam }: QuizPageClientProps) {
           </header>
 
           <section aria-labelledby="quiz-modes-heading" className="space-y-6">
-            <div className="flex flex-col gap-2 border-b border-white/[0.07] pb-6 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h2
-                  id="quiz-modes-heading"
-                  className="text-lg font-semibold tracking-tight text-foreground sm:text-xl"
-                >
-                  Quiz modes
-                </h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Three-column grid · Glass panels · Hover to preview glow
-                </p>
-              </div>
-              <span className="inline-flex w-fit items-center rounded-lg border border-emerald-500/25 bg-emerald-500/8 px-3 py-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-200/95">
-                Select one to begin
-              </span>
-            </div>
 
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:gap-8">
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 md:gap-6 lg:grid-cols-3 xl:gap-8">
               {SINGLE_TYPE_CARDS.map((item, i) => (
                 <QuizCard
                   key={item.type}
@@ -220,22 +221,9 @@ export function QuizPageClient({ typeParam, teamParam }: QuizPageClientProps) {
                   tone={item.tone}
                   index={i}
                   pickerMode
-                  choiceHint="Ten questions"
+                  choiceHint={item.choiceHint}
                 />
               ))}
-              <QuizCard
-                title="Mixed quiz"
-                description="The showcase run — rotations through every mechanic in one cinematic session."
-                href="/quiz?type=mixed"
-                icon={Sparkles}
-                accent="from-emerald-400/15 via-violet-500/18 to-cyan-500/12"
-                badge="10 QUESTIONS"
-                metadata="All categories · ~3 min · Rotating types"
-                tone="spectrum"
-                index={SINGLE_TYPE_CARDS.length}
-                pickerMode
-                choiceHint="Ten mixed questions"
-              />
             </div>
           </section>
         </div>

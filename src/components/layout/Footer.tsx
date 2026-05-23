@@ -36,7 +36,7 @@ const SOCIALS = [
 
 export function Footer() {
   return (
-    <footer className="relative mt-24 border-t border-white/10 bg-[var(--background)]/60 backdrop-blur-xl">
+    <footer className="relative mt-10 md:mt-24 border-t border-white/10 bg-[var(--background)]/60 backdrop-blur-xl">
       <div className="pointer-events-none absolute inset-x-0 -top-24 h-24 bg-gradient-to-b from-transparent to-[var(--background)]/60" />
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-5 lg:px-8">
         <div className="lg:col-span-2">

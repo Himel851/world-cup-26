@@ -218,13 +218,16 @@ export function QuizCard({
         delay: index * 0.07,
         ease: [0.16, 1, 0.3, 1],
       }}
-      whileHover={{ y: -6, transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] } }}
+      whileHover={{
+        y: -4,
+        transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] },
+      }}
     >
       <Link
         href={href}
         aria-label={ariaLabel}
         className={cn(
-          "group relative flex h-full min-h-[280px] touch-manipulation flex-col overflow-hidden rounded-[1.35rem] border bg-white/2.5 p-6 shadow-[0_2px_0_0_rgba(255,255,255,0.04)_inset] backdrop-blur-2xl transition-[background-color,box-shadow,border-color,transform] duration-500 ease-out motion-reduce:transition-none",
+          "group relative flex h-full min-h-[11.5rem] touch-manipulation flex-col overflow-hidden rounded-lg border bg-white/2.5 p-3.5 shadow-[0_2px_0_0_rgba(255,255,255,0.04)_inset] backdrop-blur-2xl transition-[background-color,box-shadow,border-color,transform] duration-500 ease-out motion-reduce:transition-none sm:min-h-[280px] sm:rounded-[1.35rem] sm:p-6",
           "active:scale-[0.985] motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100",
           t.borderIdle,
           t.borderHover,
@@ -263,10 +266,10 @@ export function QuizCard({
         />
 
         <div className="relative flex flex-1 flex-col">
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start justify-between gap-2 sm:gap-3">
             <motion.div
               className={cn(
-                "relative grid size-13 shrink-0 place-items-center rounded-2xl border border-white/10 bg-black/25 transition-[transform,box-shadow,border-color] duration-500 group-hover:border-white/20 group-hover:bg-white/7",
+                "relative grid size-10 shrink-0 place-items-center rounded-lg border border-white/10 bg-black/25 transition-[transform,box-shadow,border-color] duration-500 group-hover:border-white/20 group-hover:bg-white/7 sm:size-13 sm:rounded-2xl",
               )}
               whileHover={{ scale: 1.06 }}
               transition={{ type: "spring", stiffness: 420, damping: 22 }}
@@ -274,13 +277,13 @@ export function QuizCard({
               <div
                 aria-hidden
                 className={cn(
-                  "pointer-events-none absolute inset-[-6px] rounded-2xl opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-100",
+                  "pointer-events-none absolute inset-[-4px] rounded-lg opacity-0 blur-md transition-opacity duration-500 group-hover:opacity-100 sm:inset-[-6px] sm:rounded-2xl sm:blur-lg",
                   t.iconBackdrop,
                 )}
               />
               <Icon
                 className={cn(
-                  "relative z-1 h-[1.35rem] w-[1.35rem] transition-transform duration-500 group-hover:scale-110",
+                  "relative z-1 size-4 transition-transform duration-500 group-hover:scale-110 sm:size-[1.35rem]",
                   t.iconColor,
                   t.iconGlow,
                 )}
@@ -290,36 +293,41 @@ export function QuizCard({
             {badge && (
               <span
                 className={cn(
-                  "shrink-0 rounded-lg border border-white/10 bg-black/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground transition-colors duration-500",
+                  "shrink-0 rounded-lg border border-white/10 bg-black/30 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.08em] text-muted-foreground transition-colors duration-500 sm:px-2.5 sm:py-1 sm:text-[10px] sm:tracking-[0.14em]",
                   "group-hover:border-white/18 group-hover:text-foreground/90",
                 )}
+                title={badge}
               >
-                {badge}
+                <span className="sm:hidden">
+                  {badge.replace(" QUESTIONS", "Q")}
+                </span>
+                <span className="hidden sm:inline">{badge}</span>
               </span>
             )}
           </div>
 
-          <h3 className="relative mt-6 text-[1.35rem] font-bold leading-tight tracking-[-0.02em] text-foreground sm:text-2xl">
+          <h3 className="relative mt-3 text-sm font-bold leading-snug tracking-tight text-foreground sm:mt-6 sm:text-[1.35rem] sm:leading-tight sm:tracking-[-0.02em] lg:text-2xl">
             {title}
           </h3>
-          <p className="relative mt-2.5 flex-1 text-sm leading-relaxed text-muted-foreground">
+          <p className="relative mt-1.5 line-clamp-2 flex-1 text-[11px] leading-relaxed text-muted-foreground sm:mt-2.5 sm:line-clamp-none sm:text-sm">
             {description}
           </p>
 
           {metadata && (
-            <p className="relative mt-4 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">
+            <p className="relative mt-2 hidden font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80 sm:mt-4 sm:block">
               {metadata}
             </p>
           )}
 
           <div
             className={cn(
-              "relative mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/25 py-3.5 text-sm font-semibold tracking-tight text-foreground/95 transition-all duration-500",
+              "relative mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-black/25 py-2 text-[11px] font-semibold tracking-tight text-foreground/95 transition-all duration-500 sm:mt-6 sm:gap-2 sm:rounded-xl sm:py-3.5 sm:text-sm",
               t.cta,
             )}
           >
-            Start Quiz
-            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+            <span className="sm:hidden">Start</span>
+            <span className="hidden sm:inline">Start Quiz</span>
+            <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5 sm:size-4" />
           </div>
         </div>
       </Link>
