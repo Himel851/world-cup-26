@@ -204,20 +204,22 @@ export function QuizRunner({
   if (!current) return null;
 
   return (
-    <div className="relative space-y-6">
+    <div className="relative space-y-3 sm:space-y-6">
       <Confetti active={showConfetti} />
 
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
-            <Sparkles className="mr-1 inline h-3.5 w-3.5" />
+      <header className="flex flex-wrap items-center justify-between gap-2 sm:items-end sm:gap-3">
+        <div className="min-w-0">
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-300 sm:text-xs sm:tracking-[0.2em]">
+            <Sparkles className="mr-1 inline h-3 w-3 sm:h-3.5 sm:w-3.5" />
             {title}
           </p>
           {subtitle && (
-            <p className="mt-1 text-sm text-[var(--muted-foreground)]">{subtitle}</p>
+            <p className="mt-1 hidden text-sm text-muted-foreground sm:block">
+              {subtitle}
+            </p>
           )}
         </div>
-        <Button asChild variant="ghost" size="sm">
+        <Button asChild variant="ghost" size="sm" className="h-8 px-2 sm:h-9 sm:px-3">
           <Link href="/">
             <ChevronLeft className="h-4 w-4" />
             Exit
