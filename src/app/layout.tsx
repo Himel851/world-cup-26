@@ -36,6 +36,14 @@ export const metadata: Metadata = {
     title: "World Cup Challenge",
     description: "Test Your Football IQ — FIFA World Cup 2026 quizzes.",
     type: "website",
+    images: [
+      {
+        url: "/favicon.ico",
+        width: 1200,
+        height: 630,
+        alt: "World Cup Challenge",
+      },
+    ],
   },
 };
 
