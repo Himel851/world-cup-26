@@ -17,7 +17,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = "https://football-world-cup-26.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "World Cup Challenge · FIFA 2026",
     template: "%s · World Cup Challenge",
@@ -32,10 +35,16 @@ export const metadata: Metadata = {
     "World Cup Challenge",
   ],
   authors: [{ name: "World Cup Challenge" }],
+  verification: {
+    google: "Y_HFm9CuKforMqO1C2lrRoppIjHYHqUxTTgPtscT6Fs",
+  },
   openGraph: {
     title: "World Cup Challenge",
     description: "Test Your Football IQ — FIFA World Cup 2026 quizzes.",
     type: "website",
+    url: "/",
+    siteName: "World Cup Challenge",
+    locale: "en_US",
     images: [
       {
         url: "/favicon.ico",
