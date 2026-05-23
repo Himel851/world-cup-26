@@ -192,7 +192,7 @@ interface FilterGroupProps {
 
 function FilterGroup({ label, icon: Icon, value, options, onChange }: FilterGroupProps) {
   return (
-    <div className="flex max-sm:w-full items-center gap-0.5 overflow-x-auto rounded-lg border border-white/10 bg-white/[0.04] p-0.5 backdrop-blur-md sm:gap-1 sm:rounded-xl sm:p-1">
+    <div className="flex max-sm:w-full items-center gap-0.5 overflow-x-auto rounded-lg border border-white/10 bg-white/[0.04] p-0.5 backdrop-blur-md sm:gap-1 sm:rounded-xl sm:p-1 cursor-pointer">
       {Icon && (
         <span className="hidden shrink-0 items-center gap-1.5 px-2 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground md:inline-flex">
           <Icon className="h-3.5 w-3.5" />
@@ -205,7 +205,7 @@ function FilterGroup({ label, icon: Icon, value, options, onChange }: FilterGrou
           type="button"
           onClick={() => onChange(o.value)}
           className={cn(
-            "shrink-0 rounded-md px-2 py-1 text-[11px] font-semibold transition-all sm:rounded-lg sm:px-3 sm:py-1.5 sm:text-xs",
+            "shrink-0 rounded-md px-2 py-1 text-[11px] font-semibold transition-all sm:rounded-lg sm:px-3 sm:py-1.5 sm:text-xs cursor-pointer",
             value === o.value
               ? "bg-emerald-400/20 text-emerald-200 ring-1 ring-emerald-400/30"
               : "text-muted-foreground hover:text-foreground",

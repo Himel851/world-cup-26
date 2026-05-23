@@ -128,7 +128,7 @@ function GroupStageFiltersPanel({
                 type="button"
                 onClick={() => setGroup(g)}
                 className={cn(
-                  "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors sm:px-3 sm:py-1.5 sm:text-xs",
+                  "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors sm:px-3 sm:py-1.5 sm:text-xs cursor-pointer ",
                   group === g
                     ? "bg-emerald-400/15 text-emerald-300 ring-1 ring-emerald-400/40"
                     : "bg-white/[0.04] text-muted-foreground hover:bg-white/[0.08]",
@@ -153,7 +153,7 @@ function GroupStageFiltersPanel({
                 type="button"
                 onClick={() => setMatchday(md)}
                 className={cn(
-                  "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors sm:px-3 sm:py-1.5 sm:text-xs",
+                  "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors sm:px-3 sm:py-1.5 sm:text-xs cursor-pointer ",
                   matchday === md
                     ? "bg-sky-400/15 text-sky-300 ring-1 ring-sky-400/40"
                     : "bg-white/[0.04] text-muted-foreground hover:bg-white/[0.08]",

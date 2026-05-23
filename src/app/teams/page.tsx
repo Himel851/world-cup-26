@@ -30,10 +30,7 @@ export default async function TeamsPage({ searchParams }: PageProps) {
         <h1 className="mt-1.5 text-2xl font-black tracking-tight sm:mt-2 sm:text-4xl lg:text-5xl">
           National <span className="text-gradient">Teams</span>
         </h1>
-        <p className="mt-2 line-clamp-2 max-w-2xl text-xs text-muted-foreground sm:mt-3 sm:line-clamp-none sm:text-base">
-          Search by name, captain or continent. Filter by continent and group draw, then dive into
-          each side&apos;s profile.
-        </p>
+       
       </header>
 
       <TeamsExplorer teams={TEAMS} initialContinent={initialContinent} />

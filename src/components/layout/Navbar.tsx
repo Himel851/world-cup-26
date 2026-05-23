@@ -9,12 +9,9 @@ import {
   CalendarClock,
   Gamepad2,
   Goal,
-  Menu,
   Moon,
   Sun,
-  Trophy,
   Users,
-  X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -32,7 +29,6 @@ const LINKS = [
 
 export function Navbar() {
   const pathname = usePathname();
-  const [open, setOpen] = React.useState(false);
   const { theme, toggle } = useTheme();
   const [scrolled, setScrolled] = React.useState(false);
 
@@ -42,10 +38,6 @@ export function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  React.useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -124,7 +116,7 @@ export function Navbar() {
                 animate={{ y: 0, opacity: 1, rotate: 0 }}
                 exit={{ y: 8, opacity: 0, rotate: 90 }}
                 transition={{ duration: 0.2 }}
-                className="grid place-items-center"
+                className="grid place-items-center cursor-pointer"
               >
                 {theme === "dark" ? (
                   <Sun className="h-4 w-4" />
@@ -139,74 +131,10 @@ export function Navbar() {
             <Link href="/quiz">Start Quiz</Link>
           </Button>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={() => setOpen((v) => !v)}
-            aria-label="Open menu"
-            aria-expanded={open}
-          >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+          {/* Hamburger removed on mobile — MobileTabBar handles primary nav. Kept for theme menu/etc if needed later. */}
         </div>
       </nav>
 
-      {/* Mobile sidebar */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 top-16 z-40 lg:hidden"
-            aria-hidden={!open}
-          >
-            <div
-              className="absolute inset-0 bg-black/60 backdrop-blur-md"
-              onClick={() => setOpen(false)}
-            />
-            <motion.aside
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 320, damping: 32 }}
-              className="absolute right-0 top-0 flex h-[calc(100dvh-4rem)] w-72 max-w-[85vw] flex-col gap-2 border-l border-white/10 bg-[var(--background)]/95 p-4 backdrop-blur-2xl"
-            >
-              {LINKS.map((link, i) => {
-                const Icon = link.icon;
-                const active = isActive(link.href);
-                return (
-                  <motion.div
-                    key={link.href}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.04 * i }}
-                  >
-                    <Link
-                      href={link.href}
-                      className={cn(
-                        "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors",
-                        active
-                          ? "bg-emerald-400/10 text-emerald-300 ring-1 ring-emerald-400/30"
-                          : "text-[var(--foreground)] hover:bg-white/5",
-                      )}
-                    >
-                      <Icon className="h-4 w-4" />
-                      {link.label}
-                    </Link>
-                  </motion.div>
-                );
-              })}
-              <div className="mt-auto pt-4">
-                <Button asChild variant="glow" className="w-full">
-                  <Link href="/quiz">Start Quiz</Link>
-                </Button>
-              </div>
-            </motion.aside>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </header>
   );
 }
