@@ -8,12 +8,14 @@ import type {
   TeamWithRanking,
 } from "@/types";
 import { pickN, pickRandom, seedFromDate, seededRandom, shuffle } from "./utils";
+import { pickTeamWcQuestions } from "./team-wc-quiz";
 
 const QUESTION_TIME_LIMIT: Record<QuizType, number> = {
   flag: 20,
   ranking: 18,
   continent: 18,
   group: 20,
+  history: 22,
 };
 
 let counter = 0;
@@ -151,58 +153,17 @@ export function generateDailyChallenge(
   return generateQuiz({ count: 10, seed, teams });
 }
 
-export function generateTeamQuiz(
-  team: Team,
-  teams: TeamWithRanking[],
-  count = 5,
-): QuizQuestion[] {
+export function generateTeamQuiz(team: Team, count = 10): QuizQuestion[] {
   const rand = Math.random;
-  const out: QuizQuestion[] = [];
+  const picked = pickTeamWcQuestions(team, count, rand);
 
-  out.push({
-    id: uid("flag"),
-    type: "flag",
-    prompt: "Identify this flag",
-    imageUrl: team.flag,
-    correctAnswer: team.name,
-    options: shuffle(
-      [team.name, ...pickN(TEAMS.filter((t) => t.id !== team.id), 3, rand).map((t) => t.name)],
-      rand,
-    ),
-    timeLimit: QUESTION_TIME_LIMIT.flag,
+  return picked.map((q) => ({
+    id: uid("hist"),
+    type: "history" as const,
+    prompt: q.prompt,
+    options: shuffle([q.correctAnswer, ...q.distractors], rand),
+    correctAnswer: q.correctAnswer,
+    timeLimit: QUESTION_TIME_LIMIT.history,
     meta: { teamId: team.id },
-  });
-
-  const withRank = teams.find((t) => t.id === team.id);
-  if (withRank?.ranking) {
-    out.push({
-      id: uid("rank"),
-      type: "ranking",
-      prompt: `What is ${team.name}'s current FIFA world ranking?`,
-      options: shuffle(
-        [
-          `#${withRank.ranking.rank}`,
-          `#${withRank.ranking.rank + 3}`,
-          `#${withRank.ranking.rank + 7}`,
-          `#${withRank.ranking.rank + 12}`,
-        ],
-        rand,
-      ),
-      correctAnswer: `#${withRank.ranking.rank}`,
-      timeLimit: QUESTION_TIME_LIMIT.ranking,
-      meta: { teamId: team.id },
-    });
-  }
-
-  while (out.length < count) {
-    const type = pickRandom<QuizType>(["ranking", "continent", "group"], rand);
-    if (type === "ranking") {
-      out.push(generateRankingQuestion(teams, rand));
-    } else if (type === "continent") {
-      out.push(generateContinentQuestion(rand));
-    } else {
-      out.push(generateGroupQuestion(rand));
-    }
-  }
-  return out;
+  }));
 }

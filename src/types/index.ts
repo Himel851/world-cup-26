@@ -39,7 +39,8 @@ export type QuizType =
   | "flag"
   | "ranking"
   | "continent"
-  | "group";
+  | "group"
+  | "history";
 
 export interface QuizQuestion {
   id: string;

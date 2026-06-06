@@ -21,6 +21,7 @@ const TYPE_LABEL: Record<QuizType, string> = {
   ranking: "Ranking",
   continent: "Continent",
   group: "Group Stage",
+  history: "World Cup History",
 };
 
 const TYPE_ACCENT: Record<QuizType, string> = {
@@ -28,6 +29,7 @@ const TYPE_ACCENT: Record<QuizType, string> = {
   ranking: "from-violet-400/20 via-fuchsia-400/10 to-transparent",
   continent: "from-amber-400/20 via-orange-400/10 to-transparent",
   group: "from-pink-400/20 via-rose-400/10 to-transparent",
+  history: "from-cyan-400/20 via-sky-400/10 to-transparent",
 };
 
 export function QuestionCard({

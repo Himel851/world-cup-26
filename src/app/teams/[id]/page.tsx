@@ -3,16 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  ArrowDown,
   ArrowLeft,
-  ArrowUp,
   Calendar,
-  Globe2,
-  Goal,
-  Minus,
   Sparkles,
   TrendingUp,
-  Trophy,
 } from "lucide-react";
 
 import { FixtureCard } from "@/components/fixtures/FixtureCard";
@@ -43,29 +37,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description: `${team.name} at FIFA World Cup 2026 — Group ${team.group}, live FIFA ranking ${formatRank(team)}.`,
     openGraph: { images: [team.flag] },
   };
-}
-
-function Movement({ movement }: { movement: number }) {
-  if (movement > 0) {
-    return (
-      <span className="inline-flex items-center gap-1 text-emerald-400">
-        <ArrowUp className="h-4 w-4" />+{movement}
-      </span>
-    );
-  }
-  if (movement < 0) {
-    return (
-      <span className="inline-flex items-center gap-1 text-rose-400">
-        <ArrowDown className="h-4 w-4" />
-        {movement}
-      </span>
-    );
-  }
-  return (
-    <span className="inline-flex items-center gap-1 text-muted-foreground">
-      <Minus className="h-4 w-4" />—
-    </span>
-  );
 }
 
 export default async function TeamDetailsPage({ params }: PageProps) {
@@ -122,7 +93,7 @@ export default async function TeamDetailsPage({ params }: PageProps) {
 
             <div className="mt-6 flex flex-wrap gap-2">
               <Badge variant="primary">FIFA {formatRank(team)}</Badge>
-              <Badge variant="secondary">{team.continent}</Badge>
+              <Badge variant="secondary">{formatPoints(team)} pts</Badge>
               <Badge variant="accent">Group {team.group}</Badge>
               {r && <Badge variant="outline">{r.confederation}</Badge>}
             </div>
@@ -131,7 +102,7 @@ export default async function TeamDetailsPage({ params }: PageProps) {
               <Button asChild size="lg" variant="default">
                 <Link href={`/quiz?team=${team.id}`}>
                   <Sparkles className="h-4 w-4" />
-                  Quiz on {team.name}
+                  Play Quiz
                 </Link>
               </Button>
               <Button asChild size="lg" variant="secondary">
@@ -149,35 +120,6 @@ export default async function TeamDetailsPage({ params }: PageProps) {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 pb-16 sm:px-6 lg:grid-cols-3 lg:px-8">
-        <InfoCard icon={TrendingUp} label="FIFA Rank" value={formatRank(team)} accent="text-emerald-300" />
-        <InfoCard icon={Trophy} label="Total Points" value={formatPoints(team)} accent="text-amber-300" />
-        <InfoCard
-          icon={Globe2}
-          label="Confederation"
-          value={r?.confederation ?? team.continent}
-          accent="text-violet-300"
-        />
-        <InfoCard
-          icon={Calendar}
-          label="Previous Rank"
-          value={r ? `#${r.prevRank}` : "—"}
-          accent="text-cyan-300"
-        />
-        <InfoCard
-          icon={Goal}
-          label="Rated Matches"
-          value={r ? String(r.ratedMatches) : "—"}
-          accent="text-sky-300"
-        />
-        <InfoCard
-          icon={TrendingUp}
-          label="Rank Movement"
-          value={r ? <Movement movement={r.movement} /> : "—"}
-          accent="text-rose-300"
-        />
       </div>
 
       {squad ? (
@@ -236,27 +178,6 @@ export default async function TeamDetailsPage({ params }: PageProps) {
           ))}
         </ul>
       </div>
-    </div>
-  );
-}
-
-interface InfoCardProps {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  value: React.ReactNode;
-  accent: string;
-}
-
-function InfoCard({ icon: Icon, label, value, accent }: InfoCardProps) {
-  return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-5 transition-colors hover:border-white/20">
-      <div className="flex items-center justify-between">
-        <span className={`grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/5 ${accent}`}>
-          <Icon className="h-5 w-5" />
-        </span>
-      </div>
-      <p className="mt-4 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
-      <p className="mt-1 text-lg font-bold leading-snug">{value}</p>
     </div>
   );
 }

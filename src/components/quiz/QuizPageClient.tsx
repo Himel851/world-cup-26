@@ -30,6 +30,7 @@ const TYPE_LABEL: Record<QuizType, string> = {
   ranking: "FIFA Ranking",
   continent: "Continental",
   group: "Group Draw",
+  history: "World Cup History",
 };
 
 type QuizSelection =
@@ -132,7 +133,7 @@ export function QuizPageClient({ typeParam, teamParam, teams }: QuizPageClientPr
 
   const subtitle =
     selection?.kind === "team"
-      ? `5 quick-fire questions focused on ${selection.team.name}.`
+      ? `10 World Cup history questions all about ${selection.team.name} — titles, scorers, and legendary moments.`
       : selection?.kind === "type"
         ? `Pure ${TYPE_LABEL[selection.quizType]} mode — 10 questions of the same flavour.`
         : selection?.kind === "mixed"
@@ -145,7 +146,7 @@ export function QuizPageClient({ typeParam, teamParam, teams }: QuizPageClientPr
       return;
     }
     if (selection.kind === "team") {
-      setQuestions(generateTeamQuiz(selection.team, teams, 5));
+      setQuestions(generateTeamQuiz(selection.team, 10));
     } else if (selection.kind === "type") {
       setQuestions(generateQuiz({ count: 10, types: [selection.quizType], teams }));
     } else {
