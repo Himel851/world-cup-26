@@ -294,11 +294,11 @@ export function RankingsExplorer({ rankings, confederations }: RankingsExplorerP
           forcePage={safePage}
           marginPagesDisplayed={1}
           pageRangeDisplayed={3}
-          containerClassName="flex flex-wrap items-center justify-center gap-1.5"
+          containerClassName="flex flex-wrap items-center justify-center gap-1.5 cursor-pointer"
           pageClassName=""
           pageLinkClassName={cn(
             "inline-flex min-w-9 items-center justify-center rounded-lg border border-white/10 px-3 py-2 text-sm font-medium transition-colors",
-            "hover:border-emerald-400/40 hover:bg-white/5",
+            "hover:border-emerald-400/40 hover:bg-white/5 cursor-pointer",
           )}
           activeLinkClassName="!border-emerald-400/50 !bg-emerald-400/15 !text-emerald-200"
           previousLinkClassName="inline-flex items-center justify-center rounded-lg border border-white/10 px-3 py-2 text-sm font-medium hover:border-emerald-400/40 hover:bg-white/5"

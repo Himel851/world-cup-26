@@ -8,14 +8,11 @@ import {
   CalendarClock,
   Gamepad2,
   Goal,
-  Moon,
-  Sun,
   TrendingUp,
   Users,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
@@ -29,7 +26,7 @@ const LINKS = [
 
 export function Navbar() {
   const pathname = usePathname();
-  const { theme, toggle } = useTheme();
+  // const { theme, toggle } = useTheme();
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -79,7 +76,8 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
-          <Button
+        
+          {/* <Button
             variant="ghost"
             size="icon"
             onClick={toggle}
@@ -87,7 +85,7 @@ export function Navbar() {
             className="rounded-xl"
           >
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
+          </Button> */}
 
           <Button asChild variant="glow" size="sm" className="hidden md:inline-flex">
             <Link href="/quiz">Start Quiz</Link>

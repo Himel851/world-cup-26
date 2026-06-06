@@ -16,8 +16,8 @@ export default async function HomePage() {
     <>
       <TournamentCountdown />
       <TournamentStats />
-      <WorldCupWinners />
       <GroupsGrid />
+      <WorldCupWinners />
       <HostStadiums />
       <FeaturedTeams teams={teams} />
       <TrendingQuizzes />
