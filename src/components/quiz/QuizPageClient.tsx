@@ -6,7 +6,6 @@ import {
   Compass,
   Flag,
   MapPin,
-  Shield,
   Sparkles,
   TrendingUp,
 } from "lucide-react";
@@ -16,18 +15,18 @@ import { QuizRunner } from "@/components/quiz/QuizRunner";
 import { FootballLoader } from "@/components/FootballLoader";
 import { TEAMS_BY_ID } from "@/data/teams";
 import { generateQuiz, generateTeamQuiz } from "@/lib/generateQuestions";
-import type { QuizQuestion, QuizType, Team } from "@/types";
+import type { QuizQuestion, QuizType, Team, TeamWithRanking } from "@/types";
 
 interface QuizPageClientProps {
   typeParam?: string;
   teamParam?: string;
+  teams: TeamWithRanking[];
 }
 
-const VALID_TYPES: QuizType[] = ["flag", "captain", "ranking", "continent", "group"];
+const VALID_TYPES: QuizType[] = ["flag", "ranking", "continent", "group"];
 
 const TYPE_LABEL: Record<QuizType, string> = {
   flag: "Flag Master",
-  captain: "Captain Call",
   ranking: "FIFA Ranking",
   continent: "Continental",
   group: "Group Draw",
@@ -54,8 +53,7 @@ const SINGLE_TYPE_CARDS = [
   {
     type: "flag" as const,
     title: TYPE_LABEL.flag,
-    description:
-      "Identify nations from their flags with zero multiple-choice fatigue.",
+    description: "Identify nations from their flags with zero multiple-choice fatigue.",
     href: "/quiz?type=flag",
     icon: Flag,
     accent: "from-emerald-400/25 via-teal-500/12 to-transparent",
@@ -65,28 +63,15 @@ const SINGLE_TYPE_CARDS = [
     choiceHint: "Ten questions",
   },
   {
-    type: "captain" as const,
-    title: TYPE_LABEL.captain,
-    description: "Match skippers to their squads — memory and instinct under pressure.",
-    href: "/quiz?type=captain",
-    icon: Shield,
-    accent: "from-sky-400/25 via-cyan-500/12 to-transparent",
-    badge: "10 QUESTIONS",
-    tone: "cyan" as QuizCardTone,
-    metadata: "Single category · ~3 min · Timed rounds",
-    choiceHint: "Ten questions",
-  },
-  {
     type: "ranking" as const,
     title: TYPE_LABEL.ranking,
-    description:
-      "Head-to-head FIFA ranking duels — pick who sits higher on the ladder.",
+    description: "Head-to-head FIFA ranking duels — pick who sits higher on the ladder.",
     href: "/quiz?type=ranking",
     icon: TrendingUp,
     accent: "from-violet-400/25 via-fuchsia-500/12 to-transparent",
     badge: "10 QUESTIONS",
     tone: "violet" as QuizCardTone,
-    metadata: "Single category · ~3 min · Timed rounds",
+    metadata: "Live FIFA data · ~3 min",
     choiceHint: "Ten questions",
   },
   {
@@ -116,7 +101,7 @@ const SINGLE_TYPE_CARDS = [
   {
     type: "mixed" as const,
     title: "Mixed quiz",
-    description: "Every mode in one run — flags, captains, rankings, and more.",
+    description: "Every mode in one run — flags, live rankings, continents, and groups.",
     href: "/quiz?type=mixed",
     icon: Sparkles,
     accent: "from-emerald-400/15 via-violet-500/18 to-cyan-500/12",
@@ -127,7 +112,7 @@ const SINGLE_TYPE_CARDS = [
   },
 ];
 
-export function QuizPageClient({ typeParam, teamParam }: QuizPageClientProps) {
+export function QuizPageClient({ typeParam, teamParam, teams }: QuizPageClientProps) {
   const [questions, setQuestions] = React.useState<QuizQuestion[] | null>(null);
   const [seed, setSeed] = React.useState(0);
 
@@ -160,13 +145,13 @@ export function QuizPageClient({ typeParam, teamParam }: QuizPageClientProps) {
       return;
     }
     if (selection.kind === "team") {
-      setQuestions(generateTeamQuiz(selection.team, 5));
+      setQuestions(generateTeamQuiz(selection.team, teams, 5));
     } else if (selection.kind === "type") {
-      setQuestions(generateQuiz({ count: 10, types: [selection.quizType] }));
+      setQuestions(generateQuiz({ count: 10, types: [selection.quizType], teams }));
     } else {
-      setQuestions(generateQuiz({ count: 10 }));
+      setQuestions(generateQuiz({ count: 10, teams }));
     }
-  }, [selection, seed]);
+  }, [selection, seed, teams]);
 
   const storageKey =
     selection?.kind === "team"
@@ -193,20 +178,17 @@ export function QuizPageClient({ typeParam, teamParam }: QuizPageClientProps) {
         <div className="relative mx-auto max-w-6xl space-y-12 lg:space-y-16">
           <header className="space-y-6 text-center sm:text-left">
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-300/95 backdrop-blur-md">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]" />
-                World Cup Challenge
+              <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-300/95">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                World Cup 2026 Quiz
               </p>
               <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                {SINGLE_TYPE_CARDS.length} modes · Live data
+                {SINGLE_TYPE_CARDS.length} modes · Live FIFA data
               </p>
             </div>
-
-        
           </header>
 
           <section aria-labelledby="quiz-modes-heading" className="space-y-6">
-
             <div className="grid grid-cols-2 gap-3 sm:gap-5 md:gap-6 lg:grid-cols-3 xl:gap-8">
               {SINGLE_TYPE_CARDS.map((item, i) => (
                 <QuizCard

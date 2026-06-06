@@ -1,29 +1,21 @@
 import type { Team, GroupLetter } from "@/types";
 
-/**
- * FIFA World Cup 2026 — 48 nations across 12 groups (A–L).
- * Group draw matches the official 2026 World Cup group stage.
- * Flags are sourced from the free https://flagcdn.com placeholder service.
- */
 /** Smaller CDN flags — faster loads than w320 across list views. */
 const flag = (code: string) => `https://flagcdn.com/w80/${code.toLowerCase()}.png`;
 
+/**
+ * FIFA World Cup 2026 — 48 nations (group draw + tournament structure only).
+ * Live rank, points and confederation come from the FIFA rankings API.
+ */
 export const TEAMS: Team[] = [
-  // ─────────── Group A ───────────
   {
     id: "mex",
     name: "Mexico",
     code: "mx",
     flag: flag("mx"),
     continent: "North America",
-    fifaRanking: 14,
-    captain: "Edson Álvarez",
     group: "A",
-    stadium: "Estadio Azteca",
-    description:
-      "Co-host of the 2026 tournament. El Tri have appeared at every World Cup since 1994 and open the event at the iconic Azteca.",
-    colors: { primary: "#006847", secondary: "#ce1126" },
-    stats: { worldCupTitles: 0, appearances: 17, bestFinish: "Quarter-finals" },
+    fifaCode: "MEX",
   },
   {
     id: "rsa",
@@ -31,14 +23,8 @@ export const TEAMS: Team[] = [
     code: "za",
     flag: flag("za"),
     continent: "Africa",
-    fifaRanking: 51,
-    captain: "Ronwen Williams",
     group: "A",
-    stadium: "FNB Stadium",
-    description:
-      "Bafana Bafana return to the World Cup for the first time since hosting in 2010, marshalled by AFCON-winning shot-stopper Ronwen Williams.",
-    colors: { primary: "#007a4d", secondary: "#ffb612" },
-    stats: { worldCupTitles: 0, appearances: 3, bestFinish: "Group Stage" },
+    fifaCode: "RSA",
   },
   {
     id: "kor",
@@ -46,14 +32,8 @@ export const TEAMS: Team[] = [
     code: "kr",
     flag: flag("kr"),
     continent: "Asia",
-    fifaRanking: 22,
-    captain: "Son Heung-min",
     group: "A",
-    stadium: "Seoul World Cup Stadium",
-    description:
-      "Reds of Asia. Famous for their 2002 semi-final run and led today by Tottenham talisman Son Heung-min.",
-    colors: { primary: "#cd2e3a", secondary: "#0047a0" },
-    stats: { worldCupTitles: 0, appearances: 11, bestFinish: "Fourth place (2002)" },
+    fifaCode: "KOR",
   },
   {
     id: "cze",
@@ -61,31 +41,17 @@ export const TEAMS: Team[] = [
     code: "cz",
     flag: flag("cz"),
     continent: "Europe",
-    fifaRanking: 37,
-    captain: "Tomáš Souček",
     group: "A",
-    stadium: "Fortuna Arena",
-    description:
-      "Národní tým return to the World Cup with a physical midfield core anchored by West Ham talisman Tomáš Souček.",
-    colors: { primary: "#11457e", secondary: "#d7141a" },
-    stats: { worldCupTitles: 0, appearances: 10, bestFinish: "Runners-up (as Czechoslovakia, 1934, 1962)" },
+    fifaCode: "CZE",
   },
-
-  // ─────────── Group B ───────────
   {
     id: "can",
     name: "Canada",
     code: "ca",
     flag: flag("ca"),
     continent: "North America",
-    fifaRanking: 41,
-    captain: "Alphonso Davies",
     group: "B",
-    stadium: "BMO Field",
-    description:
-      "Co-host of the 2026 World Cup. The Canucks return to the tournament riding the rapid rise of a golden generation.",
-    colors: { primary: "#ff0000", secondary: "#ffffff" },
-    stats: { worldCupTitles: 0, appearances: 2, bestFinish: "Group Stage" },
+    fifaCode: "CAN",
   },
   {
     id: "bih",
@@ -93,14 +59,8 @@ export const TEAMS: Team[] = [
     code: "ba",
     flag: flag("ba"),
     continent: "Europe",
-    fifaRanking: 74,
-    captain: "Edin Džeko",
     group: "B",
-    stadium: "Bilino Polje",
-    description:
-      "Zmajevi (Dragons) qualify for only their second World Cup, still inspired by evergreen captain and goal machine Edin Džeko.",
-    colors: { primary: "#002395", secondary: "#fecb00" },
-    stats: { worldCupTitles: 0, appearances: 1, bestFinish: "Group Stage" },
+    fifaCode: "BIH",
   },
   {
     id: "qat",
@@ -108,14 +68,8 @@ export const TEAMS: Team[] = [
     code: "qa",
     flag: flag("qa"),
     continent: "Asia",
-    fifaRanking: 35,
-    captain: "Hassan Al-Haydos",
     group: "B",
-    stadium: "Lusail Iconic Stadium",
-    description:
-      "Reigning Asian champions. The Maroon return to the World Cup after hosting in 2022.",
-    colors: { primary: "#8a1538", secondary: "#ffffff" },
-    stats: { worldCupTitles: 0, appearances: 2, bestFinish: "Group Stage" },
+    fifaCode: "QAT",
   },
   {
     id: "swi",
@@ -123,31 +77,17 @@ export const TEAMS: Team[] = [
     code: "ch",
     flag: flag("ch"),
     continent: "Europe",
-    fifaRanking: 19,
-    captain: "Granit Xhaka",
     group: "B",
-    stadium: "Stade de Genève",
-    description:
-      "Die Nati — a tactically astute side that consistently reaches major tournament knockouts.",
-    colors: { primary: "#ff0000", secondary: "#ffffff" },
-    stats: { worldCupTitles: 0, appearances: 12, bestFinish: "Quarter-finals" },
+    fifaCode: "SUI",
   },
-
-  // ─────────── Group C ───────────
   {
     id: "bra",
     name: "Brazil",
     code: "br",
     flag: flag("br"),
     continent: "South America",
-    fifaRanking: 5,
-    captain: "Neymar",
     group: "C",
-    stadium: "Maracanã",
-    description:
-      "Five-time world champions. Seleção's blend of samba flair and clinical finishing makes them a perennial threat.",
-    colors: { primary: "#fedf00", secondary: "#009c3b" },
-    stats: { worldCupTitles: 5, appearances: 22, bestFinish: "Champions (1958, 1962, 1970, 1994, 2002)" },
+    fifaCode: "BRA",
   },
   {
     id: "mar",
@@ -155,14 +95,8 @@ export const TEAMS: Team[] = [
     code: "ma",
     flag: flag("ma"),
     continent: "Africa",
-    fifaRanking: 13,
-    captain: "Romain Saïss",
     group: "C",
-    stadium: "Stade Mohammed V",
-    description:
-      "First African nation to reach a World Cup semi-final (2022). The Atlas Lions are now a continental powerhouse.",
-    colors: { primary: "#c1272d", secondary: "#006233" },
-    stats: { worldCupTitles: 0, appearances: 6, bestFinish: "Semi-finals" },
+    fifaCode: "MAR",
   },
   {
     id: "hai",
@@ -170,14 +104,8 @@ export const TEAMS: Team[] = [
     code: "ht",
     flag: flag("ht"),
     continent: "North America",
-    fifaRanking: 83,
-    captain: "Duckens Nazon",
     group: "C",
-    stadium: "Stade Sylvio Cator",
-    description:
-      "Les Grenadiers return to the World Cup for the first time since 1974, sparking a national celebration.",
-    colors: { primary: "#00209f", secondary: "#d21034" },
-    stats: { worldCupTitles: 0, appearances: 2, bestFinish: "Group Stage" },
+    fifaCode: "HAI",
   },
   {
     id: "sct",
@@ -185,31 +113,17 @@ export const TEAMS: Team[] = [
     code: "gb-sct",
     flag: flag("gb-sct"),
     continent: "Europe",
-    fifaRanking: 48,
-    captain: "Andy Robertson",
     group: "C",
-    stadium: "Hampden Park",
-    description:
-      "The Tartan Army are back at a World Cup after a 28-year wait, captained by Liverpool flying full-back Andy Robertson.",
-    colors: { primary: "#0065bd", secondary: "#ffffff" },
-    stats: { worldCupTitles: 0, appearances: 9, bestFinish: "Group Stage" },
+    fifaCode: "SCO",
   },
-
-  // ─────────── Group D ───────────
   {
     id: "usa",
     name: "United States",
     code: "us",
     flag: flag("us"),
     continent: "North America",
-    fifaRanking: 16,
-    captain: "Christian Pulisic",
     group: "D",
-    stadium: "MetLife Stadium",
-    description:
-      "Main hosts of the 2026 World Cup. The USMNT brings a fearless new generation led by Pulisic and Reyna.",
-    colors: { primary: "#b22234", secondary: "#3c3b6e" },
-    stats: { worldCupTitles: 0, appearances: 11, bestFinish: "Third place (1930)" },
+    fifaCode: "USA",
   },
   {
     id: "par",
@@ -217,14 +131,8 @@ export const TEAMS: Team[] = [
     code: "py",
     flag: flag("py"),
     continent: "South America",
-    fifaRanking: 53,
-    captain: "Gustavo Gómez",
     group: "D",
-    stadium: "Estadio Defensores del Chaco",
-    description:
-      "La Albirroja reached the 2010 World Cup quarter-finals — known for tactical grit and physicality.",
-    colors: { primary: "#d52b1e", secondary: "#0038a8" },
-    stats: { worldCupTitles: 0, appearances: 8, bestFinish: "Quarter-finals (2010)" },
+    fifaCode: "PAR",
   },
   {
     id: "aus",
@@ -232,14 +140,8 @@ export const TEAMS: Team[] = [
     code: "au",
     flag: flag("au"),
     continent: "Asia",
-    fifaRanking: 25,
-    captain: "Mathew Ryan",
     group: "D",
-    stadium: "Stadium Australia",
-    description:
-      "The Socceroos reached the Round of 16 in 2022 — Asia's resilient, athletic, ever-organised qualifiers.",
-    colors: { primary: "#00843d", secondary: "#ffcd00" },
-    stats: { worldCupTitles: 0, appearances: 6, bestFinish: "Round of 16" },
+    fifaCode: "AUS",
   },
   {
     id: "tur",
@@ -247,31 +149,17 @@ export const TEAMS: Team[] = [
     code: "tr",
     flag: flag("tr"),
     continent: "Europe",
-    fifaRanking: 34,
-    captain: "Hakan Çalhanoğlu",
     group: "D",
-    stadium: "Atatürk Olympic Stadium",
-    description:
-      "The Crescent-Stars return after a long absence, orchestrated by Inter midfield maestro Hakan Çalhanoğlu.",
-    colors: { primary: "#e30a17", secondary: "#ffffff" },
-    stats: { worldCupTitles: 0, appearances: 2, bestFinish: "Third place (2002)" },
+    fifaCode: "TUR",
   },
-
-  // ─────────── Group E ───────────
   {
     id: "ger",
     name: "Germany",
     code: "de",
     flag: flag("de"),
     continent: "Europe",
-    fifaRanking: 12,
-    captain: "Joshua Kimmich",
     group: "E",
-    stadium: "Allianz Arena",
-    description:
-      "Four-time world champions known for tactical discipline and a deep production line of midfield talent.",
-    colors: { primary: "#000000", secondary: "#dd0000" },
-    stats: { worldCupTitles: 4, appearances: 20, bestFinish: "Champions (1954, 1974, 1990, 2014)" },
+    fifaCode: "GER",
   },
   {
     id: "cuw",
@@ -279,14 +167,8 @@ export const TEAMS: Team[] = [
     code: "cw",
     flag: flag("cw"),
     continent: "North America",
-    fifaRanking: 82,
-    captain: "Leandro Bacuna",
     group: "E",
-    stadium: "Ergilio Hato Stadium",
-    description:
-      "Tiny Caribbean island, giant achievement — Curaçao become the smallest nation by population ever to qualify for a men's World Cup.",
-    colors: { primary: "#002b7f", secondary: "#fde000" },
-    stats: { worldCupTitles: 0, appearances: 1, bestFinish: "Debut campaign" },
+    fifaCode: "CUW",
   },
   {
     id: "civ",
@@ -294,14 +176,8 @@ export const TEAMS: Team[] = [
     code: "ci",
     flag: flag("ci"),
     continent: "Africa",
-    fifaRanking: 40,
-    captain: "Serge Aurier",
     group: "E",
-    stadium: "Stade Olympique Alassane Ouattara",
-    description:
-      "Les Éléphants are reigning AFCON champions (2024). A bright new generation building on their golden era.",
-    colors: { primary: "#ff8200", secondary: "#009e60" },
-    stats: { worldCupTitles: 0, appearances: 4, bestFinish: "Group Stage" },
+    fifaCode: "CIV",
   },
   {
     id: "ecu",
@@ -309,31 +185,17 @@ export const TEAMS: Team[] = [
     code: "ec",
     flag: flag("ec"),
     continent: "South America",
-    fifaRanking: 32,
-    captain: "Enner Valencia",
     group: "E",
-    stadium: "Estadio Rodrigo Paz Delgado",
-    description:
-      "La Tri thrive at high altitude in Quito. A young squad rising up the CONMEBOL ranks.",
-    colors: { primary: "#fdd116", secondary: "#003893" },
-    stats: { worldCupTitles: 0, appearances: 4, bestFinish: "Round of 16" },
+    fifaCode: "ECU",
   },
-
-  // ─────────── Group F ───────────
   {
     id: "ned",
     name: "Netherlands",
     code: "nl",
     flag: flag("nl"),
     continent: "Europe",
-    fifaRanking: 6,
-    captain: "Virgil van Dijk",
     group: "F",
-    stadium: "Johan Cruijff Arena",
-    description:
-      "Three-time finalists known as Oranje. Pioneers of Total Football with a flair for attacking play.",
-    colors: { primary: "#ae1c28", secondary: "#21468b" },
-    stats: { worldCupTitles: 0, appearances: 11, bestFinish: "Runners-up (1974, 1978, 2010)" },
+    fifaCode: "NED",
   },
   {
     id: "jpn",
@@ -341,14 +203,8 @@ export const TEAMS: Team[] = [
     code: "jp",
     flag: flag("jp"),
     continent: "Asia",
-    fifaRanking: 17,
-    captain: "Wataru Endo",
     group: "F",
-    stadium: "Saitama Stadium 2002",
-    description:
-      "Samurai Blue. Asia's most consistent World Cup side, with stunning upsets over Spain and Germany in 2022.",
-    colors: { primary: "#bc002d", secondary: "#ffffff" },
-    stats: { worldCupTitles: 0, appearances: 7, bestFinish: "Round of 16" },
+    fifaCode: "JPN",
   },
   {
     id: "swe",
@@ -356,14 +212,8 @@ export const TEAMS: Team[] = [
     code: "se",
     flag: flag("se"),
     continent: "Europe",
-    fifaRanking: 29,
-    captain: "Victor Lindelöf",
     group: "F",
-    stadium: "Friends Arena",
-    description:
-      "Blågult return to the World Cup with a quality blend of Premier League experience and a clinical attack.",
-    colors: { primary: "#006aa7", secondary: "#fecc00" },
-    stats: { worldCupTitles: 0, appearances: 12, bestFinish: "Runners-up (1958)" },
+    fifaCode: "SWE",
   },
   {
     id: "tun",
@@ -371,31 +221,17 @@ export const TEAMS: Team[] = [
     code: "tn",
     flag: flag("tn"),
     continent: "Africa",
-    fifaRanking: 45,
-    captain: "Youssef Msakni",
     group: "F",
-    stadium: "Stade Olympique de Radès",
-    description:
-      "Carthage Eagles known for their organisation and tenacity. A staple of recent World Cups.",
-    colors: { primary: "#e70013", secondary: "#ffffff" },
-    stats: { worldCupTitles: 0, appearances: 7, bestFinish: "Group Stage" },
+    fifaCode: "TUN",
   },
-
-  // ─────────── Group G ───────────
   {
     id: "bel",
     name: "Belgium",
     code: "be",
     flag: flag("be"),
     continent: "Europe",
-    fifaRanking: 8,
-    captain: "Kevin De Bruyne",
     group: "G",
-    stadium: "King Baudouin Stadium",
-    description:
-      "Red Devils. Long-time FIFA #1 with a star-studded core orchestrated by Kevin De Bruyne.",
-    colors: { primary: "#ed2939", secondary: "#fae042" },
-    stats: { worldCupTitles: 0, appearances: 14, bestFinish: "Third place (2018)" },
+    fifaCode: "BEL",
   },
   {
     id: "egy",
@@ -403,14 +239,8 @@ export const TEAMS: Team[] = [
     code: "eg",
     flag: flag("eg"),
     continent: "Africa",
-    fifaRanking: 36,
-    captain: "Mohamed Salah",
     group: "G",
-    stadium: "Cairo International Stadium",
-    description:
-      "The Pharaohs are Africa's most decorated AFCON side. Salah's brilliance lights up every match.",
-    colors: { primary: "#ce1126", secondary: "#000000" },
-    stats: { worldCupTitles: 0, appearances: 4, bestFinish: "Group Stage" },
+    fifaCode: "EGY",
   },
   {
     id: "irn",
@@ -418,14 +248,8 @@ export const TEAMS: Team[] = [
     code: "ir",
     flag: flag("ir"),
     continent: "Asia",
-    fifaRanking: 20,
-    captain: "Alireza Jahanbakhsh",
     group: "G",
-    stadium: "Azadi Stadium",
-    description:
-      "Team Melli are Asia's most prolific World Cup qualifiers in the last decade, known for defensive solidity.",
-    colors: { primary: "#239f40", secondary: "#da0000" },
-    stats: { worldCupTitles: 0, appearances: 7, bestFinish: "Group Stage" },
+    fifaCode: "IRN",
   },
   {
     id: "nzl",
@@ -433,31 +257,17 @@ export const TEAMS: Team[] = [
     code: "nz",
     flag: flag("nz"),
     continent: "Oceania",
-    fifaRanking: 89,
-    captain: "Chris Wood",
     group: "G",
-    stadium: "Eden Park",
-    description:
-      "The All Whites — Oceania's standard-bearers, unbeaten at the 2010 World Cup group stage.",
-    colors: { primary: "#000000", secondary: "#ffffff" },
-    stats: { worldCupTitles: 0, appearances: 3, bestFinish: "Group Stage" },
+    fifaCode: "NZL",
   },
-
-  // ─────────── Group H ───────────
   {
     id: "esp",
     name: "Spain",
     code: "es",
     flag: flag("es"),
     continent: "Europe",
-    fifaRanking: 1,
-    captain: "Rodri",
     group: "H",
-    stadium: "Santiago Bernabéu",
-    description:
-      "Reigning European champions. La Roja's tiki-taka legacy and 2010 World Cup win still define modern football.",
-    colors: { primary: "#aa151b", secondary: "#f1bf00" },
-    stats: { worldCupTitles: 1, appearances: 16, bestFinish: "Champions (2010)" },
+    fifaCode: "ESP",
   },
   {
     id: "cpv",
@@ -465,14 +275,8 @@ export const TEAMS: Team[] = [
     code: "cv",
     flag: flag("cv"),
     continent: "Africa",
-    fifaRanking: 70,
-    captain: "Ryan Mendes",
     group: "H",
-    stadium: "Estádio Nacional de Cabo Verde",
-    description:
-      "Os Tubarões Azuis (Blue Sharks) — a tiny archipelago nation making its history-making World Cup debut.",
-    colors: { primary: "#003893", secondary: "#cf2027" },
-    stats: { worldCupTitles: 0, appearances: 1, bestFinish: "Debut campaign" },
+    fifaCode: "CPV",
   },
   {
     id: "ksa",
@@ -480,14 +284,8 @@ export const TEAMS: Team[] = [
     code: "sa",
     flag: flag("sa"),
     continent: "Asia",
-    fifaRanking: 56,
-    captain: "Salem Al-Dawsari",
     group: "H",
-    stadium: "King Fahd International Stadium",
-    description:
-      "The Green Falcons stunned Argentina in 2022 and continue to invest heavily in their domestic game.",
-    colors: { primary: "#006c35", secondary: "#ffffff" },
-    stats: { worldCupTitles: 0, appearances: 7, bestFinish: "Round of 16" },
+    fifaCode: "KSA",
   },
   {
     id: "uru",
@@ -495,31 +293,17 @@ export const TEAMS: Team[] = [
     code: "uy",
     flag: flag("uy"),
     continent: "South America",
-    fifaRanking: 11,
-    captain: "Federico Valverde",
     group: "H",
-    stadium: "Estadio Centenario",
-    description:
-      "Two-time world champions and winners of the very first World Cup in 1930. Famed for la garra charrúa.",
-    colors: { primary: "#0038a8", secondary: "#fcd116" },
-    stats: { worldCupTitles: 2, appearances: 14, bestFinish: "Champions (1930, 1950)" },
+    fifaCode: "URU",
   },
-
-  // ─────────── Group I ───────────
   {
     id: "fra",
     name: "France",
     code: "fr",
     flag: flag("fr"),
     continent: "Europe",
-    fifaRanking: 3,
-    captain: "Kylian Mbappé",
     group: "I",
-    stadium: "Stade de France",
-    description:
-      "Les Bleus reached the last two finals. Mbappé leads an attacking unit that's the envy of world football.",
-    colors: { primary: "#0055a4", secondary: "#ef4135" },
-    stats: { worldCupTitles: 2, appearances: 16, bestFinish: "Champions (1998, 2018)" },
+    fifaCode: "FRA",
   },
   {
     id: "sen",
@@ -527,14 +311,8 @@ export const TEAMS: Team[] = [
     code: "sn",
     flag: flag("sn"),
     continent: "Africa",
-    fifaRanking: 18,
-    captain: "Kalidou Koulibaly",
     group: "I",
-    stadium: "Stade Me Abdoulaye Wade",
-    description:
-      "Reigning African powerhouses. The Lions of Teranga have featured in the last four AFCON finals.",
-    colors: { primary: "#00853f", secondary: "#fdef42" },
-    stats: { worldCupTitles: 0, appearances: 3, bestFinish: "Quarter-finals" },
+    fifaCode: "SEN",
   },
   {
     id: "irq",
@@ -542,14 +320,8 @@ export const TEAMS: Team[] = [
     code: "iq",
     flag: flag("iq"),
     continent: "Asia",
-    fifaRanking: 58,
-    captain: "Aymen Hussein",
     group: "I",
-    stadium: "Basra International Stadium",
-    description:
-      "The Lions of Mesopotamia qualify for their first World Cup since 1986 — a milestone moment for a football-mad nation.",
-    colors: { primary: "#cd1126", secondary: "#000000" },
-    stats: { worldCupTitles: 0, appearances: 1, bestFinish: "Group Stage" },
+    fifaCode: "IRQ",
   },
   {
     id: "nor",
@@ -557,31 +329,17 @@ export const TEAMS: Team[] = [
     code: "no",
     flag: flag("no"),
     continent: "Europe",
-    fifaRanking: 24,
-    captain: "Martin Ødegaard",
     group: "I",
-    stadium: "Ullevaal Stadion",
-    description:
-      "Powered by superstar duo Erling Haaland and Martin Ødegaard, Norway are at last back at a major tournament.",
-    colors: { primary: "#ba0c2f", secondary: "#00205b" },
-    stats: { worldCupTitles: 0, appearances: 3, bestFinish: "Round of 16" },
+    fifaCode: "NOR",
   },
-
-  // ─────────── Group J ───────────
   {
     id: "arg",
     name: "Argentina",
     code: "ar",
     flag: flag("ar"),
     continent: "South America",
-    fifaRanking: 2,
-    captain: "Lionel Messi",
     group: "J",
-    stadium: "Estadio Monumental",
-    description:
-      "Reigning world champions. La Albiceleste captured glory in 2022 with Lionel Messi finally lifting the trophy.",
-    colors: { primary: "#75aadb", secondary: "#ffffff" },
-    stats: { worldCupTitles: 3, appearances: 18, bestFinish: "Champions (1978, 1986, 2022)" },
+    fifaCode: "ARG",
   },
   {
     id: "alg",
@@ -589,14 +347,8 @@ export const TEAMS: Team[] = [
     code: "dz",
     flag: flag("dz"),
     continent: "Africa",
-    fifaRanking: 38,
-    captain: "Riyad Mahrez",
     group: "J",
-    stadium: "Stade du 5 Juillet 1962",
-    description:
-      "Les Fennecs (Desert Foxes) — AFCON champions in 2019, marshalled by Riyad Mahrez.",
-    colors: { primary: "#006233", secondary: "#ffffff" },
-    stats: { worldCupTitles: 0, appearances: 4, bestFinish: "Round of 16" },
+    fifaCode: "ALG",
   },
   {
     id: "aut",
@@ -604,14 +356,8 @@ export const TEAMS: Team[] = [
     code: "at",
     flag: flag("at"),
     continent: "Europe",
-    fifaRanking: 23,
-    captain: "Marcel Sabitzer",
     group: "J",
-    stadium: "Ernst Happel Stadion",
-    description:
-      "Das Team — a high-pressing, well-drilled side under Ralf Rangnick's influence in recent campaigns.",
-    colors: { primary: "#ed2939", secondary: "#ffffff" },
-    stats: { worldCupTitles: 0, appearances: 7, bestFinish: "Third place (1954)" },
+    fifaCode: "AUT",
   },
   {
     id: "jor",
@@ -619,31 +365,17 @@ export const TEAMS: Team[] = [
     code: "jo",
     flag: flag("jo"),
     continent: "Asia",
-    fifaRanking: 62,
-    captain: "Ehsan Haddad",
     group: "J",
-    stadium: "Amman International Stadium",
-    description:
-      "Al-Nashama qualify for the World Cup for the first time, riding the wave of their stunning 2024 AFC Asian Cup final run.",
-    colors: { primary: "#000000", secondary: "#ce1126" },
-    stats: { worldCupTitles: 0, appearances: 1, bestFinish: "Debut campaign" },
+    fifaCode: "JOR",
   },
-
-  // ─────────── Group K ───────────
   {
     id: "por",
     name: "Portugal",
     code: "pt",
     flag: flag("pt"),
     continent: "Europe",
-    fifaRanking: 7,
-    captain: "Cristiano Ronaldo",
     group: "K",
-    stadium: "Estádio da Luz",
-    description:
-      "A golden generation led by Cristiano Ronaldo, Bernardo Silva and Bruno Fernandes chasing a maiden World Cup.",
-    colors: { primary: "#006600", secondary: "#ff0000" },
-    stats: { worldCupTitles: 0, appearances: 8, bestFinish: "Third place (1966)" },
+    fifaCode: "POR",
   },
   {
     id: "cod",
@@ -651,14 +383,8 @@ export const TEAMS: Team[] = [
     code: "cd",
     flag: flag("cd"),
     continent: "Africa",
-    fifaRanking: 57,
-    captain: "Chancel Mbemba",
     group: "K",
-    stadium: "Stade des Martyrs",
-    description:
-      "Les Léopards return to the global stage for the first time since 1974, riding a wave of European-based talent.",
-    colors: { primary: "#007fff", secondary: "#f7d618" },
-    stats: { worldCupTitles: 0, appearances: 1, bestFinish: "Group Stage" },
+    fifaCode: "COD",
   },
   {
     id: "uzb",
@@ -666,14 +392,8 @@ export const TEAMS: Team[] = [
     code: "uz",
     flag: flag("uz"),
     continent: "Asia",
-    fifaRanking: 61,
-    captain: "Eldor Shomurodov",
     group: "K",
-    stadium: "Bunyodkor Stadium",
-    description:
-      "The White Wolves achieve a historic first — Uzbekistan qualify for a maiden World Cup after years of near-misses.",
-    colors: { primary: "#1eb53a", secondary: "#0099b5" },
-    stats: { worldCupTitles: 0, appearances: 1, bestFinish: "Debut campaign" },
+    fifaCode: "UZB",
   },
   {
     id: "col",
@@ -681,31 +401,17 @@ export const TEAMS: Team[] = [
     code: "co",
     flag: flag("co"),
     continent: "South America",
-    fifaRanking: 10,
-    captain: "James Rodríguez",
     group: "K",
-    stadium: "Estadio Metropolitano",
-    description:
-      "Los Cafeteros boast some of the best technical players in CONMEBOL, with James pulling the strings.",
-    colors: { primary: "#fcd116", secondary: "#003893" },
-    stats: { worldCupTitles: 0, appearances: 7, bestFinish: "Quarter-finals (2014)" },
+    fifaCode: "COL",
   },
-
-  // ─────────── Group L ───────────
   {
     id: "eng",
     name: "England",
     code: "gb-eng",
     flag: flag("gb-eng"),
     continent: "Europe",
-    fifaRanking: 4,
-    captain: "Harry Kane",
     group: "L",
-    stadium: "Wembley Stadium",
-    description:
-      "The Three Lions return as Euro 2024 finalists, driven by goal machine Harry Kane and Jude Bellingham.",
-    colors: { primary: "#ffffff", secondary: "#ce1124" },
-    stats: { worldCupTitles: 1, appearances: 16, bestFinish: "Champions (1966)" },
+    fifaCode: "ENG",
   },
   {
     id: "cro",
@@ -713,14 +419,8 @@ export const TEAMS: Team[] = [
     code: "hr",
     flag: flag("hr"),
     continent: "Europe",
-    fifaRanking: 9,
-    captain: "Luka Modrić",
     group: "L",
-    stadium: "Stadion Poljud",
-    description:
-      "Vatreni reached the 2018 final and 2022 semis. Modrić's masterful midfield play keeps them elite.",
-    colors: { primary: "#ff0000", secondary: "#171796" },
-    stats: { worldCupTitles: 0, appearances: 6, bestFinish: "Runners-up (2018)" },
+    fifaCode: "CRO",
   },
   {
     id: "gha",
@@ -728,14 +428,8 @@ export const TEAMS: Team[] = [
     code: "gh",
     flag: flag("gh"),
     continent: "Africa",
-    fifaRanking: 60,
-    captain: "André Ayew",
     group: "L",
-    stadium: "Accra Sports Stadium",
-    description:
-      "The Black Stars famously took Uruguay to a 2010 quarter-final and continue producing elite talent.",
-    colors: { primary: "#ce1126", secondary: "#fcd116" },
-    stats: { worldCupTitles: 0, appearances: 5, bestFinish: "Quarter-finals (2010)" },
+    fifaCode: "GHA",
   },
   {
     id: "pan",
@@ -743,14 +437,8 @@ export const TEAMS: Team[] = [
     code: "pa",
     flag: flag("pa"),
     continent: "North America",
-    fifaRanking: 43,
-    captain: "Aníbal Godoy",
     group: "L",
-    stadium: "Estadio Rommel Fernández",
-    description:
-      "La Marea Roja made their World Cup debut in 2018 and continue to grow as a CONCACAF force.",
-    colors: { primary: "#d21034", secondary: "#005aa7" },
-    stats: { worldCupTitles: 0, appearances: 2, bestFinish: "Group Stage" },
+    fifaCode: "PAN",
   },
 ];
 

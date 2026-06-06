@@ -10,10 +10,10 @@ import { Select } from "@/components/ui/select";
 import { TeamCard } from "@/components/teams/TeamCard";
 import { CONTINENTS, GROUPS } from "@/data/teams";
 import { cn } from "@/lib/utils";
-import type { Continent, GroupLetter, Team } from "@/types";
+import type { Continent, GroupLetter, TeamWithRanking } from "@/types";
 
 interface TeamsExplorerProps {
-  teams: Team[];
+  teams: TeamWithRanking[];
   initialContinent?: Continent | "All";
 }
 
@@ -33,12 +33,15 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
       if (!q) return true;
       return (
         t.name.toLowerCase().includes(q) ||
-        t.captain.toLowerCase().includes(q) ||
-        t.continent.toLowerCase().includes(q)
+        t.fifaCode.toLowerCase().includes(q) ||
+        t.continent.toLowerCase().includes(q) ||
+        (t.ranking?.confederation.toLowerCase().includes(q) ?? false)
       );
     });
     out = [...out].sort((a, b) => {
-      if (sort === "ranking") return a.fifaRanking - b.fifaRanking;
+      if (sort === "ranking") {
+        return (a.ranking?.rank ?? 9999) - (b.ranking?.rank ?? 9999);
+      }
       if (sort === "name") return a.name.localeCompare(b.name);
       return a.group.localeCompare(b.group);
     });
@@ -63,7 +66,7 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search team, captain or continent…"
+              placeholder="Search team, FIFA code or confederation…"
               className="h-10 pl-9 text-sm sm:h-11 sm:pl-10"
               aria-label="Search teams"
             />
@@ -106,7 +109,7 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
             onChange={(e) =>
               setContinent(e.target.value === "" ? "All" : (e.target.value as Continent))
             }
-            className="min-w-0 h-9 w-full text-sm font-medium ring-emerald-400/40 focus-visible:ring-2 sm:h-10 sm:w-auto sm:min-w-48"
+            className="min-w-0 h-9 w-full text-sm font-medium sm:h-10 sm:w-auto sm:min-w-48"
             aria-label="Filter by continent"
           >
             <option value="">All continents</option>
@@ -121,7 +124,7 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
             onChange={(e) =>
               setGroup(e.target.value === "" ? "All" : (e.target.value as GroupLetter))
             }
-            className="min-w-0 h-9 w-full text-sm font-medium ring-sky-400/40 focus-visible:ring-2 sm:h-10 sm:w-auto sm:min-w-44"
+            className="min-w-0 h-9 w-full text-sm font-medium sm:h-10 sm:w-auto sm:min-w-44"
             aria-label="Filter by World Cup group"
           >
             <option value="">All groups</option>
@@ -140,27 +143,27 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
           {teams.length} nations
         </p>
         <Badge variant="outline" className="shrink-0 text-[10px] sm:text-xs">
-          FIFA WC 2026
+          Live FIFA rankings
         </Badge>
       </div>
 
       {filtered.length === 0 ? (
-          <div className="rounded-3xl border border-white/10 bg-white/3 p-12 text-center">
-            <p className="text-lg font-semibold">No teams match those filters.</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Try clearing some filters or another search.
-            </p>
-            <Button onClick={clearAll} variant="secondary" size="sm" className="mt-4">
-              Reset filters
-            </Button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
-            {filtered.map((team) => (
-              <TeamCard key={team.id} team={team} />
-            ))}
-          </div>
-        )}
+        <div className="rounded-3xl border border-white/10 bg-white/3 p-12 text-center">
+          <p className="text-lg font-semibold">No teams match those filters.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Try clearing some filters or another search.
+          </p>
+          <Button onClick={clearAll} variant="secondary" size="sm" className="mt-4">
+            Reset filters
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+          {filtered.map((team) => (
+            <TeamCard key={team.id} team={team} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -200,6 +203,3 @@ function FilterGroup({ label, icon: Icon, value, options, onChange }: FilterGrou
     </div>
   );
 }
-
-
-

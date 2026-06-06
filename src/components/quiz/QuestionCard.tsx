@@ -18,7 +18,6 @@ interface QuestionCardProps {
 
 const TYPE_LABEL: Record<QuizType, string> = {
   flag: "Flag",
-  captain: "Captain",
   ranking: "Ranking",
   continent: "Continent",
   group: "Group Stage",
@@ -26,7 +25,6 @@ const TYPE_LABEL: Record<QuizType, string> = {
 
 const TYPE_ACCENT: Record<QuizType, string> = {
   flag: "from-emerald-400/20 via-teal-400/10 to-transparent",
-  captain: "from-sky-400/20 via-cyan-400/10 to-transparent",
   ranking: "from-violet-400/20 via-fuchsia-400/10 to-transparent",
   continent: "from-amber-400/20 via-orange-400/10 to-transparent",
   group: "from-pink-400/20 via-rose-400/10 to-transparent",

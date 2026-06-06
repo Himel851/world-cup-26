@@ -5,12 +5,12 @@ import type {
   QuizQuestion,
   QuizType,
   Team,
+  TeamWithRanking,
 } from "@/types";
 import { pickN, pickRandom, seedFromDate, seededRandom, shuffle } from "./utils";
 
 const QUESTION_TIME_LIMIT: Record<QuizType, number> = {
   flag: 20,
-  captain: 22,
   ranking: 18,
   continent: 18,
   group: 20,
@@ -18,10 +18,6 @@ const QUESTION_TIME_LIMIT: Record<QuizType, number> = {
 
 let counter = 0;
 const uid = (prefix: string) => `${prefix}-${Date.now().toString(36)}-${(counter++).toString(36)}`;
-
-// ─────────────────────────────────────────────────────────────────
-// Individual generators
-// ─────────────────────────────────────────────────────────────────
 
 export function generateFlagQuestion(rand: () => number = Math.random): QuizQuestion {
   const team = pickRandom(TEAMS, rand);
@@ -43,31 +39,18 @@ export function generateFlagQuestion(rand: () => number = Math.random): QuizQues
   };
 }
 
-export function generateCaptainQuestion(rand: () => number = Math.random): QuizQuestion {
-  const team = pickRandom(TEAMS, rand);
-  const distractors = pickN(
-    TEAMS.filter((t) => t.captain !== team.captain),
-    3,
-    rand,
+export function generateRankingQuestion(
+  teams: TeamWithRanking[],
+  rand: () => number = Math.random,
+): QuizQuestion {
+  const pool = teams.filter((t) => t.ranking);
+  if (pool.length < 4) {
+    return generateContinentQuestion(rand);
+  }
+  const [a, b, c, d] = pickN(pool, 4, rand);
+  const ranked = [a, b, c, d].sort(
+    (x, y) => (x.ranking!.rank) - (y.ranking!.rank),
   );
-  const options = shuffle(
-    [team.captain, ...distractors.map((t) => t.captain)],
-    rand,
-  );
-  return {
-    id: uid("cap"),
-    type: "captain",
-    prompt: `Who is the captain of ${team.name}?`,
-    options,
-    correctAnswer: team.captain,
-    timeLimit: QUESTION_TIME_LIMIT.captain,
-    meta: { teamId: team.id },
-  };
-}
-
-export function generateRankingQuestion(rand: () => number = Math.random): QuizQuestion {
-  const [a, b, c, d] = pickN(TEAMS, 4, rand);
-  const ranked = [a, b, c, d].sort((x, y) => x.fifaRanking - y.fifaRanking);
   const best = ranked[0];
   const options = shuffle([a, b, c, d].map((t) => t.name), rand);
   return {
@@ -90,10 +73,7 @@ export function generateContinentQuestion(rand: () => number = Math.random): Qui
     3,
     rand,
   );
-  const options = shuffle(
-    [correctTeam.name, ...distractors.map((t) => t.name)],
-    rand,
-  );
+  const options = shuffle([correctTeam.name, ...distractors.map((t) => t.name)], rand);
   return {
     id: uid("cont"),
     type: "continent",
@@ -115,10 +95,7 @@ export function generateGroupQuestion(rand: () => number = Math.random): QuizQue
     3,
     rand,
   );
-  const options = shuffle(
-    [correctTeam.name, ...distractors.map((t) => t.name)],
-    rand,
-  );
+  const options = shuffle([correctTeam.name, ...distractors.map((t) => t.name)], rand);
   return {
     id: uid("grp"),
     type: "group",
@@ -130,85 +107,102 @@ export function generateGroupQuestion(rand: () => number = Math.random): QuizQue
   };
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Mixed generators
-// ─────────────────────────────────────────────────────────────────
-
-const GENERATORS: Record<QuizType, (rand?: () => number) => QuizQuestion> = {
-  flag: generateFlagQuestion,
-  captain: generateCaptainQuestion,
-  ranking: generateRankingQuestion,
-  continent: generateContinentQuestion,
-  group: generateGroupQuestion,
-};
-
 export interface GenerateOptions {
   count?: number;
   types?: QuizType[];
   seed?: number;
+  teams?: TeamWithRanking[];
 }
 
+const QUIZ_TYPES: QuizType[] = ["flag", "ranking", "continent", "group"];
+
 export function generateQuiz(opts: GenerateOptions = {}): QuizQuestion[] {
-  const { count = 10, types, seed } = opts;
+  const { count = 10, types, seed, teams = [] } = opts;
   const rand = typeof seed === "number" ? seededRandom(seed) : Math.random;
-  const pool = types && types.length > 0 ? types : (Object.keys(GENERATORS) as QuizType[]);
+  const pool = types && types.length > 0 ? types : QUIZ_TYPES;
   const questions: QuizQuestion[] = [];
+
   for (let i = 0; i < count; i++) {
     const t = pool[i % pool.length];
-    // For non-seeded play we randomise the type completely each step.
     const type = typeof seed === "number" ? t : (pickRandom(pool, rand) as QuizType);
-    questions.push(GENERATORS[type](rand));
+    switch (type) {
+      case "flag":
+        questions.push(generateFlagQuestion(rand));
+        break;
+      case "ranking":
+        questions.push(generateRankingQuestion(teams, rand));
+        break;
+      case "continent":
+        questions.push(generateContinentQuestion(rand));
+        break;
+      case "group":
+        questions.push(generateGroupQuestion(rand));
+        break;
+    }
   }
   return questions;
 }
 
-/** A deterministic daily challenge that's identical for every visitor on a given day. */
-export function generateDailyChallenge(date: Date = new Date()): QuizQuestion[] {
+export function generateDailyChallenge(
+  date: Date = new Date(),
+  teams: TeamWithRanking[] = [],
+): QuizQuestion[] {
   const seed = seedFromDate(date);
-  return generateQuiz({ count: 10, seed });
+  return generateQuiz({ count: 10, seed, teams });
 }
 
-/** Generate a single team-focused quiz, used on the Team Details page. */
-export function generateTeamQuiz(team: Team, count = 5): QuizQuestion[] {
+export function generateTeamQuiz(
+  team: Team,
+  teams: TeamWithRanking[],
+  count = 5,
+): QuizQuestion[] {
   const rand = Math.random;
   const out: QuizQuestion[] = [];
 
-  // Always include a flag question for this team
   out.push({
-    ...generateFlagQuestion(rand),
+    id: uid("flag"),
+    type: "flag",
     prompt: "Identify this flag",
     imageUrl: team.flag,
     correctAnswer: team.name,
     options: shuffle(
-      [
-        team.name,
-        ...pickN(TEAMS.filter((t) => t.id !== team.id), 3, rand).map((t) => t.name),
-      ],
+      [team.name, ...pickN(TEAMS.filter((t) => t.id !== team.id), 3, rand).map((t) => t.name)],
       rand,
     ),
+    timeLimit: QUESTION_TIME_LIMIT.flag,
     meta: { teamId: team.id },
   });
 
-  // And a captain question for this team
-  out.push({
-    ...generateCaptainQuestion(rand),
-    prompt: `Who captains ${team.name}?`,
-    correctAnswer: team.captain,
-    options: shuffle(
-      [
-        team.captain,
-        ...pickN(TEAMS.filter((t) => t.captain !== team.captain), 3, rand).map(
-          (t) => t.captain,
-        ),
-      ],
-      rand,
-    ),
-    meta: { teamId: team.id },
-  });
+  const withRank = teams.find((t) => t.id === team.id);
+  if (withRank?.ranking) {
+    out.push({
+      id: uid("rank"),
+      type: "ranking",
+      prompt: `What is ${team.name}'s current FIFA world ranking?`,
+      options: shuffle(
+        [
+          `#${withRank.ranking.rank}`,
+          `#${withRank.ranking.rank + 3}`,
+          `#${withRank.ranking.rank + 7}`,
+          `#${withRank.ranking.rank + 12}`,
+        ],
+        rand,
+      ),
+      correctAnswer: `#${withRank.ranking.rank}`,
+      timeLimit: QUESTION_TIME_LIMIT.ranking,
+      meta: { teamId: team.id },
+    });
+  }
 
   while (out.length < count) {
     const type = pickRandom<QuizType>(["ranking", "continent", "group"], rand);
-    out.push(GENERATORS[type](rand));
+    if (type === "ranking") {
+      out.push(generateRankingQuestion(teams, rand));
+    } else if (type === "continent") {
+      out.push(generateContinentQuestion(rand));
+    } else {
+      out.push(generateGroupQuestion(rand));
+    }
   }
   return out;
 }

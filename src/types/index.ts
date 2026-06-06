@@ -13,28 +13,30 @@ export type GroupLetter =
 export interface Team {
   id: string;
   name: string;
-  code: string; // ISO 3166-1 alpha-2 (for placeholder flag urls)
+  code: string;
   flag: string;
   continent: Continent;
-  fifaRanking: number;
-  captain: string;
   group: GroupLetter;
-  stadium: string;
-  description: string;
-  colors: {
-    primary: string;
-    secondary: string;
-  };
-  stats?: {
-    worldCupTitles: number;
-    appearances: number;
-    bestFinish: string;
-  };
+  /** FIFA 3-letter country code for rankings API lookup */
+  fifaCode: string;
 }
+
+export interface TeamRanking {
+  rank: number;
+  prevRank: number;
+  movement: number;
+  points: number;
+  prevPoints: number;
+  ratedMatches: number;
+  confederation: string;
+}
+
+export type TeamWithRanking = Team & {
+  ranking: TeamRanking | null;
+};
 
 export type QuizType =
   | "flag"
-  | "captain"
   | "ranking"
   | "continent"
   | "group";

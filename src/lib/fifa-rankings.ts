@@ -5,6 +5,8 @@ import type {
   FifaRankingsResponse,
 } from "@/types/fifa-rankings";
 
+import { API_CACHE_REVALIDATE } from "@/lib/api-cache";
+
 export const FIFA_RANKINGS_URL =
   "https://api.fifa.com/api/v3/fifarankings/rankings/live?gender=1&sportType=0&language=en";
 
@@ -35,7 +37,7 @@ function normalize(result: FifaRankingResult): FifaRankingEntry {
 
 export async function fetchFifaRankings(): Promise<FifaRankingEntry[]> {
   const res = await fetch(FIFA_RANKINGS_URL, {
-    next: { revalidate: 3600 },
+    next: { revalidate: API_CACHE_REVALIDATE },
     headers: { Accept: "application/json" },
   });
 

@@ -6,18 +6,21 @@ import { FootballLoader } from "@/components/FootballLoader";
 import { QuizRunner } from "@/components/quiz/QuizRunner";
 import { generateDailyChallenge } from "@/lib/generateQuestions";
 import { seedFromDate } from "@/lib/utils";
-import type { QuizQuestion } from "@/types";
+import type { QuizQuestion, TeamWithRanking } from "@/types";
 
-export function DailyChallengeClient() {
+interface DailyChallengeClientProps {
+  teams: TeamWithRanking[];
+}
+
+export function DailyChallengeClient({ teams }: DailyChallengeClientProps) {
   const [questions, setQuestions] = React.useState<QuizQuestion[] | null>(null);
   const [seed, setSeed] = React.useState<number | null>(null);
 
   React.useEffect(() => {
-    // Generate on the client so all date math uses the user's local day.
     const today = new Date();
     setSeed(seedFromDate(today));
-    setQuestions(generateDailyChallenge(today));
-  }, []);
+    setQuestions(generateDailyChallenge(today, teams));
+  }, [teams]);
 
   if (!questions || seed === null) {
     return (

@@ -1,20 +1,16 @@
 import Image from "next/image";
 
-import type { Team } from "@/types";
+import { formatRank } from "@/lib/teams-with-rankings";
+import type { TeamWithRanking } from "@/types";
 
 interface TeamHeroAnimationProps {
-  team: Team;
+  team: TeamWithRanking;
 }
 
 export function TeamHeroAnimation({ team }: TeamHeroAnimationProps) {
   return (
     <div className="relative mx-auto aspect-3/2 w-full max-w-lg">
-      <div
-        className="absolute -inset-6 rounded-4xl opacity-40"
-        style={{
-          background: `radial-gradient(circle at 50% 50%, ${team.colors.primary}, transparent 70%)`,
-        }}
-      />
+      <div className="absolute -inset-6 rounded-4xl bg-emerald-400/10 opacity-60" />
       <div className="relative h-full w-full overflow-hidden rounded-4xl ring-1 ring-white/15 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.7)]">
         <Image
           src={team.flag}
@@ -27,10 +23,10 @@ export function TeamHeroAnimation({ team }: TeamHeroAnimationProps) {
         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
         <div className="absolute inset-x-0 bottom-0 flex items-center justify-between p-5">
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-white/90 drop-shadow">
-            {team.code.toUpperCase().replace("-", " · ")}
+            {team.fifaCode}
           </p>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/80 drop-shadow">
-            FIFA #{team.fifaRanking}
+            FIFA {formatRank(team)}
           </p>
         </div>
       </div>

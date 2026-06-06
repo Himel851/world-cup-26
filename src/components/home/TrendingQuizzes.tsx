@@ -4,7 +4,6 @@ import {
   Compass,
   Flag,
   MapPin,
-  Shield,
   TrendingUp,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -28,16 +27,8 @@ const QUIZZES: QuizCard[] = [
     badge: "Trending",
   },
   {
-    title: "Captain Call",
-    description: "Match every captain to their national side.",
-    href: "/quiz?type=captain",
-    icon: Shield,
-    accent: "from-sky-400/30 via-cyan-500/20 to-transparent",
-    badge: "Hot",
-  },
-  {
     title: "FIFA Ranking",
-    description: "Pick the better-ranked side from a head-to-head.",
+    description: "Pick the better-ranked side from a head-to-head using live data.",
     href: "/quiz?type=ranking",
     icon: TrendingUp,
     accent: "from-violet-400/30 via-fuchsia-500/20 to-transparent",
@@ -72,7 +63,7 @@ export function TrendingQuizzes() {
           Football Quizzes
         </h2>
         <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-          Quiz is one part of the site — challenge yourself with flags, captains, rankings, and more.
+          Quiz is one part of the site — challenge yourself with flags, live rankings, continents, and more.
         </p>
       </div>
 
