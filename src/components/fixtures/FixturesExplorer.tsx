@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, ChevronDown, Search, SlidersHorizontal, Sparkles, X } from "lucide-react";
 
 import { FixtureCard } from "@/components/fixtures/FixtureCard";
@@ -333,13 +332,9 @@ export function FixturesExplorer({
             </div>
           </details>
 
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="order-2 hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl sm:block"
-          >
+          <div className="order-2 hidden rounded-3xl border border-white/10 bg-white/3 p-6 sm:block">
             <GroupStageFiltersPanel {...groupFilterProps} />
-          </motion.div>
+          </div>
         </>
       )}
 
@@ -380,53 +375,33 @@ export function FixturesExplorer({
       </div>
 
       <div className={view === "knockout" ? "order-3" : "order-4"}>
-        <AnimatePresence mode="wait">
         {filtered.length === 0 ? (
-          <motion.div
-            key="empty"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="rounded-2xl border border-dashed border-white/15 py-12 text-center sm:rounded-3xl sm:py-16"
-          >
+          <div className="rounded-2xl border border-dashed border-white/15 py-12 text-center sm:rounded-3xl sm:py-16">
             <p className="text-lg font-semibold">No matches match those filters.</p>
             <Button variant="secondary" size="sm" className="mt-4" onClick={clearAll}>
               Reset filters
             </Button>
-          </motion.div>
+          </div>
         ) : view === "knockout" ? (
-          <motion.ul
-            key="knockout"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="grid gap-3 sm:gap-4 lg:grid-cols-2"
-          >
-            {filtered.map((fixture, i) => (
+          <ul className="grid gap-3 sm:gap-4 lg:grid-cols-2">
+            {filtered.map((fixture) => (
               <li key={fixture.id}>
-                <FixtureCard fixture={fixture} index={i} />
+                <FixtureCard fixture={fixture} />
               </li>
             ))}
-          </motion.ul>
+          </ul>
         ) : (
-          <motion.div
-            key="list"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="space-y-6 sm:space-y-10"
-          >
+          <div className="space-y-6 sm:space-y-10">
             {byDate.map(([dateLabel, dayFixtures]) => (
               <section key={dateLabel}>
                 <h2 className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-300 sm:mb-4 sm:text-sm sm:tracking-[0.2em]">
                   {dateLabel}
                 </h2>
                 <ul className="grid gap-3 sm:gap-4 lg:grid-cols-2">
-                  {dayFixtures.map((fixture, i) => (
+                  {dayFixtures.map((fixture) => (
                     <li key={fixture.id}>
                       <FixtureCard
                         fixture={fixture}
-                        index={i}
                         highlightTeamId={highlightTeamId ?? (teamId || undefined)}
                       />
                     </li>
@@ -434,9 +409,8 @@ export function FixturesExplorer({
                 </ul>
               </section>
             ))}
-          </motion.div>
+          </div>
         )}
-        </AnimatePresence>
       </div>
     </div>
   );

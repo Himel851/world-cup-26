@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -57,12 +56,7 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
 
   return (
     <div className="space-y-3 sm:space-y-6">
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-xl sm:rounded-3xl sm:p-6"
-      >
+      <div className="rounded-2xl border border-white/10 bg-white/3 p-3 sm:rounded-3xl sm:p-6">
         <div className="flex flex-col gap-2.5 sm:gap-4 lg:flex-row lg:items-center">
           <div className="relative min-w-0 flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground max-sm:h-3.5 max-sm:w-3.5" />
@@ -138,7 +132,7 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
             ))}
           </Select>
         </div>
-      </motion.div>
+      </div>
 
       <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground sm:text-sm">
         <p className="min-w-0">
@@ -150,34 +144,23 @@ export function TeamsExplorer({ teams, initialContinent = "All" }: TeamsExplorer
         </Badge>
       </div>
 
-      <AnimatePresence mode="popLayout">
-        {filtered.length === 0 ? (
-          <motion.div
-            key="empty"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="rounded-3xl border border-white/10 bg-white/[0.03] p-12 text-center backdrop-blur-xl"
-          >
+      {filtered.length === 0 ? (
+          <div className="rounded-3xl border border-white/10 bg-white/3 p-12 text-center">
             <p className="text-lg font-semibold">No teams match those filters.</p>
-            <p className="mt-1 text-sm text-[var(--muted-foreground)]">
+            <p className="mt-1 text-sm text-muted-foreground">
               Try clearing some filters or another search.
             </p>
             <Button onClick={clearAll} variant="secondary" size="sm" className="mt-4">
               Reset filters
             </Button>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            key="grid"
-            className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4"
-          >
-            {filtered.map((team, i) => (
-              <TeamCard key={team.id} team={team} index={i} />
+          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+            {filtered.map((team) => (
+              <TeamCard key={team.id} team={team} />
             ))}
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </div>
   );
 }
@@ -192,7 +175,7 @@ interface FilterGroupProps {
 
 function FilterGroup({ label, icon: Icon, value, options, onChange }: FilterGroupProps) {
   return (
-    <div className="flex max-sm:w-full items-center gap-0.5 overflow-x-auto rounded-lg border border-white/10 bg-white/[0.04] p-0.5 backdrop-blur-md sm:gap-1 sm:rounded-xl sm:p-1 cursor-pointer">
+    <div className="flex max-sm:w-full items-center gap-0.5 overflow-x-auto rounded-lg border border-white/10 bg-white/4 p-0.5 sm:gap-1 sm:rounded-xl sm:p-1 cursor-pointer">
       {Icon && (
         <span className="hidden shrink-0 items-center gap-1.5 px-2 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground md:inline-flex">
           <Icon className="h-3.5 w-3.5" />

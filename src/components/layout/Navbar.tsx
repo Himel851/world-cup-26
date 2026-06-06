@@ -3,7 +3,6 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
 import {
   Calendar,
   CalendarClock,
@@ -29,38 +28,23 @@ const LINKS = [
 export function Navbar() {
   const pathname = usePathname();
   const { theme, toggle } = useTheme();
-  const [scrolled, setScrolled] = React.useState(false);
-
-  React.useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300",
-        scrolled
-          ? "border-b border-white/10 bg-[var(--background)]/70 backdrop-blur-xl"
-          : "bg-transparent",
-      )}
-    >
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/95">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
           className="group flex items-center gap-2.5"
           aria-label="FIFA World Cup 2026 home"
         >
-          <span className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 shadow-[0_0_24px_rgba(34,211,164,0.55)] transition-transform group-hover:scale-110">
+          <span className="relative grid h-9 w-9 place-items-center rounded-xl bg-linear-to-br from-emerald-400 via-teal-500 to-cyan-500">
             <Goal className="h-5 w-5 text-emerald-950" />
           </span>
           <span className="flex flex-col leading-none">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
               FIFA &apos;26
             </span>
             <span className="text-base font-bold tracking-tight text-gradient">
@@ -69,7 +53,6 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop nav */}
         <ul className="hidden items-center gap-1 lg:flex">
           {LINKS.map((link) => {
             const Icon = link.icon;
@@ -79,21 +62,14 @@ export function Navbar() {
                 <Link
                   href={link.href}
                   className={cn(
-                    "relative inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-colors",
+                    "inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-colors",
                     active
-                      ? "text-[var(--foreground)]"
-                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]",
+                      ? "bg-white/6 text-foreground ring-1 ring-white/10"
+                      : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   <Icon className="h-4 w-4" />
                   {link.label}
-                  {active && (
-                    <motion.span
-                      layoutId="nav-pill"
-                      className="absolute inset-0 -z-10 rounded-xl bg-white/[0.06] ring-1 ring-white/10"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
-                  )}
                 </Link>
               </li>
             );
@@ -108,32 +84,14 @@ export function Navbar() {
             aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
             className="rounded-xl"
           >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={theme}
-                initial={{ y: -8, opacity: 0, rotate: -90 }}
-                animate={{ y: 0, opacity: 1, rotate: 0 }}
-                exit={{ y: 8, opacity: 0, rotate: 90 }}
-                transition={{ duration: 0.2 }}
-                className="grid place-items-center cursor-pointer"
-              >
-                {theme === "dark" ? (
-                  <Sun className="h-4 w-4" />
-                ) : (
-                  <Moon className="h-4 w-4" />
-                )}
-              </motion.span>
-            </AnimatePresence>
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
 
           <Button asChild variant="glow" size="sm" className="hidden md:inline-flex">
             <Link href="/quiz">Start Quiz</Link>
           </Button>
-
-          {/* Hamburger removed on mobile — MobileTabBar handles primary nav. Kept for theme menu/etc if needed later. */}
         </div>
       </nav>
-
     </header>
   );
 }

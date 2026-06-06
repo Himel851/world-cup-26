@@ -42,8 +42,8 @@ export function FeaturedTeams() {
       </div>
 
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {featured.map((team, i) => (
-          <TeamCard key={team.id} team={team} index={i} />
+        {featured.map((team) => (
+          <TeamCard key={team.id} team={team} />
         ))}
       </div>
     </section>

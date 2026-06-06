@@ -178,7 +178,7 @@ export default async function TeamDetailsPage({ params }: PageProps) {
         <ul className="mt-6 grid gap-4 lg:grid-cols-3">
           {teamFixtures.map((fixture, i) => (
             <li key={fixture.id}>
-              <FixtureCard fixture={fixture} index={i} highlightTeamId={team.id} />
+              <FixtureCard fixture={fixture} highlightTeamId={team.id} />
             </li>
           ))}
         </ul>
@@ -207,7 +207,7 @@ export default async function TeamDetailsPage({ params }: PageProps) {
           {groupMates.map((mate) => (
             <li
               key={mate.id}
-              className="group rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-xl transition-all hover:border-emerald-400/40 hover:bg-white/[0.05]"
+              className="group rounded-2xl border border-white/10 bg-white/3 p-4 transition-colors hover:border-emerald-400/40 hover:bg-white/5"
             >
               <Link href={`/teams/${mate.id}`} className="flex items-center gap-3">
                 <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-md ring-1 ring-white/10">
@@ -244,7 +244,7 @@ interface InfoCardProps {
 
 function InfoCard({ icon: Icon, label, value, accent }: InfoCardProps) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition-all hover:border-white/20">
+    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-5 transition-colors hover:border-white/20">
       <div className="flex items-center justify-between">
         <span className={`grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/[0.05] ${accent}`}>
           <Icon className="h-5 w-5" />

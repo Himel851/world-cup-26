@@ -1,8 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { MapPin, Trophy } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +9,6 @@ import type { Fixture } from "@/types";
 
 interface FixtureCardProps {
   fixture: Fixture;
-  index?: number;
   highlightTeamId?: string;
   className?: string;
 }
@@ -45,8 +41,7 @@ function TeamRow({
       className={cn(
         "flex min-h-10 min-w-0 w-full flex-1 items-center gap-1.5 rounded-md px-0.5 py-0 transition-colors hover:bg-white/6 sm:min-h-0 sm:gap-2.5 sm:rounded-xl sm:p-2",
         side === "away" && "flex-row-reverse text-right",
-        isHighlight &&
-          "rounded-md bg-emerald-400/10 ring-1 ring-emerald-400/25 sm:rounded-xl",
+        isHighlight && "rounded-md bg-emerald-400/10 ring-1 ring-emerald-400/25 sm:rounded-xl",
       )}
     >
       <div className="relative h-7 w-9 shrink-0 overflow-hidden rounded-md ring-1 ring-white/10 sm:h-9 sm:w-12">
@@ -59,20 +54,12 @@ function TeamRow({
         >
           {team.name}
         </p>
-        {/* <p className="truncate text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">
-          {side === "home" ? "Home" : "Away"}
-        </p> */}
       </div>
     </Link>
   );
 }
 
-export function FixtureCard({
-  fixture,
-  index = 0,
-  highlightTeamId,
-  className,
-}: FixtureCardProps) {
+export function FixtureCard({ fixture, highlightTeamId, className }: FixtureCardProps) {
   const isKnockoutMilestone = Boolean(fixture.label);
   const statusLabel =
     fixture.status === "scheduled"
@@ -84,13 +71,9 @@ export function FixtureCard({
           : fixture.status;
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-24px" }}
-      transition={{ duration: 0.4, delay: Math.min(index * 0.03, 0.35) }}
+    <article
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-3 backdrop-blur-xl transition-colors hover:border-emerald-400/30 sm:p-5",
+        "relative overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-3 transition-colors hover:border-emerald-400/30 sm:p-5",
         fixture.stage === "final" && "border-amber-400/30 hover:border-amber-400/50",
         className,
       )}
@@ -134,7 +117,7 @@ export function FixtureCard({
       </div>
 
       {isKnockoutMilestone ? (
-        <motion.div className="mt-3 flex items-center gap-2.5 py-1 sm:mt-4 sm:gap-3 sm:py-2">
+        <div className="mt-3 flex items-center gap-2.5 py-1 sm:mt-4 sm:gap-3 sm:py-2">
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-amber-400/15 text-amber-300 ring-1 ring-amber-400/30 sm:h-12 sm:w-12 sm:rounded-xl">
             <Trophy className="h-5 w-5 sm:h-6 sm:w-6" />
           </span>
@@ -144,7 +127,7 @@ export function FixtureCard({
               Teams confirmed after the group stage
             </p>
           </div>
-        </motion.div>
+        </div>
       ) : (
         <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1 sm:mt-4 sm:gap-2">
           <TeamRow
@@ -179,6 +162,6 @@ export function FixtureCard({
           {fixture.venue.name} · {fixture.venue.city}, {fixture.venue.country}
         </span>
       </p>
-    </motion.article>
+    </article>
   );
 }

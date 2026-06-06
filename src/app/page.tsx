@@ -1,31 +1,17 @@
-import dynamic from "next/dynamic";
-
 import { FeaturedTeamsStatic } from "@/components/home/FeaturedTeamsStatic";
+import { DailyChallengeCard } from "@/components/home/DailyChallengeCard";
 import { GroupsGrid } from "@/components/home/GroupsGrid";
+import { TrendingQuizzes } from "@/components/home/TrendingQuizzes";
 import { TournamentCountdown } from "@/components/home/TournamentCountdown";
 import { TournamentStats } from "@/components/home/TournamentStats";
-
-const TrendingQuizzes = dynamic(
-  () =>
-    import("@/components/home/TrendingQuizzes").then((m) => ({
-      default: m.TrendingQuizzes,
-    })),
-  { loading: () => null },
-);
-
-const DailyChallengeCard = dynamic(
-  () =>
-    import("@/components/home/DailyChallengeCard").then((m) => ({
-      default: m.DailyChallengeCard,
-    })),
-  { loading: () => null },
-);
+import { WorldCupWinners } from "@/components/home/WorldCupWinners";
 
 export default function HomePage() {
   return (
     <>
       <TournamentCountdown />
       <TournamentStats />
+      <WorldCupWinners />
       <GroupsGrid />
       <FeaturedTeamsStatic />
       <TrendingQuizzes />
