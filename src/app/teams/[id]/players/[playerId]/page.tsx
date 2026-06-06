@@ -51,7 +51,6 @@ export default async function PlayerDetailPage({ params }: PageProps) {
   }
 
   const player = await getPlayerForTeam(id, Number(playerId), team.fifaCode, team.name);
-  console.log(player);
   if (!player) notFound();
 
   return (
