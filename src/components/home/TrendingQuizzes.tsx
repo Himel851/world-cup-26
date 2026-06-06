@@ -80,13 +80,13 @@ export function TrendingQuizzes() {
         transition={{ duration: 0.5 }}
       >
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
-          Trending Now
+          Test Your Knowledge
         </p>
         <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-          Pick your quiz mode
+          Football Quizzes
         </h2>
         <p className="mt-2 max-w-xl text-sm text-[var(--muted-foreground)]">
-          Every question is generated dynamically from real team data. No two runs the same.
+          Quiz is one part of the site — challenge yourself with flags, captains, rankings, and more.
         </p>
       </motion.div>
 

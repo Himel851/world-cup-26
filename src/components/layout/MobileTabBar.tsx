@@ -15,8 +15,8 @@ import { cn } from "@/lib/utils";
 
 const TABS = [
   { href: "/", label: "Home", icon: Goal },
-  { href: "/teams", label: "Teams", icon: Users },
   { href: "/fixtures", label: "Fixtures", icon: CalendarClock },
+  { href: "/teams", label: "Teams", icon: Users },
   { href: "/quiz", label: "Quiz", icon: Gamepad2 },
   { href: "/daily-challenge", label: "Daily", icon: Calendar },
 ] as const;

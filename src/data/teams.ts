@@ -1,11 +1,12 @@
-import type { Team } from "@/types";
+import type { Team, GroupLetter } from "@/types";
 
 /**
  * FIFA World Cup 2026 — 48 nations across 12 groups (A–L).
  * Group draw matches the official 2026 World Cup group stage.
  * Flags are sourced from the free https://flagcdn.com placeholder service.
  */
-const flag = (code: string) => `https://flagcdn.com/w320/${code.toLowerCase()}.png`;
+/** Smaller CDN flags — faster loads than w320 across list views. */
+const flag = (code: string) => `https://flagcdn.com/w80/${code.toLowerCase()}.png`;
 
 export const TEAMS: Team[] = [
   // ─────────── Group A ───────────
@@ -769,3 +770,7 @@ export const CONTINENTS = [
 ] as const;
 
 export const GROUPS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"] as const;
+
+export function getTeamsByGroup(group: GroupLetter): Team[] {
+  return TEAMS.filter((t) => t.group === group);
+}

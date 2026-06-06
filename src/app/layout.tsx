@@ -23,35 +23,36 @@ const siteUrl = "https://football-world-cup-26.vercel.app";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "World Cup Challenge · FIFA 2026",
-    template: "%s · World Cup Challenge",
+    default: "FIFA World Cup 2026 · Groups, Fixtures & Quiz",
+    template: "%s · World Cup 2026",
   },
   description:
-    "Test your football IQ across all 48 FIFA World Cup 2026 nations. Flag quizzes, captains, rankings, daily challenges and a global leaderboard.",
+    "Everything for FIFA World Cup 2026 — 48 nations, 12 groups, full schedule, squads, and football quizzes. Countdown to kickoff in Bangladesh Standard Time.",
   keywords: [
     "FIFA World Cup 2026",
+    "World Cup Groups",
+    "World Cup Fixtures",
     "Football Quiz",
-    "Soccer Quiz",
     "National Teams",
-    "World Cup Challenge",
+    "World Cup Schedule",
   ],
-  authors: [{ name: "World Cup Challenge" }],
+  authors: [{ name: "World Cup 2026" }],
   verification: {
     google: "Y_HFm9CuKforMqO1C2lrRoppIjHYHqUxTTgPtscT6Fs",
   },
   openGraph: {
-    title: "World Cup Challenge",
-    description: "Test Your Football IQ — FIFA World Cup 2026 quizzes.",
+    title: "FIFA World Cup 2026",
+    description: "Groups, fixtures, squads & quizzes for the 2026 World Cup.",
     type: "website",
     url: "/",
-    siteName: "World Cup Challenge",
+    siteName: "World Cup 2026",
     locale: "en_US",
     images: [
       {
         url: "/favicon.ico",
         width: 1200,
         height: 630,
-        alt: "World Cup Challenge",
+        alt: "World Cup 2026",
       },
     ],
   },

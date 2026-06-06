@@ -20,10 +20,9 @@ import { cn } from "@/lib/utils";
 
 const LINKS = [
   { href: "/", label: "Home", icon: Goal },
-  { href: "/teams", label: "Teams", icon: Users },
   { href: "/fixtures", label: "Fixtures", icon: CalendarClock },
+  { href: "/teams", label: "Teams", icon: Users },
   { href: "/quiz", label: "Quiz", icon: Gamepad2 },
-  // { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { href: "/daily-challenge", label: "Daily", icon: Calendar },
 ] as const;
 
@@ -55,7 +54,7 @@ export function Navbar() {
         <Link
           href="/"
           className="group flex items-center gap-2.5"
-          aria-label="World Cup Challenge home"
+          aria-label="FIFA World Cup 2026 home"
         >
           <span className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 shadow-[0_0_24px_rgba(34,211,164,0.55)] transition-transform group-hover:scale-110">
             <Goal className="h-5 w-5 text-emerald-950" />
@@ -65,7 +64,7 @@ export function Navbar() {
               FIFA &apos;26
             </span>
             <span className="text-base font-bold tracking-tight text-gradient">
-              World Cup Challenge
+              World Cup 2026
             </span>
           </span>
         </Link>

@@ -3,19 +3,19 @@ import { Code, Goal, MessageCircle, PlayCircle } from "lucide-react";
 
 const NAV_GROUPS = [
   {
-    title: "Play",
+    title: "Tournament",
     links: [
-      { href: "/quiz", label: "Random Quiz" },
-      { href: "/daily-challenge", label: "Daily Challenge" },
-      // { href: "/leaderboard", label: "Leaderboard" },
-    ],
-  },
-  {
-    title: "Explore",
-    links: [
+      { href: "/fixtures", label: "Full Schedule" },
       { href: "/teams", label: "All Teams" },
       { href: "/teams?continent=Europe", label: "Europe" },
       { href: "/teams?continent=South+America", label: "South America" },
+    ],
+  },
+  {
+    title: "Quiz",
+    links: [
+      { href: "/quiz", label: "Random Quiz" },
+      { href: "/daily-challenge", label: "Daily Challenge" },
     ],
   },
   {
@@ -44,11 +44,11 @@ export function Footer() {
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 shadow-[0_0_24px_rgba(34,211,164,0.55)]">
               <Goal className="h-5 w-5 text-emerald-950" />
             </span>
-            <span className="text-lg font-bold text-gradient">World Cup Challenge</span>
+            <span className="text-lg font-bold text-gradient">World Cup 2026</span>
           </Link>
           <p className="mt-4 max-w-sm text-sm text-[var(--muted-foreground)]">
-            Test your football IQ across 48 nations heading to the FIFA World Cup 2026. Dynamic
-            questions, daily challenges and global leaderboards.
+            Groups, fixtures, squads and quizzes for the FIFA World Cup 2026 — 48 nations across
+            USA, Canada and Mexico.
           </p>
           <div className="mt-6 flex items-center gap-2">
             {SOCIALS.map((s) => {
@@ -90,7 +90,7 @@ export function Footer() {
 
       <div className="border-t border-white/5">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-[var(--muted-foreground)] sm:flex-row sm:px-6 lg:px-8">
-          <p>© {new Date().getFullYear()} World Cup Challenge. Not affiliated with FIFA.</p>
+          <p>© {new Date().getFullYear()} World Cup 2026. Not affiliated with FIFA.</p>
           <p>Built with Next.js · Tailwind · Framer Motion</p>
         </div>
       </div>
