@@ -7,6 +7,7 @@ import {
   CalendarClock,
   Gamepad2,
   Goal,
+  TrendingUp,
   Users,
 } from "lucide-react";
 
@@ -16,6 +17,7 @@ const TABS = [
   { href: "/", label: "Home", icon: Goal },
   { href: "/fixtures", label: "Fixtures", icon: CalendarClock },
   { href: "/teams", label: "Teams", icon: Users },
+  { href: "/rankings", label: "Rank", icon: TrendingUp },
   { href: "/quiz", label: "Quiz", icon: Gamepad2 },
   { href: "/daily-challenge", label: "Daily", icon: Calendar },
 ] as const;
@@ -36,7 +38,7 @@ export function MobileTabBar() {
         aria-label="Primary"
         className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-background pb-[env(safe-area-inset-bottom)] lg:hidden"
       >
-        <ul className="mx-auto grid max-w-lg grid-cols-5 px-1">
+        <ul className="mx-auto grid max-w-lg grid-cols-6 px-0.5">
           {TABS.map((tab) => {
             const Icon = tab.icon;
             const active = isActive(tab.href);
@@ -46,17 +48,17 @@ export function MobileTabBar() {
                   href={tab.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "relative flex h-14 touch-manipulation flex-col items-center justify-center gap-0.5 px-1 text-[10px] font-medium tracking-tight transition-colors focus-visible:outline-none",
+                    "relative flex h-14 touch-manipulation flex-col items-center justify-center gap-0.5 px-0.5 text-[9px] font-medium tracking-tight transition-colors focus-visible:outline-none",
                     active ? "text-emerald-300" : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   {active && (
                     <span
                       aria-hidden
-                      className="absolute inset-x-4 top-0 h-[2px] rounded-full bg-emerald-400"
+                      className="absolute inset-x-2 top-0 h-[2px] rounded-full bg-emerald-400"
                     />
                   )}
-                  <Icon className="relative h-[18px] w-[18px]" />
+                  <Icon className="relative h-[17px] w-[17px]" />
                   <span className="relative leading-none">{tab.label}</span>
                 </Link>
               </li>

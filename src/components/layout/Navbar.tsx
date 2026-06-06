@@ -10,6 +10,7 @@ import {
   Goal,
   Moon,
   Sun,
+  TrendingUp,
   Users,
 } from "lucide-react";
 
@@ -21,6 +22,7 @@ const LINKS = [
   { href: "/", label: "Home", icon: Goal },
   { href: "/fixtures", label: "Fixtures", icon: CalendarClock },
   { href: "/teams", label: "Teams", icon: Users },
+  { href: "/rankings", label: "Ranking", icon: TrendingUp },
   { href: "/quiz", label: "Quiz", icon: Gamepad2 },
   { href: "/daily-challenge", label: "Daily", icon: Calendar },
 ] as const;

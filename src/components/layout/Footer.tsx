@@ -7,6 +7,7 @@ const NAV_GROUPS = [
     links: [
       { href: "/fixtures", label: "Full Schedule" },
       { href: "/teams", label: "All Teams" },
+      { href: "/rankings", label: "FIFA Rankings" },
       { href: "/teams?continent=Europe", label: "Europe" },
       { href: "/teams?continent=South+America", label: "South America" },
     ],
