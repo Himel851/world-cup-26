@@ -1,6 +1,7 @@
 import { FeaturedTeamsStatic } from "@/components/home/FeaturedTeamsStatic";
-import { DailyChallengeCard } from "@/components/home/DailyChallengeCard";
+// import { DailyChallengeCard } from "@/components/home/DailyChallengeCard";
 import { GroupsGrid } from "@/components/home/GroupsGrid";
+import { HostStadiums } from "@/components/home/HostStadiums";
 import { TrendingQuizzes } from "@/components/home/TrendingQuizzes";
 import { TournamentCountdown } from "@/components/home/TournamentCountdown";
 import { TournamentStats } from "@/components/home/TournamentStats";
@@ -13,9 +14,10 @@ export default function HomePage() {
       <TournamentStats />
       <WorldCupWinners />
       <GroupsGrid />
+      <HostStadiums />
       <FeaturedTeamsStatic />
       <TrendingQuizzes />
-      <DailyChallengeCard />
+      {/* <DailyChallengeCard /> */}
     </>
   );
 }
