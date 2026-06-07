@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Footer } from "@/components/layout/Footer";
 import { MobileTabBar } from "@/components/layout/MobileTabBar";
 import { Navbar } from "@/components/layout/Navbar";
+import { SiteAtmosphere } from "@/components/layout/SiteAtmosphere";
 import { ThemeProvider } from "@/components/theme-provider";
 
 import "./globals.css";
@@ -75,10 +76,12 @@ export default function RootLayout({
     >
       <body className="relative min-h-full flex flex-col">
         <ThemeProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <MobileTabBar />
+          <SiteAtmosphere>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <MobileTabBar />
+          </SiteAtmosphere>
         </ThemeProvider>
       </body>
     </html>

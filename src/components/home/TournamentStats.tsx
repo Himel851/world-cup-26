@@ -32,8 +32,8 @@ const STATS = [
 export function TournamentStats() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-10">
-        <div className="pointer-events-none absolute inset-0 pitch-grid opacity-20" />
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/45 p-6 shadow-[0_16px_60px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-lg sm:p-10">
+        <div className="pointer-events-none absolute inset-0 pitch-grid opacity-10" />
 
         <div className="relative grid grid-cols-2 gap-6 md:grid-cols-4">
           {STATS.map((s) => {

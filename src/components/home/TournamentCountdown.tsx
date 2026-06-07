@@ -34,12 +34,9 @@ export function TournamentCountdown() {
 
   return (
     <section className="relative isolate overflow-hidden pt-10 sm:pt-14 lg:pt-20">
-      <div className="pointer-events-none absolute inset-0 pitch-grid opacity-25" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_500px_at_50%_0%,rgba(34,211,164,0.12),transparent_65%)]" />
-
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-10">
-          <div className="pointer-events-none absolute inset-0 pitch-grid opacity-20" />
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/45 p-6 shadow-[0_16px_60px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-lg sm:p-10">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_400px_at_50%_0%,rgba(34,211,164,0.08),transparent_70%)]" />
 
           <div className="relative text-center">
             <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-300">

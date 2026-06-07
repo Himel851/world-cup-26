@@ -33,9 +33,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const team = await getTeamWithRanking(id);
   if (!team) return { title: "Team not found" };
   return {
-    title: team.name,
-    description: `${team.name} at FIFA World Cup 2026 — Group ${team.group}, live FIFA ranking ${formatRank(team)}.`,
-    openGraph: { images: [team.flag] },
+    title: team?.name,
+    description: `${team?.name} at FIFA World Cup 2026 — Group ${team?.group}, live FIFA ranking ${formatRank(team)}.`,
+    openGraph: { images: [team?.flag] },
   };
 }
 
@@ -48,11 +48,13 @@ export default async function TeamDetailsPage({ params }: PageProps) {
       ? getTeamSquadByFifaCode(TEAMS_BY_ID[id]?.fifaCode ?? "", TEAMS_BY_ID[id]?.name ?? "")
       : null,
   ]);
+
+  console.log(squad);
   if (!team) notFound();
 
-  const groupMates = allTeams.filter((t) => t.group === team.group && t.id !== team.id);
-  const teamFixtures = getFixturesForTeam(team.id);
-  const r = team.ranking;
+  const groupMates = allTeams.filter((t) => t.group === team?.group && t.id !== team?.id);
+  const teamFixtures = getFixturesForTeam(team?.id);
+  const r = team?.ranking;
 
   return (
     <div className="relative">
@@ -70,13 +72,13 @@ export default async function TeamDetailsPage({ params }: PageProps) {
 
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
-              Group {team.group} · {r?.confederation ?? team.continent}
+              Group {team?.group} · {r?.confederation ?? team?.continent}
             </p>
             <h1 className="mt-2 flex flex-wrap items-center gap-3 sm:gap-4">
               <span className="relative h-9 w-12 shrink-0 overflow-hidden rounded-md ring-1 ring-white/15 sm:h-11 sm:w-14">
                 <Image
-                  src={team.flag}
-                  alt={`${team.name} flag`}
+                  src={team?.flag}
+                  alt={`${team?.name} flag`}
                   fill
                   sizes="48px"
                   className="object-cover"
@@ -84,29 +86,29 @@ export default async function TeamDetailsPage({ params }: PageProps) {
                 />
               </span>
               <span className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-                {team.name}
+                {team?.name}
               </span>
             </h1>
             <p className="mt-4 max-w-xl text-muted-foreground sm:text-lg">
-              Live FIFA ranking data for {team.name} at World Cup 2026 — Group {team.group}.
+              Live FIFA ranking data for {team?.name} at World Cup 2026 — Group {team?.group}.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2">
               <Badge variant="primary">FIFA {formatRank(team)}</Badge>
               <Badge variant="secondary">{formatPoints(team)} pts</Badge>
-              <Badge variant="accent">Group {team.group}</Badge>
+              <Badge variant="accent">Group {team?.group}</Badge>
               {r && <Badge variant="outline">{r.confederation}</Badge>}
             </div>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg" variant="default">
-                <Link href={`/quiz?team=${team.id}`}>
+                <Link href={`/quiz?team=${team?.id}`}>
                   <Sparkles className="h-4 w-4" />
                   Play Quiz
                 </Link>
               </Button>
               <Button asChild size="lg" variant="secondary">
-                <Link href={`/fixtures?team=${team.id}`}>
+                <Link href={`/fixtures?team=${team?.id}`}>
                   <Calendar className="h-4 w-4" />
                   View fixtures
                 </Link>
@@ -123,7 +125,7 @@ export default async function TeamDetailsPage({ params }: PageProps) {
       </div>
 
       {squad ? (
-        <TeamSquadSection squad={squad} localTeamId={team.id} />
+        <TeamSquadSection squad={squad} localTeamId={team?.id} />
       ) : (
         <SquadUnavailable reason={squadUnavailableReason()} />
       )}
@@ -134,14 +136,14 @@ export default async function TeamDetailsPage({ params }: PageProps) {
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-sky-300">Official schedule</p>
             <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Group stage fixtures</h2>
           </div>
-          <Link href={`/fixtures?team=${team.id}`} className="text-sm font-semibold text-emerald-300 hover:text-emerald-200">
+          <Link href={`/fixtures?team=${team?.id}`} className="text-sm font-semibold text-emerald-300 hover:text-emerald-200">
             All fixtures
           </Link>
         </div>
         <ul className="mt-6 grid gap-4 lg:grid-cols-3">
           {teamFixtures.map((fixture) => (
             <li key={fixture.id}>
-              <FixtureCard fixture={fixture} highlightTeamId={team.id} />
+              <FixtureCard fixture={fixture} highlightTeamId={team?.id} />
             </li>
           ))}
         </ul>
@@ -150,7 +152,7 @@ export default async function TeamDetailsPage({ params }: PageProps) {
       <div className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between gap-2">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">Group {team.group}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">Group {team?.group}</p>
             <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Group stage opponents</h2>
           </div>
           <Link href="/teams" className="text-sm font-semibold text-emerald-300 hover:text-emerald-200">
