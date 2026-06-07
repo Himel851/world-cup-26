@@ -325,8 +325,7 @@ export function QuizCard({
               t.cta,
             )}
           >
-            <span className="sm:hidden">Start</span>
-            <span className="hidden sm:inline">Start Quiz</span>
+            <span className="">Play Quiz</span>
             <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5 sm:size-4" />
           </div>
         </div>

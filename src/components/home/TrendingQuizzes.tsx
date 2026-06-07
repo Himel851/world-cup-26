@@ -1,101 +1,105 @@
+"use client";
+
 import Link from "next/link";
-import {
-  ArrowRight,
-  Compass,
-  Flag,
-  MapPin,
-  TrendingUp,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { ArrowRight, Compass, Flag, MapPin, Sparkles, TrendingUp } from "lucide-react";
 
-interface QuizCard {
-  title: string;
-  description: string;
-  href: string;
-  icon: LucideIcon;
-  accent: string;
-  badge: string;
-}
+import { QuizCard, type QuizCardTone } from "@/components/quiz/QuizCard";
 
-const QUIZZES: QuizCard[] = [
+const QUIZZES = [
   {
     title: "Flag Master",
-    description: "48 nations. One flag. Two-second window before time runs out.",
+    description: "48 nations. One flag. Beat the clock before time runs out.",
     href: "/quiz?type=flag",
     icon: Flag,
-    accent: "from-emerald-400/30 via-teal-500/20 to-transparent",
+    accent: "from-emerald-400/25 via-teal-500/12 to-transparent",
     badge: "Trending",
+    tone: "emerald" as QuizCardTone,
+    metadata: "10 questions · ~3 min",
+    choiceHint: "Flag identification",
   },
   {
     title: "FIFA Ranking",
-    description: "Pick the better-ranked side from a head-to-head using live data.",
+    description: "Head-to-head duels — pick who sits higher on the live ladder.",
     href: "/quiz?type=ranking",
     icon: TrendingUp,
-    accent: "from-violet-400/30 via-fuchsia-500/20 to-transparent",
-    badge: "New",
+    accent: "from-violet-400/25 via-fuchsia-500/12 to-transparent",
+    badge: "Live data",
+    tone: "violet" as QuizCardTone,
+    metadata: "Live FIFA data · ~3 min",
+    choiceHint: "Ranking battles",
   },
   {
     title: "Continental",
-    description: "Identify the continent a national team plays for.",
+    description: "Lock in the right continent for every national team on the card.",
     href: "/quiz?type=continent",
     icon: Compass,
-    accent: "from-amber-400/30 via-orange-500/20 to-transparent",
+    accent: "from-amber-400/25 via-orange-500/12 to-transparent",
     badge: "Easy",
+    tone: "amber" as QuizCardTone,
+    metadata: "6 continents · ~3 min",
+    choiceHint: "Continent quiz",
   },
   {
     title: "Group Draw",
-    description: "Which team landed in Group A, F, or L? Find out.",
+    description: "Which side belongs in Group A, F, or L? Test your draw knowledge.",
     href: "/quiz?type=group",
     icon: MapPin,
-    accent: "from-pink-400/30 via-rose-500/20 to-transparent",
+    accent: "from-pink-400/25 via-rose-500/12 to-transparent",
     badge: "Pro",
+    tone: "rose" as QuizCardTone,
+    metadata: "12 groups · ~3 min",
+    choiceHint: "Group draw",
   },
-];
+] as const;
 
 export function TrendingQuizzes() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div>
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
-          Test Your Knowledge
-        </p>
-        <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-          Football Quizzes
-        </h2>
-        <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-          Quiz is one part of the site — challenge yourself with flags, live rankings, continents, and more.
-        </p>
-      </div>
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/45 p-6 shadow-[0_16px_60px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-lg sm:p-8 lg:p-10">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_400px_at_100%_0%,rgba(167,139,250,0.1),transparent_55%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(700px_350px_at_0%_100%,rgba(34,211,164,0.08),transparent_50%)]" />
+        <div className="pointer-events-none absolute inset-0 pitch-grid opacity-[0.06]" />
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {QUIZZES.map((q) => {
-          const Icon = q.icon;
-          return (
-            <Link
+        <div className="relative flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
+              <Sparkles className="h-3.5 w-3.5" />
+              Test Your Knowledge
+            </p>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Football Quizzes</h2>
+            <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+              Four quick modes — flags, live rankings, continents, and the group draw. Pick one
+              and play instantly.
+            </p>
+          </div>
+
+          <Link
+            href="/quiz"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-emerald-300 transition-colors hover:border-emerald-400/40 hover:bg-emerald-500/10 hover:text-emerald-200"
+          >
+            All quiz modes
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="relative mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
+          {QUIZZES.map((q, i) => (
+            <QuizCard
               key={q.title}
+              title={q.title}
+              description={q.description}
               href={q.href}
-              className="group relative block h-full overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-6 transition-colors hover:border-emerald-400/40"
-            >
-              <div
-                className={`pointer-events-none absolute inset-0 bg-linear-to-br ${q.accent} opacity-50`}
-              />
-              <div className="relative flex items-start justify-between">
-                <div className="grid h-12 w-12 place-items-center rounded-2xl border border-white/10 bg-white/6">
-                  <Icon className="h-5 w-5 text-emerald-300" />
-                </div>
-                <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-300">
-                  {q.badge}
-                </span>
-              </div>
-              <h3 className="relative mt-5 text-xl font-bold tracking-tight">{q.title}</h3>
-              <p className="relative mt-2 text-sm text-muted-foreground">{q.description}</p>
-              <div className="relative mt-6 flex items-center gap-1.5 text-sm font-semibold text-emerald-300">
-                Play now
-                <ArrowRight className="h-4 w-4" />
-              </div>
-            </Link>
-          );
-        })}
+              icon={q.icon}
+              accent={q.accent}
+              badge={q.badge}
+              tone={q.tone}
+              metadata={q.metadata}
+              choiceHint={q.choiceHint}
+              index={i}
+              pickerMode
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
