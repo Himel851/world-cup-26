@@ -72,6 +72,11 @@ function logApiWarning(message: string) {
   }
 }
 
+/** Always logs — visible in Vercel Runtime Logs (not browser console). */
+function logSquadDebug(step: string, data?: unknown) {
+  console.log(`[squad-debug] ${step}`, data ?? "");
+}
+
 async function throttle() {
   const elapsed = Date.now() - lastRequestAt;
   if (elapsed < MIN_REQUEST_GAP_MS) {
@@ -121,7 +126,10 @@ function fetchCached<T>(path: string, cacheKey: string[]): Promise<ApiFootballEn
     ["api-football", ...cacheKey],
     { revalidate: cacheTtl() },
   )().catch((error: unknown) => {
-    if (error instanceof ApiFootballError) logApiWarning(error.message);
+    if (error instanceof ApiFootballError) {
+      logApiWarning(error.message);
+      logSquadDebug("fetchCached error", { path, cacheKey, message: error.message, status: error.status });
+    }
     return null;
   });
 }
@@ -281,9 +289,16 @@ async function resolveApiTeam(
   teamName: string,
 ): Promise<ApiFootballTeam | null> {
   const code = fifaCode.toUpperCase();
+  logSquadDebug("resolveApiTeam start", { fifaCode: code, teamName, season: getApiSeason() });
 
-  const fromLeague = (await getQualifiedTeams()).find((t) => codesMatch(code, t.code));
-  if (fromLeague) return fromLeague;
+  const qualifiedTeams = await getQualifiedTeams();
+  logSquadDebug("getQualifiedTeams", { count: qualifiedTeams.length, season: getApiSeason() });
+
+  const fromLeague = qualifiedTeams.find((t) => codesMatch(code, t.code));
+  if (fromLeague) {
+    logSquadDebug("resolveApiTeam matched via WC league", { teamId: fromLeague.id, name: fromLeague.name });
+    return fromLeague;
+  }
 
   const confederations = await confederationByTeamCode();
   const queries = [
@@ -293,12 +308,18 @@ async function resolveApiTeam(
 
   for (const path of queries) {
     const data = await fetchCached<RawApiTeam[]>(path, ["team-lookup", path]);
+    logSquadDebug("team lookup attempt", { path, resultCount: data?.response.length ?? 0 });
     if (!data?.response.length) continue;
 
     const match = pickNationalTeam(data.response, code, teamName);
-    if (match) return mapRawTeam(match, confederations);
+    if (match) {
+      const mapped = mapRawTeam(match, confederations);
+      logSquadDebug("resolveApiTeam matched via lookup", { path, teamId: mapped.id, name: mapped.name });
+      return mapped;
+    }
   }
 
+  logSquadDebug("resolveApiTeam failed — no match", { fifaCode: code, teamName });
   return null;
 }
 
@@ -320,6 +341,12 @@ export const getTeamSquad = cache(
 
     const path = `/players/squads?team=${teamId}`;
     const squadData = await fetchCached<RawSquadResponse[]>(path, ["squad", String(teamId)]);
+    logSquadDebug("getTeamSquad fetch", {
+      teamId,
+      path,
+      hasResponse: Boolean(squadData?.response[0]),
+      playerCount: squadData?.response[0]?.players.length ?? 0,
+    });
     if (!squadData?.response[0]) return null;
 
     const squad = squadData.response[0];
@@ -375,17 +402,46 @@ export async function getTeamSquadByFifaCode(
   fifaCode: string,
   teamName: string,
 ): Promise<TeamSquadData | null> {
-  if (!fifaCode || !teamName || !isApiFootballConfigured()) return null;
+  logSquadDebug("getTeamSquadByFifaCode start", {
+    fifaCode,
+    teamName,
+    apiConfigured: isApiFootballConfigured(),
+    apiKeyLength: API_FOOTBALL_KEY.trim().length,
+    season: getApiSeason(),
+    env: process.env.NODE_ENV,
+  });
+
+  if (!fifaCode || !teamName || !isApiFootballConfigured()) {
+    logSquadDebug("getTeamSquadByFifaCode skipped", {
+      hasFifaCode: Boolean(fifaCode),
+      hasTeamName: Boolean(teamName),
+      apiConfigured: isApiFootballConfigured(),
+    });
+    return null;
+  }
 
   try {
     const apiTeam = await resolveApiTeam(fifaCode, teamName);
     if (!apiTeam) {
       logApiWarning(`No API team matched for ${teamName} (${fifaCode})`);
+      logSquadDebug("getTeamSquadByFifaCode no apiTeam", { fifaCode, teamName });
       return null;
     }
-    return getTeamSquad(apiTeam.id, apiTeam);
+
+    const squad = await getTeamSquad(apiTeam.id, apiTeam);
+    logSquadDebug("getTeamSquadByFifaCode result", {
+      fifaCode,
+      teamName,
+      apiTeamId: apiTeam.id,
+      squadLoaded: Boolean(squad),
+      playerCount: squad?.players.length ?? 0,
+    });
+    return squad;
   } catch (error) {
-    if (error instanceof ApiFootballError) logApiWarning(error.message);
+    if (error instanceof ApiFootballError) {
+      logApiWarning(error.message);
+      logSquadDebug("getTeamSquadByFifaCode error", { message: error.message, status: error.status });
+    }
     return null;
   }
 }

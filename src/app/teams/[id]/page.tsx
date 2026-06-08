@@ -50,16 +50,27 @@ export async function generateMetadata({
 
 export default async function TeamDetailsPage({ params }: PageProps) {
   const { id } = await params;
+  const apiConfigured = isApiFootballConfigured();
+  const fifaCode = TEAMS_BY_ID[id]?.fifaCode ?? "";
+  const teamName = TEAMS_BY_ID[id]?.name ?? "";
+
   const [team, allTeams, squad] = await Promise.all([
     getTeamWithRanking(id),
     getTeamsWithRankings(),
-    isApiFootballConfigured()
-      ? getTeamSquadByFifaCode(
-          TEAMS_BY_ID[id]?.fifaCode ?? "",
-          TEAMS_BY_ID[id]?.name ?? "",
-        )
-      : null,
+    apiConfigured ? getTeamSquadByFifaCode(fifaCode, teamName) : null,
   ]);
+
+  console.log("[squad-debug] TeamDetailsPage render", {
+    teamId: id,
+    fifaCode,
+    teamName,
+    apiConfigured,
+    squadLoaded: Boolean(squad),
+    playerCount: squad?.players.length ?? 0,
+    willShowTeamSquadSection: Boolean(squad),
+    unavailableReason: squad ? null : squadUnavailableReason(),
+    env: process.env.NODE_ENV,
+  });
 
   if (!team) notFound();
 
