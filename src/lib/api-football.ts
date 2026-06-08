@@ -109,6 +109,12 @@ async function rawApiFetch<T>(
   return parseEnvelope((await res.json()) as ApiFootballEnvelope<T>);
 }
 
+function logApiWarning(message: string) {
+  if (process.env.NODE_ENV === "development") {
+    console.warn("[API-Football]", message);
+  }
+}
+
 /** Cache only successful responses (errors throw and are not stored). */
 function fetchCached<T>(path: string, cacheKey: string[]): Promise<ApiFootballEnvelope<T> | null> {
   return unstable_cache(

@@ -8,6 +8,7 @@ import {
   CalendarClock,
   Gamepad2,
   Goal,
+  GitBranch,
   TrendingUp,
   Users,
 } from "lucide-react";
@@ -20,6 +21,7 @@ const LINKS = [
   { href: "/fixtures", label: "Fixtures", icon: CalendarClock },
   { href: "/teams", label: "Teams", icon: Users },
   { href: "/rankings", label: "Ranking", icon: TrendingUp },
+  { href: "/predictions", label: "Predict", icon: GitBranch },
   { href: "/quiz", label: "Quiz", icon: Gamepad2 },
   { href: "/daily-challenge", label: "Daily", icon: Calendar },
 ] as const;
