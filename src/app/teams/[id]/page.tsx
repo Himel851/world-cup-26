@@ -5,10 +5,12 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar, Sparkles, TrendingUp } from "lucide-react";
 
 import { FixtureCard } from "@/components/fixtures/FixtureCard";
+import { SquadBrowserDebug } from "@/components/teams/SquadBrowserDebug";
 import {
   SquadUnavailable,
   TeamSquadSection,
 } from "@/components/teams/TeamSquadSection";
+import { API_FOOTBALL_SEASON } from "@/config/global-variables";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getFixturesForTeam } from "@/data/fixtures";
@@ -29,7 +31,7 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
   return TEAMS.map((t) => ({ id: t.id }));
@@ -60,17 +62,21 @@ export default async function TeamDetailsPage({ params }: PageProps) {
     apiConfigured ? getTeamSquadByFifaCode(fifaCode, teamName) : null,
   ]);
 
-  console.log("[squad-debug] TeamDetailsPage render", {
+  const squadDebug = {
     teamId: id,
     fifaCode,
     teamName,
     apiConfigured,
+    season: API_FOOTBALL_SEASON,
     squadLoaded: Boolean(squad),
     playerCount: squad?.players.length ?? 0,
     willShowTeamSquadSection: Boolean(squad),
     unavailableReason: squad ? null : squadUnavailableReason(),
     env: process.env.NODE_ENV,
-  });
+    timestamp: new Date().toISOString(),
+  };
+
+  console.log("[squad-debug] TeamDetailsPage render", squadDebug);
 
   if (!team) notFound();
 
@@ -149,13 +155,13 @@ export default async function TeamDetailsPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* {squad ? (
+      <SquadBrowserDebug teamId={id} />
+
+      {squad ? (
         <TeamSquadSection squad={squad} localTeamId={team?.id} />
       ) : (
         <SquadUnavailable reason={squadUnavailableReason()} />
-      )} */}
-
-      {squad && <TeamSquadSection squad={squad} localTeamId={team?.id} />}
+      )}
 
       <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between gap-2">
