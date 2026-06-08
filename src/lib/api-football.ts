@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
+import { API_FOOTBALL_KEY, API_FOOTBALL_SEASON } from "@/config/global-variables";
 import { API_CACHE_REVALIDATE } from "@/lib/api-cache";
 import { fetchFifaRankings } from "@/lib/fifa-rankings";
 import type {
@@ -46,12 +47,7 @@ export class ApiFootballError extends Error {
 
 /** Free API-Football plans only allow seasons 2022–2024. Default to 2022. */
 export function getApiSeason(): number {
-  const raw = process.env.API_FOOTBALL_SEASON?.trim();
-  if (raw) {
-    const n = Number.parseInt(raw, 10);
-    if (Number.isFinite(n)) return n;
-  }
-  return 2022;
+  return API_FOOTBALL_SEASON;
 }
 
 function cacheTtl(): number {
@@ -59,13 +55,13 @@ function cacheTtl(): number {
 }
 
 export function isApiFootballConfigured(): boolean {
-  return Boolean(process.env.API_FOOTBALL_KEY?.trim());
+  return Boolean(API_FOOTBALL_KEY.trim());
 }
 
 function apiKey(): string {
-  const key = process.env.API_FOOTBALL_KEY?.trim();
+  const key = API_FOOTBALL_KEY.trim();
   if (!key) {
-    throw new ApiFootballError("API_FOOTBALL_KEY is not configured");
+    throw new ApiFootballError("API_FOOTBALL_KEY is not configured in global-variables.ts");
   }
   return key;
 }
@@ -477,11 +473,11 @@ export async function getPlayerForTeam(
 
 export function squadUnavailableReason(): string {
   if (!isApiFootballConfigured()) {
-    return "Set API_FOOTBALL_KEY in your environment to load live squad lists from API-Football.";
+    return "Set API_FOOTBALL_KEY in src/config/global-variables.ts to load live squad lists from API-Football.";
   }
   const season = getApiSeason();
   if (season >= 2025) {
-    return `Squad data for season ${season} requires a paid API-Football plan. Free plans support seasons 2022–2024 — set API_FOOTBALL_SEASON=2022 in .env and restart the dev server.`;
+    return `Squad data for season ${season} requires a paid API-Football plan. Free plans support seasons 2022–2024 — set API_FOOTBALL_SEASON=2022 in global-variables.ts.`;
   }
-  return "Squad data is not available for this team yet, or the team could not be matched in API-Football. Restart the dev server after changing .env.";
+  return "Squad data is not available for this team yet, or the team could not be matched in API-Football.";
 }

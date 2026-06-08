@@ -40,8 +40,9 @@ export default async function PlayerDetailPage({ params }: PageProps) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 text-center">
         <p className="text-muted-foreground">
-          Add <code className="text-emerald-300">API_FOOTBALL_KEY</code> to your environment to
-          load player profiles.
+          Set <code className="text-emerald-300">API_FOOTBALL_KEY</code> in{" "}
+          <code className="text-emerald-300">src/config/global-variables.ts</code> to load player
+          profiles.
         </p>
         <Button asChild variant="secondary" className="mt-6">
           <Link href={`/teams/${id}`}>Back to team</Link>
