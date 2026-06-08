@@ -37,7 +37,7 @@ export function TeamSquadSection({ squad, localTeamId }: TeamSquadSectionProps) 
   const order = ["Goalkeepers", "Defenders", "Midfielders", "Forwards"];
 
   return (
-    <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8 mt-6">
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">

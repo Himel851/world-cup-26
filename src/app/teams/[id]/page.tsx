@@ -155,12 +155,16 @@ export default async function TeamDetailsPage({ params }: PageProps) {
         </div>
       </div>
 
-      <SquadBrowserDebug teamId={id} />
+      {/* <SquadBrowserDebug teamId={id} /> */}
 
-      {squad ? (
+      {/* {squad ? (
         <TeamSquadSection squad={squad} localTeamId={team?.id} />
       ) : (
         <SquadUnavailable reason={squadUnavailableReason()} />
+      )} */}
+
+      {squad && (
+        <TeamSquadSection squad={squad} localTeamId={team?.id} />
       )}
 
       <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
