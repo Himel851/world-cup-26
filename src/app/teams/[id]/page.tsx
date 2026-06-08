@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar, Sparkles, TrendingUp } from "lucide-react";
 
 import { FixtureCard } from "@/components/fixtures/FixtureCard";
-import { SquadBrowserDebug } from "@/components/teams/SquadBrowserDebug";
 import {
   SquadUnavailable,
   TeamSquadSection,
@@ -76,7 +75,6 @@ export default async function TeamDetailsPage({ params }: PageProps) {
     timestamp: new Date().toISOString(),
   };
 
-  console.log("[squad-debug] TeamDetailsPage render", squadDebug);
 
   if (!team) notFound();
 
@@ -154,9 +152,6 @@ export default async function TeamDetailsPage({ params }: PageProps) {
           </div>
         </div>
       </div>
-
-      {/* <SquadBrowserDebug teamId={id} /> */}
-
       {/* {squad ? (
         <TeamSquadSection squad={squad} localTeamId={team?.id} />
       ) : (
