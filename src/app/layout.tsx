@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { Footer } from "@/components/layout/Footer";
@@ -8,6 +9,7 @@ import { SiteAtmosphere } from "@/components/layout/SiteAtmosphere";
 import { ThemeProvider } from "@/components/theme-provider";
 
 import "./globals.css";
+import { NEXT_PUBLIC_GA_MEASUREMENT_ID } from "@/config/global-variables";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,6 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 const siteUrl = "https://football-world-cup-26.vercel.app";
+const gaId = NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -83,6 +86,7 @@ export default function RootLayout({
             <MobileTabBar />
           </SiteAtmosphere>
         </ThemeProvider>
+        {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
       </body>
     </html>
   );
