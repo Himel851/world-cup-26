@@ -6,7 +6,9 @@ import {
   Calendar,
   CalendarClock,
   Gamepad2,
+  GitBranch,
   Goal,
+  LayoutGrid,
   TrendingUp,
   Users,
 } from "lucide-react";
@@ -17,9 +19,10 @@ const TABS = [
   { href: "/", label: "Home", icon: Goal },
   { href: "/fixtures", label: "Fixtures", icon: CalendarClock },
   { href: "/teams", label: "Teams", icon: Users },
+  { href: "/predictions", label: "Prediction", icon: GitBranch },
+  { href: "/best-11", label: "Best XI", icon: LayoutGrid },
   { href: "/rankings", label: "Rank", icon: TrendingUp },
-  { href: "/quiz", label: "Quiz", icon: Gamepad2 },
-  { href: "/daily-challenge", label: "Daily", icon: Calendar },
+  
 ] as const;
 
 export function MobileTabBar() {

@@ -75,3 +75,12 @@ export function formatKickoffDate(iso: string): string {
     year: "numeric",
   });
 }
+
+export function formatKickoffTime(iso: string): string {
+  return new Date(iso).toLocaleTimeString(undefined, {
+    timeZone: FIXTURE_KICKOFF_TIMEZONE,
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+}

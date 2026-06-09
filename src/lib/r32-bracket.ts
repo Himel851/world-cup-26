@@ -80,16 +80,16 @@ export const R32_MATCHES: R32MatchDef[] = [
   {
     id: "r32-09",
     fifaNumber: 81,
-    home: { kind: "1", group: "D" },
-    away: { kind: "3", vs: "D" },
-    label: "M81 · 1D vs 3rd",
+    home: { kind: "1", group: "G" },
+    away: { kind: "3", vs: "G" },
+    label: "M81 · 1G vs 3rd",
   },
   {
     id: "r32-10",
     fifaNumber: 82,
-    home: { kind: "1", group: "G" },
-    away: { kind: "3", vs: "G" },
-    label: "M82 · 1G vs 3rd",
+    home: { kind: "1", group: "D" },
+    away: { kind: "3", vs: "D" },
+    label: "M82 · 1D vs 3rd",
   },
   {
     id: "r32-11",
@@ -108,9 +108,9 @@ export const R32_MATCHES: R32MatchDef[] = [
   {
     id: "r32-13",
     fifaNumber: 85,
-    home: { kind: "1", group: "B" },
-    away: { kind: "3", vs: "B" },
-    label: "M85 · 1B vs 3rd",
+    home: { kind: "1", group: "K" },
+    away: { kind: "3", vs: "K" },
+    label: "M85 · 1K vs 3rd",
   },
   {
     id: "r32-14",
@@ -122,9 +122,9 @@ export const R32_MATCHES: R32MatchDef[] = [
   {
     id: "r32-15",
     fifaNumber: 87,
-    home: { kind: "1", group: "K" },
-    away: { kind: "3", vs: "K" },
-    label: "M87 · 1K vs 3rd",
+    home: { kind: "1", group: "B" },
+    away: { kind: "3", vs: "B" },
+    label: "M87 · 1B vs 3rd",
   },
   {
     id: "r32-16",
@@ -135,10 +135,17 @@ export const R32_MATCHES: R32MatchDef[] = [
   },
 ];
 
-const COMBO_MAP = thirdPlaceCombinations as Record<
-  string,
-  Record<WinnerThirdSlot, GroupLetter>
->;
+const COMBO_ROWS = Object.values(
+  thirdPlaceCombinations as Record<string, Record<WinnerThirdSlot, GroupLetter>>,
+);
+
+/** FIFA Annex C rows keyed by sorted advancing third-place groups (e.g. "EFGHIJKL"). */
+const COMBO_BY_ADVANCING = new Map<string, Record<WinnerThirdSlot, GroupLetter>>(
+  COMBO_ROWS.map((row) => {
+    const key = [...new Set(Object.values(row))].sort().join("");
+    return [key, row] as const;
+  }),
+);
 
 export function getR32MatchDef(id: string): R32MatchDef | undefined {
   return R32_MATCHES.find((m) => m.id === id);
@@ -159,8 +166,8 @@ function thirdGroupForWinnerSlot(
 ): GroupLetter | null {
   const advancing = advancingThirdGroups(prediction);
   if (!advancing) return null;
-  const key = [...advancing].sort().join("");
-  const row = COMBO_MAP[key];
+  const key = [...new Set(advancing)].sort().join("");
+  const row = COMBO_BY_ADVANCING.get(key);
   if (!row) return null;
   return row[slot] ?? null;
 }

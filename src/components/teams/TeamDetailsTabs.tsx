@@ -4,7 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { Calendar, Users } from "lucide-react";
 
-import { FixtureCard } from "@/components/fixtures/FixtureCard";
+import { FixtureDaySection } from "@/components/fixtures/FixtureDaySection";
+import { formatKickoffDate } from "@/lib/utils";
 import {
   SquadUnavailable,
   TeamSquadSection,
@@ -92,13 +93,29 @@ export function TeamDetailsTabs({ teamId, squad, fixtures }: TeamDetailsTabsProp
                 <p className="mt-3 font-medium">No fixtures scheduled for this team yet.</p>
               </div>
             ) : (
-              <ul className="grid gap-4 lg:grid-cols-3">
-                {fixtures.map((fixture) => (
-                  <li key={fixture.id}>
-                    <FixtureCard fixture={fixture} highlightTeamId={teamId} />
-                  </li>
-                ))}
-              </ul>
+              <div className="space-y-8">
+                {[...fixtures]
+                  .sort(
+                    (a, b) =>
+                      new Date(a.kickoffUtc).getTime() - new Date(b.kickoffUtc).getTime(),
+                  )
+                  .reduce<Map<string, Fixture[]>>((map, fixture) => {
+                    const key = formatKickoffDate(fixture.kickoffUtc);
+                    const list = map.get(key) ?? [];
+                    list.push(fixture);
+                    map.set(key, list);
+                    return map;
+                  }, new Map())
+                  .entries()
+                  .map(([dateKey, dayFixtures]) => (
+                    <FixtureDaySection
+                      key={dateKey}
+                      dateKey={dateKey}
+                      fixtures={dayFixtures}
+                      highlightTeamId={teamId}
+                    />
+                  ))}
+              </div>
             )}
           </div>
         )}

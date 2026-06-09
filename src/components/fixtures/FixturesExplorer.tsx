@@ -3,7 +3,7 @@
 import * as React from "react";
 import { CalendarDays, ChevronDown, Search, SlidersHorizontal, Sparkles, X } from "lucide-react";
 
-import { FixtureCard } from "@/components/fixtures/FixtureCard";
+import { FixtureDaySection } from "@/components/fixtures/FixtureDaySection";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -195,9 +195,14 @@ export function FixturesExplorer({
   );
 
   const filtered = React.useMemo(() => {
-    if (view === "knockout") return knockoutFixtures;
-
     const q = query.trim().toLowerCase();
+
+    if (view === "knockout") {
+      return [...knockoutFixtures].sort(
+        (a, b) => new Date(a.kickoffUtc).getTime() - new Date(b.kickoffUtc).getTime(),
+      );
+    }
+
     let out = groupFixtures.filter((f) => {
       if (group !== "All" && f.group !== group) return false;
       if (matchday !== "All" && f.matchday !== matchday) return false;
@@ -382,32 +387,15 @@ export function FixturesExplorer({
               Reset filters
             </Button>
           </div>
-        ) : view === "knockout" ? (
-          <ul className="grid gap-3 sm:gap-4 lg:grid-cols-2">
-            {filtered.map((fixture) => (
-              <li key={fixture.id}>
-                <FixtureCard fixture={fixture} />
-              </li>
-            ))}
-          </ul>
         ) : (
-          <div className="space-y-6 sm:space-y-10">
+          <div className="space-y-8 sm:space-y-10">
             {byDate.map(([dateLabel, dayFixtures]) => (
-              <section key={dateLabel}>
-                <h2 className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-300 sm:mb-4 sm:text-sm sm:tracking-[0.2em]">
-                  {dateLabel}
-                </h2>
-                <ul className="grid gap-3 sm:gap-4 lg:grid-cols-2">
-                  {dayFixtures.map((fixture) => (
-                    <li key={fixture.id}>
-                      <FixtureCard
-                        fixture={fixture}
-                        highlightTeamId={highlightTeamId ?? (teamId || undefined)}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </section>
+              <FixtureDaySection
+                key={dateLabel}
+                dateKey={dateLabel}
+                fixtures={dayFixtures}
+                highlightTeamId={highlightTeamId ?? (teamId || undefined)}
+              />
             ))}
           </div>
         )}

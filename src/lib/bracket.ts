@@ -19,16 +19,16 @@ export const SF_MATCH_IDS = ["sf-01", "sf-02"] as const;
 export const THIRD_PLACE_MATCH_ID = "3rd";
 export const FINAL_MATCH_ID = "final";
 
-/** Round of 16 feeders — user bracket tree (M89–M96). */
+/** Round of 16 feeders — FIFA WC 2026 bracket (M89–M96). */
 const R16_FEEDS: [string, string][] = [
-  ["r32-01", "r32-03"], // M89 · W73 vs W75
-  ["r32-02", "r32-05"], // M90 · W74 vs W77
+  ["r32-02", "r32-05"], // M89 · W74 vs W77
+  ["r32-01", "r32-03"], // M90 · W73 vs W75
   ["r32-04", "r32-06"], // M91 · W76 vs W78
   ["r32-07", "r32-08"], // M92 · W79 vs W80
-  ["r32-11", "r32-12"], // M93 · W83 vs W84
-  ["r32-09", "r32-10"], // M94 · W81 vs W82
-  ["r32-14", "r32-16"], // M95 · W86 vs W88
-  ["r32-13", "r32-15"], // M96 · W85 vs W87
+  ["r32-10", "r32-11"], // M93 · W82 vs W83
+  ["r32-09", "r32-13"], // M94 · W81 vs W85
+  ["r32-12", "r32-16"], // M95 · W84 vs W88
+  ["r32-14", "r32-15"], // M96 · W86 vs W87
 ];
 
 /** Quarter-final feeders — bracket halves (M97–M100). */
@@ -84,3 +84,40 @@ export const KNOCKOUT_STAGES = [
 export function getBracketMatch(id: string): BracketMatch | undefined {
   return BRACKET_MATCHES.find((m) => m.id === id);
 }
+
+/**
+ * Visual tree order — each adjacent pair connects to one match in the next column.
+ * Must match R16_FEEDS / QF_FEEDS wiring (FIFA WC 2026 bracket).
+ */
+export const R32_TREE_ORDER = [
+  "r32-02",
+  "r32-05", // → r16-01 (M89)
+  "r32-01",
+  "r32-03", // → r16-02 (M90)
+  "r32-04",
+  "r32-06", // → r16-03 (M91)
+  "r32-07",
+  "r32-08", // → r16-04 (M92)
+  "r32-10",
+  "r32-11", // → r16-05 (M93)
+  "r32-09",
+  "r32-13", // → r16-06 (M94)
+  "r32-12",
+  "r32-16", // → r16-07 (M95)
+  "r32-14",
+  "r32-15", // → r16-08 (M96)
+] as const;
+
+export const R16_TREE_ORDER = [
+  "r16-01",
+  "r16-02", // → qf-01
+  "r16-05",
+  "r16-06", // → qf-02
+  "r16-03",
+  "r16-04", // → qf-03
+  "r16-07",
+  "r16-08", // → qf-04
+] as const;
+
+export const QF_TREE_ORDER = [...QF_MATCH_IDS] as const;
+export const SF_TREE_ORDER = [...SF_MATCH_IDS] as const;

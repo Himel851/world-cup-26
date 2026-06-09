@@ -1,167 +1,179 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Trophy } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { TEAMS_BY_ID } from "@/data/teams";
-import { cn, formatKickoffUtc } from "@/lib/utils";
+import { cn, formatKickoffTime } from "@/lib/utils";
 import type { Fixture } from "@/types";
 
-interface FixtureCardProps {
+interface FixtureMatchRowProps {
   fixture: Fixture;
   highlightTeamId?: string;
   className?: string;
 }
 
-const STAGE_LABEL: Record<Fixture["stage"], string> = {
-  group: "Group stage",
-  round_of_32: "Round of 32",
-  round_of_16: "Round of 16",
-  quarter: "Quarter-final",
-  semi: "Semi-final",
-  third_place: "Third place",
-  final: "Final",
-};
-
-function TeamRow({
+function TeamSide({
   teamId,
-  side,
-  isHighlight,
+  align,
+  highlight,
 }: {
   teamId: string;
-  side: "home" | "away";
-  isHighlight: boolean;
+  align: "home" | "away";
+  highlight: boolean;
 }) {
   const team = TEAMS_BY_ID[teamId];
   if (!team) return null;
+
+  const isHome = align === "home";
 
   return (
     <Link
       href={`/teams/${team.id}`}
       className={cn(
-        "flex min-h-10 min-w-0 w-full flex-1 items-center gap-1.5 rounded-md px-0.5 py-0 transition-colors hover:bg-white/6 sm:min-h-0 sm:gap-2.5 sm:rounded-xl sm:p-2",
-        side === "away" && "flex-row-reverse text-right",
-        isHighlight && "rounded-md bg-emerald-400/10 ring-1 ring-emerald-400/25 sm:rounded-xl",
+        "group/side flex min-w-0 flex-1 items-center gap-2 py-3 transition-colors sm:gap-2.5 sm:py-3.5",
+        isHome ? "justify-end text-right" : "justify-start text-left",
+        highlight && "rounded-lg bg-emerald-400/10 ring-1 ring-inset ring-emerald-400/25",
       )}
     >
-      <div className="relative h-7 w-9 shrink-0 overflow-hidden rounded-md ring-1 ring-white/10 sm:h-9 sm:w-12">
-        <Image src={team.flag} alt="" fill sizes="(max-width:640px) 36px, 48px" className="object-cover" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <p
-          className="line-clamp-2 text-[11px] font-bold leading-snug tracking-tight wrap-anywhere sm:text-sm sm:leading-tight"
+      {isHome && (
+        <span
+          className="min-w-0 truncate text-xs font-semibold leading-tight text-foreground group-hover/side:text-emerald-200 sm:text-sm"
           title={team.name}
         >
           {team.name}
-        </p>
+        </span>
+      )}
+      <div className="relative h-6 w-8 shrink-0 overflow-hidden rounded-sm ring-1 ring-white/15 sm:h-7 sm:w-10 sm:rounded-md">
+        <Image
+          src={team.flag}
+          alt=""
+          fill
+          sizes="40px"
+          className="object-cover"
+        />
       </div>
+      {!isHome && (
+        <span
+          className="min-w-0 truncate text-xs font-semibold leading-tight text-foreground group-hover/side:text-emerald-200 sm:text-sm"
+          title={team.name}
+        >
+          {team.name}
+        </span>
+      )}
     </Link>
   );
 }
 
-export function FixtureCard({ fixture, highlightTeamId, className }: FixtureCardProps) {
-  const isKnockoutMilestone = Boolean(fixture.label);
-  const statusLabel =
-    fixture.status === "scheduled"
-      ? "Scheduled"
-      : fixture.status === "live"
-        ? "Live"
-        : fixture.status === "finished"
-          ? "Full time"
-          : fixture.status;
+function KickoutPlaceholder({ label }: { label: string }) {
+  return (
+    <span className="min-w-0 flex-1 truncate px-2 text-center text-xs font-medium text-muted-foreground sm:text-sm">
+      {label}
+    </span>
+  );
+}
+
+function TimePill({ fixture }: { fixture: Fixture }) {
+  const isLive = fixture.status === "live";
+
+  if (fixture.score) {
+    return (
+      <p className="rounded-full bg-white/10 px-3 py-1 text-sm font-black tabular-nums tracking-tight text-foreground sm:px-4 sm:text-base">
+        {fixture.score.home}
+        <span className="mx-1 text-muted-foreground">–</span>
+        {fixture.score.away}
+      </p>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center">
+      <time
+        dateTime={fixture.kickoffUtc}
+        className={cn(
+          "rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide sm:px-4 sm:py-1.5 sm:text-xs",
+          isLive
+            ? "bg-rose-500 text-white shadow-sm shadow-rose-500/30"
+            : "bg-emerald-500 text-emerald-950 shadow-sm shadow-emerald-500/25",
+        )}
+      >
+        {formatKickoffTime(fixture.kickoffUtc)}
+      </time>
+      {isLive && (
+        <span className="mt-1 text-[9px] font-bold uppercase tracking-wider text-rose-400">
+          Live
+        </span>
+      )}
+    </div>
+  );
+}
+
+export function FixtureMatchRow({
+  fixture,
+  highlightTeamId,
+  className,
+}: FixtureMatchRowProps) {
+  const isKnockoutPlaceholder = !fixture.homeTeamId && !fixture.awayTeamId;
+
+  if (isKnockoutPlaceholder) {
+    return (
+      <article
+        className={cn(
+          "flex flex-col items-center gap-2 px-3 py-4 text-center sm:px-5 sm:py-5",
+          className,
+        )}
+      >
+        <TimePill fixture={fixture} />
+        <p className="text-sm font-semibold text-foreground sm:text-base">
+          {fixture.label ?? "Knockout match"}
+        </p>
+        <p className="text-[11px] text-muted-foreground">Opponents TBD</p>
+      </article>
+    );
+  }
 
   return (
     <article
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-3 transition-colors hover:border-emerald-400/30 sm:p-5",
-        fixture.stage === "final" && "border-amber-400/30 hover:border-amber-400/50",
+        "grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-3 sm:gap-3 sm:px-5",
         className,
       )}
     >
-      <div className="flex flex-col gap-2 border-b border-white/10 pb-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-2 sm:pb-3">
-        <div className="flex min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
-          {fixture.group && (
-            <Badge variant="outline" className="text-[9px] uppercase tracking-widest sm:text-[10px]">
-              Group {fixture.group}
-            </Badge>
-          )}
-          {fixture.matchday && (
-            <Badge variant="secondary" className="text-[9px] uppercase tracking-widest sm:text-[10px]">
-              MD {fixture.matchday}
-            </Badge>
-          )}
-          {fixture.stage !== "group" && (
-            <Badge variant="accent" className="max-w-full text-[9px] uppercase tracking-widest sm:text-[10px]">
-              {STAGE_LABEL[fixture.stage]}
-            </Badge>
-          )}
-          <Badge
-            variant={
-              fixture.status === "live"
-                ? "destructive"
-                : fixture.status === "finished"
-                  ? "primary"
-                  : "default"
-            }
-            className="text-[9px] uppercase tracking-widest sm:text-[10px]"
-          >
-            {statusLabel}
-          </Badge>
-        </div>
-        <time
-          dateTime={fixture.kickoffUtc}
-          className="shrink-0 text-[11px] font-semibold tabular-nums text-emerald-300 sm:text-xs"
-        >
-          {formatKickoffUtc(fixture.kickoffUtc)}
-        </time>
+      <TeamSide
+        teamId={fixture.homeTeamId}
+        align="home"
+        highlight={highlightTeamId === fixture.homeTeamId}
+      />
+      <div className="flex shrink-0 justify-center px-1">
+        <TimePill fixture={fixture} />
       </div>
-
-      {isKnockoutMilestone ? (
-        <div className="mt-3 flex items-center gap-2.5 py-1 sm:mt-4 sm:gap-3 sm:py-2">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-amber-400/15 text-amber-300 ring-1 ring-amber-400/30 sm:h-12 sm:w-12 sm:rounded-xl">
-            <Trophy className="h-5 w-5 sm:h-6 sm:w-6" />
-          </span>
-          <div className="min-w-0">
-            <p className="text-base font-bold leading-tight tracking-tight sm:text-lg">{fixture.label}</p>
-            <p className="text-xs text-muted-foreground sm:text-sm">
-              Teams confirmed after the group stage
-            </p>
-          </div>
-        </div>
-      ) : (
-        <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1 sm:mt-4 sm:gap-2">
-          <TeamRow
-            teamId={fixture.homeTeamId}
-            side="home"
-            isHighlight={highlightTeamId === fixture.homeTeamId}
-          />
-          <div className="flex shrink-0 flex-col items-center justify-center px-0.5 py-px sm:px-1">
-            {fixture.score ? (
-              <p className="text-lg font-black tabular-nums tracking-tight sm:text-xl">
-                {fixture.score.home}
-                <span className="mx-0.5 text-muted-foreground sm:mx-1">–</span>
-                {fixture.score.away}
-              </p>
-            ) : (
-              <span className="rounded-md bg-white/6 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground sm:rounded-lg sm:px-2.5 sm:py-1 sm:text-xs sm:tracking-[0.2em]">
-                vs
-              </span>
-            )}
-          </div>
-          <TeamRow
-            teamId={fixture.awayTeamId}
-            side="away"
-            isHighlight={highlightTeamId === fixture.awayTeamId}
-          />
-        </div>
-      )}
-
-      <p className="mt-3 flex items-start gap-1.5 text-[11px] leading-snug text-muted-foreground sm:mt-4 sm:items-center sm:text-xs">
-        <MapPin className="mt-0.5 h-3 w-3 shrink-0 text-sky-300/80 sm:mt-0 sm:h-3.5 sm:w-3.5" />
-        <span className="min-w-0 wrap-break-word">
-          {fixture.venue.name} · {fixture.venue.city}, {fixture.venue.country}
-        </span>
-      </p>
+      <TeamSide
+        teamId={fixture.awayTeamId}
+        align="away"
+        highlight={highlightTeamId === fixture.awayTeamId}
+      />
     </article>
+  );
+}
+
+/** @deprecated Use FixtureMatchRow inside FixtureDaySection */
+export function FixtureCard(props: FixtureMatchRowProps) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+      <FixtureMatchRow {...props} />
+      <FixtureRowMeta fixture={props.fixture} />
+    </div>
+  );
+}
+
+export function FixtureRowMeta({ fixture }: { fixture: Fixture }) {
+  return (
+    <p className="border-t border-white/8 px-3 py-2 text-center text-[10px] text-muted-foreground sm:px-5 sm:text-[11px]">
+      {fixture.venue.name} · {fixture.venue.city}
+      {fixture.group && (
+        <span className="text-emerald-300/80"> · Group {fixture.group}</span>
+      )}
+      {fixture.matchday && (
+        <span className="text-sky-300/80"> · MD {fixture.matchday}</span>
+      )}
+    </p>
   );
 }
