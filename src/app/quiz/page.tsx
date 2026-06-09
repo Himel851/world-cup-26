@@ -6,7 +6,7 @@ import { getTeamsWithRankings } from "@/lib/teams-with-rankings";
 export const metadata: Metadata = {
   title: "Quiz",
   description:
-    "Dynamically generated football quizzes — flags, live FIFA rankings, continents and group draws.",
+    "Flag Master, random flag quizzes, and the daily World Cup 2026 challenge.",
 };
 
 export const revalidate = 3600;

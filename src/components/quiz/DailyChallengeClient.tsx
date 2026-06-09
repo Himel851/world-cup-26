@@ -35,7 +35,7 @@ export function DailyChallengeClient({ teams }: DailyChallengeClientProps) {
       questions={questions}
       storageKey={`wcc:daily:${seed}`}
       title="Daily Challenge"
-      subtitle="Same 10 questions for every player today."
+      subtitle="Same 10 flag questions for every player today."
       mode="daily"
     />
   );

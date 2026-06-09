@@ -150,7 +150,7 @@ export function generateDailyChallenge(
   teams: TeamWithRanking[] = [],
 ): QuizQuestion[] {
   const seed = seedFromDate(date);
-  return generateQuiz({ count: 10, seed, teams });
+  return generateQuiz({ count: 10, seed, teams, types: ["flag"] });
 }
 
 export function generateTeamQuiz(team: Team, count = 10): QuizQuestion[] {

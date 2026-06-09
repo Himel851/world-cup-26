@@ -31,9 +31,8 @@ const NAV_GROUPS = [
     links: [
       { href: "/quiz", label: "Quiz Hub" },
       { href: "/quiz?type=flag", label: "Flag Quiz" },
-      { href: "/quiz?type=ranking", label: "Ranking Quiz" },
-      { href: "/quiz?type=mixed", label: "Mixed Quiz" },
-      { href: "/daily-challenge", label: "Daily Challenge" },
+      { href: "/quiz?type=mixed", label: "Random Quiz" },
+      { href: "/daily-challenge", label: "Daily Quiz" },
       { href: "/leaderboard", label: "Leaderboard" },
     ],
   },

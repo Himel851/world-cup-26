@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Compass, Flag, MapPin, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, CalendarDays, Flag, Sparkles } from "lucide-react";
 
 import { QuizCard, type QuizCardTone } from "@/components/quiz/QuizCard";
 
@@ -18,37 +18,26 @@ const QUIZZES = [
     choiceHint: "Flag identification",
   },
   {
-    title: "FIFA Ranking",
-    description: "Head-to-head duels — pick who sits higher on the live ladder.",
-    href: "/quiz?type=ranking",
-    icon: TrendingUp,
+    title: "Random Quiz",
+    description: "A fresh random set of flag questions every run.",
+    href: "/quiz?type=mixed",
+    icon: Sparkles,
     accent: "from-violet-400/25 via-fuchsia-500/12 to-transparent",
-    badge: "Live data",
+    badge: "Shuffle",
     tone: "violet" as QuizCardTone,
-    metadata: "Live FIFA data · ~3 min",
-    choiceHint: "Ranking battles",
+    metadata: "Random flags · ~3 min",
+    choiceHint: "Random questions",
   },
   {
-    title: "Continental",
-    description: "Lock in the right continent for every national team on the card.",
-    href: "/quiz?type=continent",
-    icon: Compass,
+    title: "Daily Quiz",
+    description: "Today's shared challenge — same questions for everyone.",
+    href: "/daily-challenge",
+    icon: CalendarDays,
     accent: "from-amber-400/25 via-orange-500/12 to-transparent",
-    badge: "Easy",
+    badge: "Today",
     tone: "amber" as QuizCardTone,
-    metadata: "6 continents · ~3 min",
-    choiceHint: "Continent quiz",
-  },
-  {
-    title: "Group Draw",
-    description: "Which side belongs in Group A, F, or L? Test your draw knowledge.",
-    href: "/quiz?type=group",
-    icon: MapPin,
-    accent: "from-pink-400/25 via-rose-500/12 to-transparent",
-    badge: "Pro",
-    tone: "rose" as QuizCardTone,
-    metadata: "12 groups · ~3 min",
-    choiceHint: "Group draw",
+    metadata: "Daily board · One set",
+    choiceHint: "Play today's set",
   },
 ] as const;
 
@@ -68,8 +57,8 @@ export function TrendingQuizzes() {
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Football Quizzes</h2>
             <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-              Four quick modes — flags, live rankings, continents, and the group draw. Pick one
-              and play instantly.
+              Flag Master, random rounds, or today&apos;s daily challenge — pick one and play
+              instantly.
             </p>
           </div>
 
@@ -82,7 +71,7 @@ export function TrendingQuizzes() {
           </Link>
         </div>
 
-        <div className="relative mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
+        <div className="relative mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
           {QUIZZES.map((q, i) => (
             <QuizCard
               key={q.title}
