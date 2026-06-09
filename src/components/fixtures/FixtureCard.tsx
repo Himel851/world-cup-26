@@ -63,14 +63,6 @@ function TeamSide({
   );
 }
 
-function KickoutPlaceholder({ label }: { label: string }) {
-  return (
-    <span className="min-w-0 flex-1 truncate px-2 text-center text-xs font-medium text-muted-foreground sm:text-sm">
-      {label}
-    </span>
-  );
-}
-
 function TimePill({ fixture }: { fixture: Fixture }) {
   const isLive = fixture.status === "live";
 

@@ -94,27 +94,27 @@ export function TeamDetailsTabs({ teamId, squad, fixtures }: TeamDetailsTabsProp
               </div>
             ) : (
               <div className="space-y-8">
-                {[...fixtures]
-                  .sort(
-                    (a, b) =>
-                      new Date(a.kickoffUtc).getTime() - new Date(b.kickoffUtc).getTime(),
-                  )
-                  .reduce<Map<string, Fixture[]>>((map, fixture) => {
-                    const key = formatKickoffDate(fixture.kickoffUtc);
-                    const list = map.get(key) ?? [];
-                    list.push(fixture);
-                    map.set(key, list);
-                    return map;
-                  }, new Map())
-                  .entries()
-                  .map(([dateKey, dayFixtures]) => (
-                    <FixtureDaySection
-                      key={dateKey}
-                      dateKey={dateKey}
-                      fixtures={dayFixtures}
-                      highlightTeamId={teamId}
-                    />
-                  ))}
+                {[
+                  ...[...fixtures]
+                    .sort(
+                      (a, b) =>
+                        new Date(a.kickoffUtc).getTime() - new Date(b.kickoffUtc).getTime(),
+                    )
+                    .reduce<Map<string, Fixture[]>>((map, fixture) => {
+                      const key = formatKickoffDate(fixture.kickoffUtc);
+                      const list = map.get(key) ?? [];
+                      list.push(fixture);
+                      map.set(key, list);
+                      return map;
+                    }, new Map()),
+                ].map(([dateKey, dayFixtures]) => (
+                  <FixtureDaySection
+                    key={dateKey}
+                    dateKey={dateKey}
+                    fixtures={dayFixtures}
+                    highlightTeamId={teamId}
+                  />
+                ))}
               </div>
             )}
           </div>

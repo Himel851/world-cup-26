@@ -87,7 +87,7 @@ export function Navbar() {
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button> */}
 
-          <Button asChild variant="glow" size="sm" className="hidden md:inline-flex">
+          <Button asChild variant="glow" size="sm" className="">
             <Link href="/quiz">Start Quiz</Link>
           </Button>
         </div>

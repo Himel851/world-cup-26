@@ -32,7 +32,7 @@ export function GroupStandingsSection({ groups, onChange }: GroupStandingsSectio
         Tap flags to place teams · Drag rows to reorder standings
       </p>
 
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {GROUPS.map((group) => (
           <GroupPredictionCard
             key={group}
