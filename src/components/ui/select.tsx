@@ -9,7 +9,7 @@ const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HT
         "flex h-11 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-[var(--foreground)] backdrop-blur-md transition-all duration-200",
         "appearance-none bg-[length:16px_16px] bg-[right_0.75rem_center] bg-no-repeat pr-9",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:border-transparent",
-        "disabled:cursor-not-allowed disabled:opacity-50",
+        "disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer",
         className,
       )}
       style={{

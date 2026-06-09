@@ -36,7 +36,7 @@ export function PitchFormation({
       {/* Stadium surround — capped height so full XI including GK fits in viewport */}
       <div className="relative p-1 sm:p-1.5">
         <div
-          className="relative mx-auto aspect-[68/88] w-full max-h-[min(36vh,300px)] overflow-hidden rounded-xl ring-1 ring-black/40 sm:max-h-[min(42vh,360px)] lg:max-h-[min(calc(100vh-8rem),520px)]"
+          className="relative mx-auto aspect-[68/88] w-full max-h-[min(50vh,400px)] overflow-hidden rounded-xl ring-1 ring-black/40 sm:max-h-[min(44vh,380px)] lg:max-h-[min(calc(100vh-8rem),520px)]"
           style={{
             backgroundColor: "#1e6b3e",
             backgroundImage: [
@@ -94,7 +94,7 @@ export function PitchFormation({
                 <span className="relative">
                   <span
                     className={cn(
-                      "grid h-9 w-9 place-items-center rounded-md bg-white shadow-lg shadow-black/30 ring-2 sm:h-10 sm:w-10",
+                      "grid h-9 w-9 place-items-center rounded-md bg-white shadow-lg shadow-black/30 ring-2 sm:h-10 sm:w-10 cursor-pointer",
                       isActive ? "ring-amber-300" : "ring-white/95",
                       player ? "text-emerald-800" : "text-emerald-700/60",
                     )}

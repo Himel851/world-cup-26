@@ -10,13 +10,7 @@ export const metadata: Metadata = {
     "Build your Best 11 for any World Cup 2026 nation — pick players and place them on a tactical pitch.",
 };
 
-interface PageProps {
-  searchParams: Promise<{ team?: string }>;
-}
-
-export default async function BestElevenPage({ searchParams }: PageProps) {
-  const { team: teamParam } = await searchParams;
-
+export default async function BestElevenPage() {
   const squadsByTeamId = Object.fromEntries(
     TEAMS.map((t) => [
       t.id,
@@ -28,13 +22,6 @@ export default async function BestElevenPage({ searchParams }: PageProps) {
     ]),
   );
 
-  const initialTeamId =
-    teamParam === "all"
-      ? "all"
-      : teamParam && TEAMS.some((t) => t.id === teamParam)
-        ? teamParam
-        : "all";
-
   return (
     <div className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 sm:pt-10 lg:px-8">
       <header className="mb-8">
@@ -45,16 +32,12 @@ export default async function BestElevenPage({ searchParams }: PageProps) {
           Build your <span className="text-gradient">Best XI</span>
         </h1>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground sm:text-base">
-          Choose any of the 48 nations, pick a formation, and place 11 players on the tactical
-          board.
+          Pick a formation, click a position on the pitch, and choose from players across all 48
+          nations.
         </p>
       </header>
 
-      <BestElevenBuilder
-        teams={TEAMS}
-        squadsByTeamId={squadsByTeamId}
-        initialTeamId={initialTeamId}
-      />
+      <BestElevenBuilder teams={TEAMS} squadsByTeamId={squadsByTeamId} />
     </div>
   );
 }

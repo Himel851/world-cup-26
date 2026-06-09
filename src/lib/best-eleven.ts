@@ -274,22 +274,101 @@ export function playersForSlot<T extends SquadPlayer>(
   );
 }
 
-export function autoFillLineup<T extends SquadPlayer>(
+/** First empty slot in formation order, or null if the XI is full. */
+export function getFirstEmptySlot(
+  slots: FormationSlot[],
+  lineup: Record<string, number>,
+): FormationSlot | null {
+  return slots.find((s) => lineup[s.id] == null) ?? null;
+}
+
+/** Next empty slot after `afterSlotId`, wrapping to the start of the formation. */
+export function getNextEmptySlot(
+  slots: FormationSlot[],
+  lineup: Record<string, number>,
+  afterSlotId?: string | null,
+): FormationSlot | null {
+  const empty = slots.filter((s) => lineup[s.id] == null);
+  if (empty.length === 0) return null;
+  if (!afterSlotId) return empty[0] ?? null;
+
+  const idx = slots.findIndex((s) => s.id === afterSlotId);
+  if (idx === -1) return empty[0] ?? null;
+
+  for (let i = 1; i <= slots.length; i++) {
+    const slot = slots[(idx + i) % slots.length]!;
+    if (lineup[slot.id] == null) return slot;
+  }
+
+  return empty[0] ?? null;
+}
+
+/** Pick an empty slot that accepts this player's position (formation order). */
+export function findSlotForPlayer<T extends SquadPlayer>(
+  player: T,
+  slots: FormationSlot[],
+  lineup: Record<string, number>,
+): FormationSlot | null {
+  return (
+    slots.find((s) => lineup[s.id] == null && slotAcceptsPosition(s, player.position)) ?? null
+  );
+}
+
+type SquadPlayerWithTeam = SquadPlayer & { teamId?: string };
+
+export function autoFillLineup<T extends SquadPlayerWithTeam>(
   players: T[],
   slots: FormationSlot[],
 ): Record<string, number> {
   const lineup: Record<string, number> = {};
-  const used = new Set<number>();
+  const usedPlayers = new Set<number>();
+  const usedTeams = new Set<string>();
 
   for (const slot of slots) {
-    const pick = players.find(
-      (p) => !used.has(p.id) && slotAcceptsPosition(slot, p.position),
+    const candidates = players.filter(
+      (p) => !usedPlayers.has(p.id) && slotAcceptsPosition(slot, p.position),
     );
+
+    // Spread picks across nations when teamId is available (48-team pool).
+    const pick =
+      candidates.find((p) => p.teamId != null && !usedTeams.has(p.teamId)) ??
+      candidates[0];
+
     if (pick) {
       lineup[slot.id] = pick.id;
-      used.add(pick.id);
+      usedPlayers.add(pick.id);
+      if (pick.teamId) usedTeams.add(pick.teamId);
     }
   }
 
   return lineup;
+}
+
+export const BEST_ELEVEN_STORAGE_KEY = "wc26-best-eleven";
+
+export type SavedBestElevenState = {
+  formationId: string;
+  lineup: Record<string, number>;
+};
+
+export function sanitizeBestElevenState(
+  raw: SavedBestElevenState,
+  validPlayerIds: Set<number>,
+): SavedBestElevenState {
+  const formationId = FORMATIONS.some((f) => f.id === raw.formationId)
+    ? raw.formationId
+    : DEFAULT_FORMATION_ID;
+
+  const slotIds = new Set(getFormation(formationId).slots.map((s) => s.id));
+  const used = new Set<number>();
+  const lineup: Record<string, number> = {};
+
+  for (const [slotId, playerId] of Object.entries(raw.lineup ?? {})) {
+    if (typeof playerId !== "number") continue;
+    if (!slotIds.has(slotId) || !validPlayerIds.has(playerId) || used.has(playerId)) continue;
+    lineup[slotId] = playerId;
+    used.add(playerId);
+  }
+
+  return { formationId, lineup };
 }
