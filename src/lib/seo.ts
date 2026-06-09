@@ -6,7 +6,13 @@ export const SITE_URL = NEXT_PUBLIC_SITE_URL;
 
 export const SITE_NAME = "World Cup 2026";
 
-const DEFAULT_OG_IMAGE = "/opengraph-image";
+/** Default share preview — public/images/logo.png */
+export const OG_IMAGE = {
+  url: "/images/logo.png",
+  width: 1200,
+  height: 630,
+  alt: "Football World Cup 2026 — Fixtures, Teams, Squads & More",
+} as const;
 
 type OgImage =
   | string
@@ -25,16 +31,16 @@ type PageMetaInput = {
 };
 
 function resolveOgImages(title: string, ogImage?: OgImage) {
-  const image = ogImage ?? DEFAULT_OG_IMAGE;
+  const image = ogImage ?? OG_IMAGE;
   if (typeof image === "string") {
-    return [{ url: image, width: 1200, height: 630, alt: `${title} · ${SITE_NAME}` }];
+    return [{ url: image, width: OG_IMAGE.width, height: OG_IMAGE.height, alt: OG_IMAGE.alt }];
   }
   return [
     {
       url: image.url,
-      width: image.width ?? 1200,
-      height: image.height ?? 630,
-      alt: image.alt ?? `${title} · ${SITE_NAME}`,
+      width: image.width ?? OG_IMAGE.width,
+      height: image.height ?? OG_IMAGE.height,
+      alt: image.alt ?? OG_IMAGE.alt,
     },
   ];
 }
