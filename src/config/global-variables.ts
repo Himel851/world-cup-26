@@ -9,3 +9,5 @@ export const NEXT_PUBLIC_GA_MEASUREMENT_ID = "G-LDGKXM16JQ";
 /** Canonical site URL for SEO, sitemap, and Open Graph (override in production if needed). */
 export const NEXT_PUBLIC_SITE_URL = "https://football-26.vercel.app";
 
+export const GOOGLE_SITE_VERIFICATION = "BWNfqklGogb8UWkzSmS8LbR6GJEIxZyLTVd4yicfcIY";
+

@@ -9,7 +9,7 @@ import { SiteAtmosphere } from "@/components/layout/SiteAtmosphere";
 import { ThemeProvider } from "@/components/theme-provider";
 
 import "./globals.css";
-import { NEXT_PUBLIC_GA_MEASUREMENT_ID } from "@/config/global-variables";
+import { GOOGLE_SITE_VERIFICATION, NEXT_PUBLIC_GA_MEASUREMENT_ID } from "@/config/global-variables";
 import { createPageMetadata, SITE_NAME, SITE_URL, WC26_KEYWORDS } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -53,8 +53,8 @@ export const metadata: Metadata = {
   creator: SITE_NAME,
   publisher: SITE_NAME,
   robots: { index: true, follow: true },
-  verification: {
-    google: "Y_HFm9CuKforMqO1C2lrRoppIjHYHqUxTTgPtscT6Fs",
+    verification: {
+    google: GOOGLE_SITE_VERIFICATION,
   },
   openGraph: defaultMeta.openGraph,
   twitter: defaultMeta.twitter,
