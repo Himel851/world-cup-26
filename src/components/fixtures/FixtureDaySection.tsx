@@ -1,6 +1,6 @@
 import { FixtureMatchRow, FixtureRowMeta } from "@/components/fixtures/FixtureCard";
 import { FIXTURE_KICKOFF_TIMEZONE } from "@/lib/utils";
-import type { Fixture } from "@/types";
+import type { Fixture, GroupMatchday } from "@/types";
 
 const STAGE_LABEL: Record<Fixture["stage"], string> = {
   group: "Group stage",
@@ -27,7 +27,7 @@ function daySectionTitle(fixtures: Fixture[]): string {
   const stage = fixtures[0]!.stage;
   if (stage === "group") {
     const matchdays = new Set(
-      fixtures.map((f) => f.matchday).filter((md): md is number => Boolean(md)),
+      fixtures.map((f) => f.matchday).filter((md): md is GroupMatchday => md != null),
     );
     if (matchdays.size === 1) {
       return `Matchday ${[...matchdays][0]} · Group stage`;
