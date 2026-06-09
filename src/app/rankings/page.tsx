@@ -1,16 +1,17 @@
-import type { Metadata } from "next";
-
 import { RankingsExplorer } from "@/components/rankings/RankingsExplorer";
 import {
   confederationsFromRankings,
   fetchFifaRankings,
 } from "@/lib/fifa-rankings";
+import { createPageMetadata, WC26_KEYWORDS } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "FIFA Rankings",
   description:
-    "Live FIFA men's world rankings — search, filter by confederation, and browse all nations.",
-};
+    "Live FIFA men's world rankings for all World Cup 2026 nations — search, filter by confederation, points and world rank.",
+  path: "/rankings",
+  keywords: [...WC26_KEYWORDS, "FIFA rankings", "world rankings", "confederation"],
+});
 
 export const revalidate = 3600;
 

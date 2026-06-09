@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
-
 import { BestElevenBuilder } from "@/components/best-eleven/BestElevenBuilder";
 import { TEAMS } from "@/data/teams";
 import { getPlayersForTeam } from "@/lib/player-list";
+import { createPageMetadata, WC26_KEYWORDS } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Best XI",
   description:
-    "Build your Best 11 for any World Cup 2026 nation — pick players and place them on a tactical pitch.",
-};
+    "Build your Best 11 for FIFA World Cup 2026 — pick from 48 nations, choose a formation, and place players on a tactical pitch. Saved locally in your browser.",
+  path: "/best-11",
+  keywords: [...WC26_KEYWORDS, "Best XI", "team builder", "fantasy lineup", "World Cup squads"],
+});
 
 export default async function BestElevenPage() {
   const squadsByTeamId = Object.fromEntries(

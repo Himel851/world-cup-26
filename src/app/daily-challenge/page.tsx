@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
-
 import { DailyChallengeClient } from "@/components/quiz/DailyChallengeClient";
+import { createPageMetadata, WC26_KEYWORDS } from "@/lib/seo";
 import { getTeamsWithRankings } from "@/lib/teams-with-rankings";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Daily Challenge",
   description:
-    "10 deterministic football trivia questions, identical for every player today. Compete on the global daily leaderboard.",
-};
+    "Daily World Cup 2026 trivia — 10 football questions, same for everyone today. Compete on the global leaderboard with streaks and accuracy.",
+  path: "/daily-challenge",
+  keywords: [...WC26_KEYWORDS, "daily quiz", "football trivia", "leaderboard", "streak"],
+});
 
 export const revalidate = 3600;
 

@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 import "./globals.css";
 import { NEXT_PUBLIC_GA_MEASUREMENT_ID } from "@/config/global-variables";
+import { createPageMetadata, SITE_NAME, SITE_URL, WC26_KEYWORDS } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,45 +22,43 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://football-world-cup-26.vercel.app";
 const gaId = NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    default: "FIFA World Cup 2026 · Groups, Fixtures & Quiz",
-    template: "%s · World Cup 2026",
-  },
+const defaultMeta = createPageMetadata({
+  title: "FIFA World Cup 2026 · Groups, Fixtures & Quiz",
   description:
-    "Everything for FIFA World Cup 2026 — 48 nations, 12 groups, full schedule, squads, and football quizzes. Countdown to kickoff in Bangladesh Standard Time.",
+    "Everything for FIFA World Cup 2026 — 48 nations, 12 groups, full schedule, squads, Best XI builder, and football quizzes. Countdown to kickoff.",
+  path: "/",
+  absoluteTitle: true,
   keywords: [
-    "FIFA World Cup 2026",
+    ...WC26_KEYWORDS,
     "World Cup Groups",
     "World Cup Fixtures",
     "Football Quiz",
+    "Best XI",
     "National Teams",
     "World Cup Schedule",
   ],
-  authors: [{ name: "World Cup 2026" }],
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "FIFA World Cup 2026 · Groups, Fixtures & Quiz",
+    template: `%s · ${SITE_NAME}`,
+  },
+  description: defaultMeta.description,
+  keywords: defaultMeta.keywords,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  robots: { index: true, follow: true },
   verification: {
     google: "Y_HFm9CuKforMqO1C2lrRoppIjHYHqUxTTgPtscT6Fs",
   },
-  openGraph: {
-    title: "FIFA World Cup 2026",
-    description: "Groups, fixtures, squads & quizzes for the 2026 World Cup.",
-    type: "website",
-    url: "/",
-    siteName: "World Cup 2026",
-    locale: "en_US",
-    images: [
-      {
-        url: "/favicon.ico",
-        width: 1200,
-        height: 630,
-        alt: "World Cup 2026",
-      },
-    ],
-  },
+  openGraph: defaultMeta.openGraph,
+  twitter: defaultMeta.twitter,
+  alternates: defaultMeta.alternates,
 };
 
 export const viewport: Viewport = {

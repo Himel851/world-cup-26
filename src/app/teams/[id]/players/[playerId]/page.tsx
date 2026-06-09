@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -9,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { TEAMS_BY_ID } from "@/data/teams";
 import { getPlayer, getPlayerForTeam, isApiFootballConfigured } from "@/lib/api-football";
 import { getPlayerFromList } from "@/lib/player-list";
+import { createPageMetadata } from "@/lib/seo";
 import { getTeamWithRanking } from "@/lib/teams-with-rankings";
 
 interface PageProps {
@@ -18,18 +18,31 @@ interface PageProps {
 /** 30 days — matches SQUAD_REVALIDATE in api-football.ts */
 export const revalidate = 2592000;
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { playerId } = await params;
+export async function generateMetadata({ params }: PageProps) {
+  const { id: teamId, playerId } = await params;
   const id = Number(playerId);
+  const team = TEAMS_BY_ID[teamId];
   const player =
     getPlayerFromList(id) ?? (isApiFootballConfigured() ? await getPlayer(id) : null);
 
-  if (!player) return { title: "Player not found" };
-  return {
+  if (!player) {
+    return createPageMetadata({
+      title: "Player not found",
+      description: "Player profile not found.",
+      path: `/teams/${teamId}/players/${playerId}`,
+      noIndex: true,
+    });
+  }
+
+  const teamName = team?.name ?? player.nationality;
+
+  return createPageMetadata({
     title: player.name,
-    description: `${player.name} — FIFA World Cup 2026 squad player profile.`,
-    openGraph: player.photo ? { images: [player.photo] } : undefined,
-  };
+    description: `${player.name} — ${player.position} for ${teamName} at FIFA World Cup 2026. Age, club, height and squad details.`,
+    path: `/teams/${teamId}/players/${playerId}`,
+    keywords: [player.name, teamName, player.position, "FIFA World Cup 2026", "squad player"],
+    ogImage: player.photo ? { url: player.photo, alt: player.name } : team?.flag ? { url: team.flag, alt: teamName } : undefined,
+  });
 }
 
 export default async function PlayerDetailPage({ params }: PageProps) {

@@ -1,11 +1,13 @@
-import type { Metadata } from "next";
-
 import { TournamentStats } from "@/components/home/TournamentStats";
+import { createPageMetadata, WC26_KEYWORDS } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Tournament Facts",
-  description: "Key numbers for FIFA World Cup 2026 — nations, groups, matches and host venues.",
-};
+  description:
+    "FIFA World Cup 2026 facts and figures — 48 teams, 12 groups, 104 matches, and 16 host cities across North America.",
+  path: "/tournament",
+  keywords: [...WC26_KEYWORDS, "tournament format", "World Cup facts", "host nations", "expanded World Cup"],
+});
 
 export const revalidate = 3600;
 

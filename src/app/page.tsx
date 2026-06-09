@@ -6,6 +6,23 @@ import { TournamentCountdown } from "@/components/home/TournamentCountdown";
 import { TournamentStats } from "@/components/home/TournamentStats";
 import { WorldCupWinners } from "@/components/home/WorldCupWinners";
 import { getTeamsWithRankings } from "@/lib/teams-with-rankings";
+import { createPageMetadata, WC26_KEYWORDS } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "FIFA World Cup 2026 · Groups, Fixtures & Quiz",
+  description:
+    "Everything for FIFA World Cup 2026 — 48 nations, 12 groups, full schedule, squads, Best XI builder, and football quizzes. Countdown to kickoff.",
+  path: "/",
+  absoluteTitle: true,
+  keywords: [
+    ...WC26_KEYWORDS,
+    "World Cup Groups",
+    "World Cup Fixtures",
+    "Football Quiz",
+    "Best XI",
+    "National Teams",
+  ],
+});
 
 export const revalidate = 3600;
 

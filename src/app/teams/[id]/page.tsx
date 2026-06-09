@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -10,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { getFixturesForTeam } from "@/data/fixtures";
 import { TEAMS } from "@/data/teams";
 import { getTeamSquadFromList } from "@/lib/player-list";
+import { createPageMetadata } from "@/lib/seo";
 import {
   formatPoints,
   formatRank,
@@ -27,17 +27,18 @@ export async function generateStaticParams() {
   return TEAMS.map((t) => ({ id: t.id }));
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps) {
   const { id } = await params;
   const team = await getTeamWithRanking(id);
-  if (!team) return { title: "Team not found" };
-  return {
-    title: team?.name,
-    description: `${team?.name} at FIFA World Cup 2026 — Group ${team?.group}, live FIFA ranking ${formatRank(team)}.`,
-    openGraph: { images: [team?.flag] },
-  };
+  if (!team) return createPageMetadata({ title: "Team not found", description: "Nation not found.", path: `/teams/${id}`, noIndex: true });
+
+  return createPageMetadata({
+    title: team.name,
+    description: `${team.name} at FIFA World Cup 2026 — Group ${team.group}, FIFA rank ${formatRank(team)} (${formatPoints(team)} pts). Squad, fixtures and player profiles.`,
+    path: `/teams/${id}`,
+    keywords: [team.name, team.fifaCode, `Group ${team.group}`, "FIFA World Cup 2026", team.continent],
+    ogImage: { url: team.flag, alt: `${team.name} flag` },
+  });
 }
 
 export default async function TeamDetailsPage({ params }: PageProps) {

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { CalendarClock } from "lucide-react";
 
@@ -6,13 +5,16 @@ import { FixturesExplorer } from "@/components/fixtures/FixturesExplorer";
 import { Button } from "@/components/ui/button";
 import { FIXTURES } from "@/data/fixtures";
 import { GROUPS, TEAMS } from "@/data/teams";
+import { createPageMetadata, WC26_KEYWORDS } from "@/lib/seo";
 import type { GroupLetter } from "@/types";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Fixtures",
   description:
-    "Official FIFA World Cup 2026 schedule — 72 group-stage matches plus knockout rounds through the final at MetLife Stadium.",
-};
+    "FIFA World Cup 2026 full schedule — 72 group-stage matches and knockout rounds through the final at MetLife Stadium, New Jersey.",
+  path: "/fixtures",
+  keywords: [...WC26_KEYWORDS, "World Cup schedule", "match fixtures", "kickoff times", "knockout bracket"],
+});
 
 interface PageProps {
   searchParams: Promise<{ group?: string; team?: string }>;

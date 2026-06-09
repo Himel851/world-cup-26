@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
-
 import { QuizPageClient } from "@/components/quiz/QuizPageClient";
+import { createPageMetadata, WC26_KEYWORDS } from "@/lib/seo";
 import { getTeamsWithRankings } from "@/lib/teams-with-rankings";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Quiz",
   description:
-    "Flag Master, random flag quizzes, and the daily World Cup 2026 challenge.",
-};
+    "World Cup 2026 football quizzes — Flag Master, random nation flags, and trivia to test your knowledge of all 48 teams.",
+  path: "/quiz",
+  keywords: [...WC26_KEYWORDS, "football quiz", "flag quiz", "World Cup trivia", "soccer quiz"],
+});
 
 export const revalidate = 3600;
 

@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
-
 import { LeaderboardTable } from "@/components/leaderboard/LeaderboardTable";
 import { LeaderboardSummary } from "@/components/leaderboard/LeaderboardSummary";
 import { LEADERBOARD } from "@/data/leaderboard";
+import { createPageMetadata, WC26_KEYWORDS } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Leaderboard",
   description:
-    "Global top-20 players competing on World Cup Challenge. Climb the table with streaks and accuracy.",
-};
+    "World Cup 2026 daily challenge leaderboard — global top players ranked by score, streaks, and accuracy.",
+  path: "/leaderboard",
+  keywords: [...WC26_KEYWORDS, "leaderboard", "high scores", "daily challenge rankings"],
+});
 
 export default function LeaderboardPage() {
   return (

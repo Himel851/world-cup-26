@@ -1,14 +1,16 @@
-import type { Metadata } from "next";
-
 import { TeamsExplorer } from "@/components/teams/TeamsExplorer";
 import { CONTINENTS } from "@/data/teams";
+import { createPageMetadata, WC26_KEYWORDS } from "@/lib/seo";
 import { getTeamsWithRankings } from "@/lib/teams-with-rankings";
 import type { Continent } from "@/types";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Teams",
-  description: "Browse all 48 nations competing at the FIFA World Cup 2026 with live FIFA rankings.",
-};
+  description:
+    "Browse all 48 nations at FIFA World Cup 2026 — squads, FIFA rankings, groups, and confederations. USA, Mexico, Canada and 45 more.",
+  path: "/teams",
+  keywords: [...WC26_KEYWORDS, "World Cup teams", "national teams", "FIFA rankings", "squads"],
+});
 
 export const revalidate = 3600;
 
