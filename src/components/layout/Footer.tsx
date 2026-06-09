@@ -16,14 +16,15 @@ const NAV_GROUPS = [
   {
     title: "Tournament",
     links: [
-      { href: "/groups", label: "Groups A–L" },
-      { href: "/winners", label: "World Cup Winners" },
-      { href: "/venues", label: "Host Venues" },
-      { href: "/fixtures", label: "Full Schedule" },
-      { href: "/teams", label: "All Teams" },
-      { href: "/rankings", label: "FIFA Rankings" },
-      { href: "/tournament", label: "Tournament Facts" },
-
+      { href: "/predictions", label: "Predictions" },
+      { href: "/best-11", label: "Best XI" },
+      { href: "/rankings", label: "Rankings" },
+      { href: "/fixtures", label: "Fixtures" },
+      { href: "/teams", label: "Teams" },
+      { href: "/venues", label: "Venues" },
+      { href: "/groups", label: "Groups" },
+      { href: "/winners", label: "Winners" },
+      { href: "/tournament", label: "Tournament" },
     ],
   },
   {
