@@ -4,26 +4,24 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Calendar,
   CalendarClock,
-  Gamepad2,
   Goal,
   GitBranch,
+  LayoutGrid,
   TrendingUp,
   Users,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 
 const LINKS = [
   { href: "/", label: "Home", icon: Goal },
   { href: "/fixtures", label: "Fixtures", icon: CalendarClock },
   { href: "/teams", label: "Teams", icon: Users },
+  { href: "/best-11", label: "Best XI", icon: LayoutGrid },
   { href: "/rankings", label: "Ranking", icon: TrendingUp },
-  { href: "/predictions", label: "Predict", icon: GitBranch },
-  { href: "/quiz", label: "Quiz", icon: Gamepad2 },
-  { href: "/daily-challenge", label: "Daily", icon: Calendar },
+  { href: "/predictions", label: "Prediction", icon: GitBranch },
 ] as const;
 
 export function Navbar() {

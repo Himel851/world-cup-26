@@ -1,9 +1,7 @@
+import { R32_MATCHES } from "@/lib/r32-bracket";
 import type { BracketMatch } from "@/types/predictions";
 
-/** Round-of-32 slots — teams assigned sequentially from advancing pool. */
-export const R32_MATCH_IDS = Array.from({ length: 16 }, (_, i) =>
-  `r32-${String(i + 1).padStart(2, "0")}`,
-) as [
+export const R32_MATCH_IDS = R32_MATCHES.map((m) => m.id) as [
   string, string, string, string, string, string, string, string,
   string, string, string, string, string, string, string, string,
 ];
@@ -21,45 +19,57 @@ export const SF_MATCH_IDS = ["sf-01", "sf-02"] as const;
 export const THIRD_PLACE_MATCH_ID = "3rd";
 export const FINAL_MATCH_ID = "final";
 
-function buildKnockoutRound(
-  ids: string[],
+/** Round of 16 feeders — user bracket tree (M89–M96). */
+const R16_FEEDS: [string, string][] = [
+  ["r32-01", "r32-03"], // M89 · W73 vs W75
+  ["r32-02", "r32-05"], // M90 · W74 vs W77
+  ["r32-04", "r32-06"], // M91 · W76 vs W78
+  ["r32-07", "r32-08"], // M92 · W79 vs W80
+  ["r32-11", "r32-12"], // M93 · W83 vs W84
+  ["r32-09", "r32-10"], // M94 · W81 vs W82
+  ["r32-14", "r32-16"], // M95 · W86 vs W88
+  ["r32-13", "r32-15"], // M96 · W85 vs W87
+];
+
+/** Quarter-final feeders — bracket halves (M97–M100). */
+const QF_FEEDS: [string, string][] = [
+  ["r16-01", "r16-02"], // QF1
+  ["r16-05", "r16-06"], // QF2
+  ["r16-03", "r16-04"], // QF3
+  ["r16-07", "r16-08"], // QF4
+];
+
+function knockoutMatch(
+  id: string,
   stage: BracketMatch["stage"],
-  labelPrefix: string,
-  parentIds: string[],
-): BracketMatch[] {
-  return ids.map((id, i) => ({
-    id,
-    stage,
-    label: `${labelPrefix} · Match ${i + 1}`,
-    feedsFrom: [
-      parentIds[i * 2] ?? null,
-      parentIds[i * 2 + 1] ?? null,
-    ] as [string | null, string | null],
-  }));
+  label: string,
+  feedsFrom: [string | null, string | null],
+): BracketMatch {
+  return { id, stage, label, feedsFrom };
 }
 
 export const BRACKET_MATCHES: BracketMatch[] = [
-  ...R32_MATCH_IDS.map((id, i) => ({
-    id,
-    stage: "round_of_32" as const,
-    label: `Round of 32 · Match ${i + 1}`,
-    feedsFrom: [null, null] as [null, null],
-  })),
-  ...buildKnockoutRound(R16_MATCH_IDS, "round_of_16", "Round of 16", R32_MATCH_IDS),
-  ...buildKnockoutRound(QF_MATCH_IDS, "quarter", "Quarter-finals", R16_MATCH_IDS),
-  ...buildKnockoutRound([...SF_MATCH_IDS], "semi", "Semi-finals", QF_MATCH_IDS),
-  {
-    id: THIRD_PLACE_MATCH_ID,
-    stage: "third_place",
-    label: "Third place play-off",
-    feedsFrom: ["sf-01", "sf-02"],
-  },
-  {
-    id: FINAL_MATCH_ID,
-    stage: "final",
-    label: "Final",
-    feedsFrom: ["sf-01", "sf-02"],
-  },
+  ...R32_MATCHES.map((m) =>
+    knockoutMatch(m.id, "round_of_32", m.label, [null, null]),
+  ),
+  ...R16_MATCH_IDS.map((id, i) =>
+    knockoutMatch(
+      id,
+      "round_of_16",
+      `Round of 16 · M${89 + i}`,
+      R16_FEEDS[i]!,
+    ),
+  ),
+  ...QF_MATCH_IDS.map((id, i) =>
+    knockoutMatch(id, "quarter", `Quarter-finals · QF${i + 1}`, QF_FEEDS[i]!),
+  ),
+  knockoutMatch("sf-01", "semi", "Semi-finals · SF1", ["qf-01", "qf-02"]),
+  knockoutMatch("sf-02", "semi", "Semi-finals · SF2", ["qf-03", "qf-04"]),
+  knockoutMatch(THIRD_PLACE_MATCH_ID, "third_place", "Third place play-off", [
+    "sf-01",
+    "sf-02",
+  ]),
+  knockoutMatch(FINAL_MATCH_ID, "final", "Final", ["sf-01", "sf-02"]),
 ];
 
 export const KNOCKOUT_STAGES = [

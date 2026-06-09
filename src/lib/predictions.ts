@@ -1,4 +1,4 @@
-import { GROUPS } from "@/data/teams";
+import { getTeamsByGroup, GROUPS } from "@/data/teams";
 import {
   BRACKET_MATCHES,
   FINAL_MATCH_ID,
@@ -6,6 +6,7 @@ import {
   THIRD_PLACE_MATCH_ID,
   getBracketMatch,
 } from "@/lib/bracket";
+import { getR32MatchSides } from "@/lib/r32-bracket";
 import type { GroupLetter } from "@/types";
 import type {
   GroupPredictions,
@@ -55,22 +56,6 @@ export function isThirdPlaceComplete(
   return advancers.every((id) => candidates.has(id));
 }
 
-/** 32 teams entering Round of 32: 12 winners, 12 runners-up, 8 third-place advancers. */
-export function getRoundOf32Pool(prediction: TournamentPrediction): string[] {
-  const firsts = GROUPS.map((g) => prediction.groups[g][0]);
-  const seconds = GROUPS.map((g) => prediction.groups[g][1]);
-  return [...firsts, ...seconds, ...prediction.thirdPlaceAdvancers];
-}
-
-export function getR32Pairings(prediction: TournamentPrediction): [string, string][] {
-  const pool = getRoundOf32Pool(prediction);
-  const pairs: [string, string][] = [];
-  for (let i = 0; i < R32_MATCH_IDS.length; i++) {
-    pairs.push([pool[i * 2] ?? "", pool[i * 2 + 1] ?? ""]);
-  }
-  return pairs;
-}
-
 function getMatchWinner(
   matchId: string,
   knockoutWinners: Record<string, string>,
@@ -108,10 +93,8 @@ export function getMatchSides(
   }
 
   if (match.feedsFrom[0] === null && match.feedsFrom[1] === null) {
-    const idx = R32_MATCH_IDS.indexOf(matchId as (typeof R32_MATCH_IDS)[number]);
-    if (idx >= 0) {
-      const pairs = getR32Pairings(prediction);
-      return pairs[idx] ?? ["", ""];
+    if (R32_MATCH_IDS.includes(matchId as (typeof R32_MATCH_IDS)[number])) {
+      return getR32MatchSides(matchId, prediction);
     }
     return ["", ""];
   }
@@ -194,6 +177,61 @@ export function clearGroupPosition(
   return { ...groups, [group]: standing };
 }
 
+export function resetGroup(
+  groups: GroupPredictions,
+  group: GroupLetter,
+): GroupPredictions {
+  return { ...groups, [group]: emptyGroupStanding() };
+}
+
+/** Move a team to another rank (shifts other placed teams). */
+export function reorderGroupStanding(
+  groups: GroupPredictions,
+  group: GroupLetter,
+  from: 0 | 1 | 2 | 3,
+  to: 0 | 1 | 2 | 3,
+): GroupPredictions {
+  if (from === to) return groups;
+
+  const standing = [...groups[group]] as GroupStanding;
+  const teamId = standing[from];
+  if (!teamId) return groups;
+
+  const placed = standing.filter(Boolean);
+  const fromPlaced = placed.indexOf(teamId);
+  if (fromPlaced < 0) return groups;
+
+  placed.splice(fromPlaced, 1);
+  const target = Math.max(0, Math.min(to, placed.length));
+  placed.splice(target, 0, teamId);
+
+  const next: GroupStanding = ["", "", "", ""];
+  placed.forEach((id, i) => {
+    next[i] = id;
+  });
+
+  return { ...groups, [group]: next };
+}
+
+/** Auto-rank teams in a group (alphabetical — adjust order manually). */
+export function autoFillGroup(
+  groups: GroupPredictions,
+  group: GroupLetter,
+): GroupPredictions {
+  const ordered = getTeamsByGroup(group)
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((t) => t.id);
+  return {
+    ...groups,
+    [group]: [
+      ordered[0] ?? "",
+      ordered[1] ?? "",
+      ordered[2] ?? "",
+      ordered[3] ?? "",
+    ],
+  };
+}
+
 export function toggleThirdPlaceAdvancer(
   advancers: string[],
   teamId: string,
@@ -258,7 +296,7 @@ export function setKnockoutWinner(
 }
 
 export function completionPercent(prediction: TournamentPrediction): number {
-  let total = GROUPS.length * 4 + 8 + BRACKET_MATCHES.length;
+  const total = GROUPS.length * 4 + 8 + BRACKET_MATCHES.length;
   let done = 0;
 
   for (const g of GROUPS) {

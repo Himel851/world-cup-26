@@ -3,7 +3,7 @@
 import * as React from "react";
 import { ChevronRight, RotateCcw, Sparkles, Trophy } from "lucide-react";
 
-import { GroupPredictionCard } from "@/components/predictions/GroupPredictionCard";
+import { GroupStandingsSection } from "@/components/predictions/GroupStandingsSection";
 import { KnockoutBracket } from "@/components/predictions/KnockoutBracket";
 import { ThirdPlacePicker } from "@/components/predictions/ThirdPlacePicker";
 import { getTeamById } from "@/components/predictions/TeamLabel";
@@ -94,13 +94,13 @@ export function PredictionsClient() {
           <Sparkles className="h-3.5 w-3.5" />
           Bracket Predictor
         </p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+        {/* <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
           Your World Cup 2026 Prediction
         </h1>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
           Rank every group, pick 8 third-place advancers, then predict every knockout
           round through the final. Saved automatically in your browser.
-        </p>
+        </p> */}
 
         <div className="mt-5 flex flex-wrap items-center gap-4">
           <div className="min-w-[200px] flex-1 max-w-md">
@@ -163,12 +163,12 @@ export function PredictionsClient() {
       {step === "groups" && (
         <section>
           <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-            <div>
+            {/* <div>
               <h2 className="text-xl font-bold">Group standings</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Tap teams in order — 1st, 2nd, 3rd, 4th for each group.
+                Tap team flags to rank each group — or use auto-fill per group.
               </p>
-            </div>
+            </div> */}
             {groupsDone && (
               <Button type="button" size="sm" onClick={() => setStep("third_place")}>
                 Next: 3rd place
@@ -176,16 +176,10 @@ export function PredictionsClient() {
               </Button>
             )}
           </div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {GROUPS.map((group) => (
-              <GroupPredictionCard
-                key={group}
-                group={group}
-                groups={prediction.groups}
-                onChange={updateGroups}
-              />
-            ))}
-          </div>
+          <GroupStandingsSection
+            groups={prediction.groups}
+            onChange={updateGroups}
+          />
         </section>
       )}
 

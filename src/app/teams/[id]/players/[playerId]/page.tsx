@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TEAMS_BY_ID } from "@/data/teams";
 import { getPlayer, getPlayerForTeam, isApiFootballConfigured } from "@/lib/api-football";
+import { getPlayerFromList } from "@/lib/player-list";
 import { getTeamWithRanking } from "@/lib/teams-with-rankings";
 
 interface PageProps {
@@ -19,8 +20,10 @@ export const revalidate = 2592000;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { playerId } = await params;
-  const player = await getPlayer(Number(playerId));
-  
+  const id = Number(playerId);
+  const player =
+    getPlayerFromList(id) ?? (isApiFootballConfigured() ? await getPlayer(id) : null);
+
   if (!player) return { title: "Player not found" };
   return {
     title: player.name,
@@ -35,23 +38,15 @@ export default async function PlayerDetailPage({ params }: PageProps) {
   if (!team) notFound();
 
   const teamWithRank = await getTeamWithRanking(id);
+  const numericPlayerId = Number(playerId);
 
-  if (!isApiFootballConfigured()) {
-    return (
-      <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-        <p className="text-muted-foreground">
-          Set <code className="text-emerald-300">API_FOOTBALL_KEY</code> in{" "}
-          <code className="text-emerald-300">src/config/global-variables.ts</code> to load player
-          profiles.
-        </p>
-        <Button asChild variant="secondary" className="mt-6">
-          <Link href={`/teams/${id}`}>Back to team</Link>
-        </Button>
-      </div>
-    );
-  }
+  const fromList = getPlayerFromList(numericPlayerId);
+  const player =
+    fromList ??
+    (isApiFootballConfigured()
+      ? await getPlayerForTeam(id, numericPlayerId, team.fifaCode, team.name)
+      : null);
 
-  const player = await getPlayerForTeam(id, Number(playerId), team.fifaCode, team.name);
   if (!player) notFound();
 
   return (

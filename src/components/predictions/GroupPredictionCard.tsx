@@ -1,124 +1,211 @@
 "use client";
 
-import { Check } from "lucide-react";
+import * as React from "react";
+import Image from "next/image";
+import { BarChart3, GripVertical, RotateCcw, Sparkles } from "lucide-react";
 
-import { TeamFlag, TeamLabel } from "@/components/predictions/TeamLabel";
+import { getTeamById } from "@/components/predictions/TeamLabel";
 import { getTeamsByGroup } from "@/data/teams";
 import {
-  clearGroupPosition,
+  autoFillGroup,
   isGroupComplete,
+  reorderGroupStanding,
+  resetGroup,
   setGroupPosition,
 } from "@/lib/predictions";
 import { cn } from "@/lib/utils";
 import type { GroupLetter } from "@/types";
 import type { GroupPredictions } from "@/types/predictions";
 
-const POSITIONS = [
-  { idx: 0 as const, label: "1st", color: "text-emerald-300" },
-  { idx: 1 as const, label: "2nd", color: "text-cyan-300" },
-  { idx: 2 as const, label: "3rd", color: "text-amber-300" },
-  { idx: 3 as const, label: "4th", color: "text-muted-foreground" },
-];
+const RANKS = [0, 1, 2, 3] as const;
+type RankIndex = (typeof RANKS)[number];
 
 interface GroupPredictionCardProps {
   group: GroupLetter;
   groups: GroupPredictions;
   onChange: (groups: GroupPredictions) => void;
+  activePosition: number | null;
+  onSelectPosition: (position: RankIndex) => void;
 }
 
-export function GroupPredictionCard({ group, groups, onChange }: GroupPredictionCardProps) {
+export function GroupPredictionCard({
+  group,
+  groups,
+  onChange,
+  activePosition,
+  onSelectPosition,
+}: GroupPredictionCardProps) {
   const standing = groups[group];
   const teams = getTeamsByGroup(group);
   const complete = isGroupComplete(standing);
+  const [dragFrom, setDragFrom] = React.useState<RankIndex | null>(null);
+  const [dropOver, setDropOver] = React.useState<RankIndex | null>(null);
 
-  function assign(teamId: string, position: 0 | 1 | 2 | 3) {
-    onChange(setGroupPosition(groups, group, teamId, position));
+  function assign(teamId: string) {
+    const slot =
+      activePosition != null
+        ? (activePosition as RankIndex)
+        : (standing.findIndex((id) => !id) as RankIndex);
+    if (slot < 0) return;
+    onChange(setGroupPosition(groups, group, teamId, slot));
   }
 
-  function clear(position: 0 | 1 | 2 | 3) {
-    onChange(clearGroupPosition(groups, group, position));
+  function handleDrop(to: RankIndex) {
+    if (dragFrom == null || dragFrom === to) return;
+    onChange(reorderGroupStanding(groups, group, dragFrom, to));
+    setDragFrom(null);
+    setDropOver(null);
   }
 
   return (
-    <article
-      className={cn(
-        "rounded-2xl border p-4 transition-colors",
-        complete
-          ? "border-emerald-400/30 bg-emerald-400/[0.04]"
-          : "border-white/10 bg-white/[0.03]",
-      )}
-    >
-      <div className="mb-3 flex items-center justify-between gap-2">
-        <h3 className="text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-300">
-          Group {group}
-        </h3>
-        {complete && (
-          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-300">
-            <Check className="h-3 w-3" />
-            Done
-          </span>
-        )}
-      </div>
+    <article className="flex w-full flex-col overflow-hidden rounded-xl shadow-lg ring-1 ring-black/20">
+      <header className="bg-[#0b1a33] px-3 pb-2.5 pt-3">
+        <div className="mb-2.5 flex items-center justify-between gap-2">
+          <h3 className="text-sm font-black uppercase tracking-wide text-white">
+            Group {group}
+          </h3>
+          <BarChart3 className="h-4 w-4 text-white/70" aria-hidden />
+        </div>
 
-      <div className="space-y-2">
-        {POSITIONS.map(({ idx, label, color }) => {
+        <div className="grid grid-cols-4 gap-1">
+          {teams.map((team) => {
+            const assignedIdx = standing.indexOf(team.id);
+            const isAssigned = assignedIdx >= 0;
+            return (
+              <button
+                key={team.id}
+                type="button"
+                disabled={isAssigned}
+                onClick={() => assign(team.id)}
+                className={cn(
+                  "flex flex-col items-center gap-0.5 rounded-md px-0.5 py-1.5 transition-colors",
+                  isAssigned
+                    ? "cursor-default opacity-40"
+                    : "bg-white/10 hover:bg-white/20",
+                )}
+                title={isAssigned ? `Placed ${assignedIdx + 1}${ordinal(assignedIdx + 1)}` : team.name}
+              >
+                <span className="relative h-5 w-7 overflow-hidden rounded-sm ring-1 ring-white/20">
+                  <Image src={team.flag} alt="" fill sizes="28px" className="object-cover" />
+                </span>
+                <span className="text-[9px] font-bold uppercase text-white">
+                  {team.fifaCode}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </header>
+
+      <div className="min-h-[9.5rem] bg-white">
+        {RANKS.map((idx) => {
           const teamId = standing[idx];
+          const team = teamId ? getTeamById(teamId) : null;
+          const isActive = activePosition === idx;
+          const isDragging = dragFrom === idx;
+          const isDropTarget = dropOver === idx && dragFrom != null && dragFrom !== idx;
+
           return (
             <div
-              key={label}
-              className="flex items-center gap-2 rounded-xl border border-white/5 bg-black/20 px-2.5 py-2"
+              key={idx}
+              draggable={Boolean(team)}
+              onDragStart={(e) => {
+                if (!team) return;
+                setDragFrom(idx);
+                e.dataTransfer.effectAllowed = "move";
+                e.dataTransfer.setData("text/plain", String(idx));
+              }}
+              onDragEnd={() => {
+                setDragFrom(null);
+                setDropOver(null);
+              }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                if (dragFrom != null) setDropOver(idx);
+              }}
+              onDragLeave={() => setDropOver((prev) => (prev === idx ? null : prev))}
+              onDrop={(e) => {
+                e.preventDefault();
+                handleDrop(idx);
+              }}
+              onClick={() => {
+                if (!team) onSelectPosition(idx);
+              }}
+              onKeyDown={(e) => {
+                if (!team && (e.key === "Enter" || e.key === " ")) {
+                  e.preventDefault();
+                  onSelectPosition(idx);
+                }
+              }}
+              role={team ? undefined : "button"}
+              tabIndex={team ? undefined : 0}
+              className={cn(
+                "flex w-full items-center gap-2 border-b border-slate-200 px-2.5 py-2 text-left transition-colors last:border-b-0",
+                team && "cursor-grab active:cursor-grabbing",
+                isDragging && "opacity-40",
+                isActive && !team && "bg-sky-100 ring-2 ring-inset ring-sky-500",
+                isDropTarget && "bg-emerald-50 ring-2 ring-inset ring-emerald-400",
+                !isActive && !isDropTarget && !isDragging && (team ? "hover:bg-slate-50" : "hover:bg-slate-50"),
+              )}
             >
-              <span className={cn("w-8 shrink-0 text-[10px] font-bold uppercase", color)}>
-                {label}
+              <span className="w-4 shrink-0 text-sm font-black text-slate-800">
+                {team ? idx + 1 : "–"}
               </span>
-              {teamId ? (
-                <button
-                  type="button"
-                  onClick={() => clear(idx)}
-                  className="flex min-w-0 flex-1 items-center gap-2 rounded-lg py-0.5 text-left transition-colors hover:text-emerald-200"
-                  title="Click to clear"
-                >
-                  <TeamLabel teamId={teamId} />
-                </button>
+
+              {team ? (
+                <>
+                  <span className="relative h-4 w-6 shrink-0 overflow-hidden rounded-sm ring-1 ring-slate-200">
+                    <Image
+                      src={team.flag}
+                      alt=""
+                      fill
+                      sizes="24px"
+                      className="object-cover"
+                    />
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-[11px] font-black uppercase tracking-tight text-slate-900">
+                    {team.name}
+                  </span>
+                  <GripVertical
+                    className="h-4 w-4 shrink-0 text-slate-400"
+                    aria-hidden
+                  />
+                </>
               ) : (
-                <span className="text-xs text-muted-foreground">Pick a team →</span>
+                <span className="text-sm font-bold text-slate-300">–</span>
               )}
             </div>
           );
         })}
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {teams.map((team) => {
-          const assignedIdx = standing.indexOf(team.id);
-          const isAssigned = assignedIdx >= 0;
-          return (
-            <button
-              key={team.id}
-              type="button"
-              disabled={isAssigned}
-              onClick={() => {
-                const nextSlot = standing.findIndex((id) => !id) as 0 | 1 | 2 | 3;
-                if (nextSlot >= 0) assign(team.id, nextSlot);
-              }}
-              className={cn(
-                "inline-flex items-center gap-1.5 rounded-lg border px-2 py-1.5 text-xs font-medium transition-colors",
-                isAssigned
-                  ? "cursor-default border-white/5 bg-white/[0.02] text-muted-foreground opacity-60"
-                  : "border-white/10 bg-white/[0.04] hover:border-emerald-400/40 hover:bg-emerald-400/10",
-              )}
-            >
-              <TeamFlag teamId={team.id} />
-              <span className="max-w-[5.5rem] truncate sm:max-w-none">{team.name}</span>
-              {isAssigned && (
-                <span className="text-[10px] text-emerald-300/80">
-                  {POSITIONS[assignedIdx]?.label}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+      <footer className="flex items-center justify-center gap-2 bg-[#0b1a33] py-2.5">
+        <button
+          type="button"
+          onClick={() => onChange(resetGroup(groups, group))}
+          className="grid h-9 w-9 place-items-center rounded-full bg-white text-slate-800 shadow-md transition-transform hover:scale-105"
+          aria-label={`Reset group ${group}`}
+        >
+          <RotateCcw className="h-4 w-4" />
+        </button>
+        {!complete && (
+          <button
+            type="button"
+            onClick={() => onChange(autoFillGroup(groups, group))}
+            className="grid h-9 w-9 place-items-center rounded-full bg-orange-500 text-white shadow-md transition-transform hover:scale-105"
+            aria-label={`Auto-fill group ${group}`}
+          >
+            <Sparkles className="h-4 w-4" />
+          </button>
+        )}
+      </footer>
     </article>
   );
+}
+
+function ordinal(n: number): string {
+  if (n === 1) return "st";
+  if (n === 2) return "nd";
+  if (n === 3) return "rd";
+  return "th";
 }

@@ -2,23 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, Sparkles, TrendingUp } from "lucide-react";
+import { Calendar, LayoutGrid, Sparkles, TrendingUp } from "lucide-react";
 
-import { FixtureCard } from "@/components/fixtures/FixtureCard";
-import {
-  SquadUnavailable,
-  TeamSquadSection,
-} from "@/components/teams/TeamSquadSection";
-import { API_FOOTBALL_SEASON } from "@/config/global-variables";
+import { TeamDetailsTabs } from "@/components/teams/TeamDetailsTabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getFixturesForTeam } from "@/data/fixtures";
-import { TEAMS, TEAMS_BY_ID } from "@/data/teams";
-import {
-  getTeamSquadByFifaCode,
-  isApiFootballConfigured,
-  squadUnavailableReason,
-} from "@/lib/api-football";
+import { TEAMS } from "@/data/teams";
+import { getTeamSquadFromList } from "@/lib/player-list";
 import {
   formatPoints,
   formatRank,
@@ -51,30 +42,13 @@ export async function generateMetadata({
 
 export default async function TeamDetailsPage({ params }: PageProps) {
   const { id } = await params;
-  const apiConfigured = isApiFootballConfigured();
-  const fifaCode = TEAMS_BY_ID[id]?.fifaCode ?? "";
-  const teamName = TEAMS_BY_ID[id]?.name ?? "";
 
-  const [team, allTeams, squad] = await Promise.all([
+  const [team, allTeams] = await Promise.all([
     getTeamWithRanking(id),
     getTeamsWithRankings(),
-    apiConfigured ? getTeamSquadByFifaCode(fifaCode, teamName) : null,
   ]);
 
-  const squadDebug = {
-    teamId: id,
-    fifaCode,
-    teamName,
-    apiConfigured,
-    season: API_FOOTBALL_SEASON,
-    squadLoaded: Boolean(squad),
-    playerCount: squad?.players.length ?? 0,
-    willShowTeamSquadSection: Boolean(squad),
-    unavailableReason: squad ? null : squadUnavailableReason(),
-    env: process.env.NODE_ENV,
-    timestamp: new Date().toISOString(),
-  };
-
+  const squad = getTeamSquadFromList(id);
 
   if (!team) notFound();
 
@@ -90,18 +64,18 @@ export default async function TeamDetailsPage({ params }: PageProps) {
         <div className="pointer-events-none absolute inset-0 bg-emerald-400/5 opacity-40" />
         <div className="pointer-events-none absolute inset-0 pitch-grid opacity-30" />
 
-        <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-10 sm:px-6 lg:px-8">
-          <Button asChild variant="ghost" size="sm" className="mb-6">
+        <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          {/* <Button asChild variant="ghost" size="sm" className="mb-6">
             <Link href="/teams">
               <ArrowLeft className="h-4 w-4" />
               All teams
             </Link>
-          </Button>
+          </Button> */}
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
+            {/* <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
               Group {team?.group} · {r?.confederation ?? team?.continent}
-            </p>
+            </p> */}
             <h1 className="mt-2 flex flex-wrap items-center gap-3 sm:gap-4">
               <span className="relative h-9 w-12 shrink-0 overflow-hidden rounded-md ring-1 ring-white/15 sm:h-11 sm:w-14">
                 <Image
@@ -117,10 +91,6 @@ export default async function TeamDetailsPage({ params }: PageProps) {
                 {team?.name}
               </span>
             </h1>
-            <p className="mt-4 max-w-xl text-muted-foreground sm:text-lg">
-              Live FIFA ranking data for {team?.name} at World Cup 2026 — Group{" "}
-              {team?.group}.
-            </p>
 
             <div className="mt-6 flex flex-wrap gap-2">
               <Badge variant="primary">FIFA {formatRank(team)}</Badge>
@@ -137,12 +107,18 @@ export default async function TeamDetailsPage({ params }: PageProps) {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="secondary">
+                <Link href={`/best-11?team=${team?.id}`}>
+                  <LayoutGrid className="h-4 w-4" />
+                  Best XI
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="ghost">
                 <Link href={`/fixtures?team=${team?.id}`}>
                   <Calendar className="h-4 w-4" />
                   View fixtures
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="ghost">
+              <Button asChild size="sm" variant="ghost" className="sm:size-lg">
                 <Link href="/rankings">
                   <TrendingUp className="h-4 w-4" />
                   Full rankings
@@ -152,41 +128,7 @@ export default async function TeamDetailsPage({ params }: PageProps) {
           </div>
         </div>
       </div>
-      {/* {squad ? (
-        <TeamSquadSection squad={squad} localTeamId={team?.id} />
-      ) : (
-        <SquadUnavailable reason={squadUnavailableReason()} />
-      )} */}
-
-      {squad && (
-        <TeamSquadSection squad={squad} localTeamId={team?.id} />
-      )}
-
-      <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between gap-2">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sky-300">
-              Official schedule
-            </p>
-            <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
-              Group stage fixtures
-            </h2>
-          </div>
-          <Link
-            href={`/fixtures?team=${team?.id}`}
-            className="text-sm font-semibold text-emerald-300 hover:text-emerald-200"
-          >
-            All fixtures
-          </Link>
-        </div>
-        <ul className="mt-6 grid gap-4 lg:grid-cols-3">
-          {teamFixtures.map((fixture) => (
-            <li key={fixture.id}>
-              <FixtureCard fixture={fixture} highlightTeamId={team?.id} />
-            </li>
-          ))}
-        </ul>
-      </section>
+      <TeamDetailsTabs teamId={team.id} squad={squad} fixtures={teamFixtures} />
 
       <div className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between gap-2">
