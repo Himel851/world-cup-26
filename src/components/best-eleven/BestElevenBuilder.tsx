@@ -21,6 +21,7 @@ import {
   autoFillLineup,
   getFormation,
   playersForSlot,
+  POSITION_LEGEND,
   sanitizeBestElevenState,
   slotToPositionFilter,
   type FormationSlot,
@@ -252,6 +253,8 @@ export function BestElevenBuilder({
             <span className="lg:hidden">Tap a position on the pitch to pick a player</span>
             <span className="hidden lg:inline">Click a position on the pitch to pick a player</span>
           </p>
+
+          <PositionLegendNote />
         </div>
       </div>
 
@@ -271,6 +274,24 @@ export function BestElevenBuilder({
           onClose={closePopup}
         />
       )}
+    </div>
+  );
+}
+
+function PositionLegendNote() {
+  return (
+    <div className="mt-4 rounded-xl border border-white/10 bg-white/2 px-3 py-3 sm:px-4">
+      <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300/90">
+        Position key
+      </p>
+      <dl className="mt-2 flex flex-wrap gap-x-3 gap-y-1.5">
+        {POSITION_LEGEND.map(({ abbr, full }) => (
+          <div key={abbr} className="flex items-baseline gap-1.5 text-[11px] sm:text-xs">
+            <dt className="font-bold text-foreground">{abbr}</dt>
+            <dd className="text-muted-foreground">{full}</dd>
+          </div>
+        ))}
+      </dl>
     </div>
   );
 }

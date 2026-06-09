@@ -196,24 +196,74 @@ export const DEFAULT_FORMATION_ID = "4-3-3";
 /** Pull lines toward center so GK + all 10 outfield players fit without scrolling. */
 const GK_SLOT_Y = 84;
 const VERTICAL_COMPRESS = 0.86;
+/** Min % distance between slot centers in the same column (icon + label need ~14%). */
+const MIN_VERTICAL_GAP = 14;
+const SAME_COLUMN_X_THRESHOLD = 18;
 
 function layoutSlotY(slot: FormationSlot): FormationSlot {
   if (slot.role === "GK") return { ...slot, y: GK_SLOT_Y };
   return { ...slot, y: Math.round(50 + (slot.y - 50) * VERTICAL_COMPRESS) };
 }
 
+/** Nudge rows apart when compression stacks CB/GK or CAM/CM on the same column. */
+function resolveVerticalOverlaps(slots: FormationSlot[]): FormationSlot[] {
+  const byId = new Map<string, FormationSlot>();
+  const placed: FormationSlot[] = [];
+
+  const gk = slots.find((s) => s.role === "GK");
+  const outfield = slots
+    .filter((s) => s.role !== "GK")
+    .sort((a, b) => b.y - a.y);
+  const ordered = gk ? [gk, ...outfield] : outfield;
+
+  for (const slot of ordered) {
+    let y = slot.y;
+
+    for (const other of placed) {
+      if (Math.abs(other.x - slot.x) > SAME_COLUMN_X_THRESHOLD) continue;
+      if (other.y > y && other.y - y < MIN_VERTICAL_GAP) {
+        y = other.y - MIN_VERTICAL_GAP;
+      }
+    }
+
+    const resolved = { ...slot, y: Math.max(y, 12) };
+    placed.push(resolved);
+    byId.set(slot.id, resolved);
+  }
+
+  return slots.map((s) => byId.get(s.id)!);
+}
+
 export function getFormation(id: string): FormationDefinition {
   const formation = FORMATIONS.find((f) => f.id === id) ?? FORMATIONS[0]!;
-  return {
-    ...formation,
-    slots: formation.slots.map(layoutSlotY),
-  };
+  const slots = resolveVerticalOverlaps(formation.slots.map(layoutSlotY));
+  return { ...formation, slots };
 }
 
 /** @deprecated Use getFormation(DEFAULT_FORMATION_ID).slots */
 export const FORMATION_4_3_1_2 = getFormation("4-3-1-2").slots;
 
 export type PositionFilter = "ALL" | "GK" | "DEF" | "MID" | "FWD";
+
+/** Pitch label abbreviations → full position names (shown below the formation). */
+export const POSITION_LEGEND: readonly { abbr: string; full: string }[] = [
+  { abbr: "GK", full: "Goalkeeper" },
+  { abbr: "LB", full: "Left Back" },
+  { abbr: "CB", full: "Centre Back" },
+  { abbr: "RB", full: "Right Back" },
+  { abbr: "LWB", full: "Left Wing-Back" },
+  { abbr: "RWB", full: "Right Wing-Back" },
+  { abbr: "LM", full: "Left Midfielder" },
+  { abbr: "CM", full: "Central Midfielder" },
+  { abbr: "RM", full: "Right Midfielder" },
+  { abbr: "CDM", full: "Central Defensive Midfielder" },
+  { abbr: "CAM", full: "Central Attacking Midfielder" },
+  { abbr: "LAM", full: "Left Attacking Midfielder" },
+  { abbr: "RAM", full: "Right Attacking Midfielder" },
+  { abbr: "LW", full: "Left Winger" },
+  { abbr: "RW", full: "Right Winger" },
+  { abbr: "ST", full: "Striker" },
+];
 
 export function shortPlayerName(name: string): string {
   const parts = name.trim().split(/\s+/);

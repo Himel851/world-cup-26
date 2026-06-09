@@ -31,7 +31,7 @@ export default async function BestElevenPage() {
         <h1 className="mt-1.5 text-2xl font-black tracking-tight sm:mt-2 sm:text-4xl lg:text-5xl">
           Build your <span className="text-gradient">Best XI</span>
         </h1>
-        <p className="mt-3 max-w-2xl text-sm text-muted-foreground sm:text-base">
+        <p className="mt-3 max-w-2xl text-sm text-muted-foreground sm:text-base hidden md:block">
           Pick a formation, click a position on the pitch, and choose from players across all 48
           nations.
         </p>
