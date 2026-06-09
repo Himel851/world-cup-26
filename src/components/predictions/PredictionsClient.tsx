@@ -36,6 +36,42 @@ function stepUnlocked(step: PredictionStep, prediction: TournamentPrediction): b
   return isThirdPlaceComplete(prediction.groups, prediction.thirdPlaceAdvancers);
 }
 
+/** Desktop: inline centred CTA. Mobile: fixed bar above the tab bar. */
+function StepNextButton({
+  show,
+  onClick,
+  children,
+}: {
+  show: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  if (!show) return null;
+
+  const button = (
+    <Button type="button" className="w-full max-w-xs sm:w-auto" size="sm" onClick={onClick}>
+      {children}
+    </Button>
+  );
+
+  return (
+    <>
+      <div className="mt-6 hidden justify-center sm:flex">{button}</div>
+
+      <div
+        className={cn(
+          "fixed inset-x-0 z-30 border-t border-white/10 bg-background/95 px-4 py-3 backdrop-blur-md sm:hidden",
+          "bottom-[calc(3.75rem+env(safe-area-inset-bottom))]",
+        )}
+      >
+        <div className="mx-auto flex max-w-lg justify-center">{button}</div>
+      </div>
+
+      <div className="h-[4.5rem] sm:hidden" aria-hidden />
+    </>
+  );
+}
+
 export function PredictionsClient() {
   const [prediction, setPrediction, ready] = useLocalStorage<TournamentPrediction>(
     PREDICTIONS_STORAGE_KEY,
@@ -144,7 +180,7 @@ export function PredictionsClient() {
               disabled={!unlocked}
               onClick={() => unlocked && setStep(s.key)}
               className={cn(
-                "inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors sm:flex-none sm:px-5",
+                "inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-xs md:text-sm font-semibold transition-colors sm:flex-none sm:px-5",
                 active
                   ? "bg-emerald-400/15 text-emerald-300 ring-1 ring-emerald-400/30"
                   : unlocked
@@ -162,48 +198,34 @@ export function PredictionsClient() {
 
       {step === "groups" && (
         <section>
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-            {/* <div>
-              <h2 className="text-xl font-bold">Group standings</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Tap team flags to rank each group — or use auto-fill per group.
-              </p>
-            </div> */}
-            {groupsDone && (
-              <Button type="button" size="sm" onClick={() => setStep("third_place")}>
-                Next: 3rd place
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
           <GroupStandingsSection
             groups={prediction.groups}
             onChange={updateGroups}
           />
+          <StepNextButton show={groupsDone} onClick={() => setStep("third_place")}>
+            Next: 3rd place
+            <ChevronRight className="h-4 w-4" />
+          </StepNextButton>
         </section>
       )}
 
       {step === "third_place" && (
         <section>
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h2 className="text-xl font-bold">Third-place advancers</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Select 8 teams to complete the Round of 32 field.
-              </p>
-            </div>
-            {thirdsDone && (
-              <Button type="button" size="sm" onClick={() => setStep("knockout")}>
-                Next: Knockout
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            )}
+          <div className="mb-6 text-center">
+            <h2 className="text-xl font-bold">Third-place advancers</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Select 8 teams to complete the Round of 32 field.
+            </p>
           </div>
           <ThirdPlacePicker
             groups={prediction.groups}
             advancers={prediction.thirdPlaceAdvancers}
             onChange={updateThirdPlace}
           />
+          <StepNextButton show={thirdsDone} onClick={() => setStep("knockout")}>
+            Next: Knockout
+            <ChevronRight className="h-4 w-4" />
+          </StepNextButton>
         </section>
       )}
 

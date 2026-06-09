@@ -13,6 +13,7 @@ interface BracketMatchCardProps {
   winner: string | undefined;
   ready: boolean;
   compact?: boolean;
+  fullWidth?: boolean;
   highlight?: boolean;
   variant?: "tree" | "plain";
   onPick: (teamId: string) => void;
@@ -26,6 +27,7 @@ export function BracketMatchCard({
   winner,
   ready,
   compact = false,
+  fullWidth = false,
   highlight = false,
   variant = "tree",
   onPick,
@@ -36,24 +38,30 @@ export function BracketMatchCard({
     <div
       className={cn(
         "overflow-hidden rounded-xl shadow-lg transition-opacity",
-        isTree ? "bg-[#1a2d52]" : "border border-white/15 bg-[#0a1220]/90 backdrop-blur-sm",
+        isTree
+          ? "bg-white ring-1 ring-sky-900/15"
+          : "border border-white/15 bg-[#0a1220]/90 backdrop-blur-sm",
         highlight && winner && "ring-2 ring-orange-400",
         !ready && isTree && "opacity-75",
-        compact ? "w-[148px]" : "w-[172px] sm:w-[180px]",
-        isTree && "min-h-[118px]",
+        fullWidth
+          ? "w-full max-w-md"
+          : compact
+            ? "w-[148px]"
+            : "w-[172px] sm:w-[180px]",
+        isTree && !fullWidth && "min-h-[118px]",
       )}
     >
       {isTree && (venueName || dateLabel || timeLabel) && (
-        <div className="shrink-0 border-b border-white/10 px-2.5 py-1.5 text-center">
+        <div className="shrink-0 border-b border-sky-800/50 bg-sky-900 px-2.5 py-1.5 text-center">
           <p className="truncate text-[10px] font-bold leading-tight text-white">
             {venueName ?? "Venue TBD"}
           </p>
           {timeLabel && (
-            <p className="mt-0.5 truncate text-[9px] font-bold text-orange-300">
+            <p className="mt-0.5 truncate text-[9px] font-bold text-sky-200">
               {timeLabel}
             </p>
           )}
-          <p className="mt-0.5 truncate text-[9px] font-semibold text-orange-400/90">
+          <p className="mt-0.5 truncate text-[9px] font-semibold text-orange-300">
             {dateLabel ?? "Date TBD"}
           </p>
         </div>
@@ -71,7 +79,7 @@ export function BracketMatchCard({
             disabled={!ready || !teamId}
             onClick={() => teamId && onPick(teamId)}
             className={cn(
-              "flex h-[34px] w-full items-center gap-2 border-b border-white/10 px-2.5 text-left last:border-b-0 transition-colors",
+              "flex h-[34px] w-full items-center gap-2 border-b border-slate-200 px-2.5 text-left last:border-b-0 transition-colors cursor-pointer",
               isTree
                 ? isWinner
                   ? "bg-orange-500 text-slate-900"
@@ -81,7 +89,7 @@ export function BracketMatchCard({
                     isPicked && !isWinner && teamId && "opacity-50",
                     ready && teamId && !isWinner && "hover:bg-white/5",
                   ),
-              !teamId && "cursor-default bg-white/90",
+              !teamId && "cursor-default bg-sky-50 text-slate-500",
             )}
           >
             {team ? (
