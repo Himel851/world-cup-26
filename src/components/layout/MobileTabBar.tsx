@@ -3,9 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Calendar,
   CalendarClock,
-  Gamepad2,
   GitBranch,
   Goal,
   LayoutGrid,
