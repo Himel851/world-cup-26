@@ -2,9 +2,8 @@ import Link from "next/link";
 import { CalendarClock } from "lucide-react";
 
 import { FixturesExplorer } from "@/components/fixtures/FixturesExplorer";
-import { Button } from "@/components/ui/button";
-import { FIXTURES } from "@/data/fixtures";
 import { GROUPS, TEAMS } from "@/data/teams";
+import { getEnrichedFixtures } from "@/lib/match-service";
 import { createPageMetadata, WC26_KEYWORDS } from "@/lib/seo";
 import type { GroupLetter } from "@/types";
 
@@ -15,6 +14,8 @@ export const metadata = createPageMetadata({
   path: "/fixtures",
   keywords: [...WC26_KEYWORDS, "World Cup schedule", "match fixtures", "kickoff times", "knockout bracket"],
 });
+
+export const revalidate = 300;
 
 interface PageProps {
   searchParams: Promise<{ group?: string; team?: string }>;
@@ -31,6 +32,7 @@ export default async function FixturesPage({ searchParams }: PageProps) {
   const initialGroup = parseGroup(group);
   const initialTeamId =
     team && TEAMS.some((t) => t.id === team) ? team : "";
+  const fixtures = await getEnrichedFixtures();
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-16 pt-4 sm:px-6 sm:pb-20 sm:pt-10 lg:px-8">
@@ -53,7 +55,7 @@ export default async function FixturesPage({ searchParams }: PageProps) {
       </header> */}
 
       <FixturesExplorer
-        fixtures={FIXTURES}
+        fixtures={fixtures}
         initialGroup={initialGroup}
         initialTeamId={initialTeamId}
       />

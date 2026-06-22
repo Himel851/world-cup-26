@@ -15,25 +15,20 @@ function TeamSide({
   teamId,
   align,
   highlight,
+  linkable = true,
 }: {
   teamId: string;
   align: "home" | "away";
   highlight: boolean;
+  linkable?: boolean;
 }) {
   const team = TEAMS_BY_ID[teamId];
   if (!team) return null;
 
   const isHome = align === "home";
 
-  return (
-    <Link
-      href={`/teams/${team.id}`}
-      className={cn(
-        "group/side flex min-w-0 flex-1 items-center gap-2 py-3 transition-colors sm:gap-2.5 sm:py-3.5",
-        isHome ? "justify-end text-right" : "justify-start text-left",
-        highlight && "rounded-lg bg-emerald-400/10 ring-1 ring-inset ring-emerald-400/25",
-      )}
-    >
+  const content = (
+    <>
       {isHome && (
         <span
           className="min-w-0 truncate text-xs font-semibold leading-tight text-foreground group-hover/side:text-emerald-200 sm:text-sm"
@@ -59,6 +54,22 @@ function TeamSide({
           {team.name}
         </span>
       )}
+    </>
+  );
+
+  const className = cn(
+    "group/side flex min-w-0 flex-1 items-center gap-2 py-3 transition-colors sm:gap-2.5 sm:py-3.5",
+    isHome ? "justify-end text-right" : "justify-start text-left",
+    highlight && "rounded-lg bg-emerald-400/10 ring-1 ring-inset ring-emerald-400/25",
+  );
+
+  if (!linkable) {
+    return <div className={className}>{content}</div>;
+  }
+
+  return (
+    <Link href={`/teams/${team.id}`} className={className} onClick={(e) => e.stopPropagation()}>
+      {content}
     </Link>
   );
 }
@@ -123,9 +134,10 @@ export function FixtureMatchRow({
   }
 
   return (
-    <article
+    <Link
+      href={`/fixtures/${fixture.id}`}
       className={cn(
-        "grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-3 sm:gap-3 sm:px-5",
+        "grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-3 transition-colors hover:bg-white/[0.03] sm:gap-3 sm:px-5",
         className,
       )}
     >
@@ -133,6 +145,7 @@ export function FixtureMatchRow({
         teamId={fixture.homeTeamId}
         align="home"
         highlight={highlightTeamId === fixture.homeTeamId}
+        linkable={false}
       />
       <div className="flex shrink-0 justify-center px-1">
         <TimePill fixture={fixture} />
@@ -141,8 +154,9 @@ export function FixtureMatchRow({
         teamId={fixture.awayTeamId}
         align="away"
         highlight={highlightTeamId === fixture.awayTeamId}
+        linkable={false}
       />
-    </article>
+    </Link>
   );
 }
 

@@ -2,16 +2,17 @@ import { FeaturedTeams } from "@/components/home/FeaturedTeams";
 import { GroupsGrid } from "@/components/home/GroupsGrid";
 import { HostStadiums } from "@/components/home/HostStadiums";
 import { TrendingQuizzes } from "@/components/home/TrendingQuizzes";
-import { TournamentCountdown } from "@/components/home/TournamentCountdown";
+import { TournamentHero } from "@/components/home/TournamentHero";
 import { TournamentStats } from "@/components/home/TournamentStats";
 import { WorldCupWinners } from "@/components/home/WorldCupWinners";
+import { getEnrichedFixtures } from "@/lib/match-service";
 import { getTeamsWithRankings } from "@/lib/teams-with-rankings";
 import { createPageMetadata, WC26_KEYWORDS } from "@/lib/seo";
 
 export const metadata = createPageMetadata({
   title: "FIFA World Cup 2026 · Groups, Fixtures & Quiz",
   description:
-    "Everything for FIFA World Cup 2026 — 48 nations, 12 groups, full schedule, squads, Best XI builder, and football quizzes. Countdown to kickoff.",
+    "Everything for FIFA World Cup 2026 — 48 nations, 12 groups, live schedule, squads, Best XI builder, and football quizzes.",
   path: "/",
   absoluteTitle: true,
   keywords: [
@@ -24,14 +25,17 @@ export const metadata = createPageMetadata({
   ],
 });
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 export default async function HomePage() {
-  const teams = await getTeamsWithRankings();
+  const [teams, fixtures] = await Promise.all([
+    getTeamsWithRankings(),
+    getEnrichedFixtures(),
+  ]);
 
   return (
     <>
-      <TournamentCountdown />
+      <TournamentHero fixtures={fixtures} />
       <TournamentStats />
       <GroupsGrid />
       <WorldCupWinners />

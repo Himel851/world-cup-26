@@ -27,7 +27,7 @@ const gaId = NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const defaultMeta = createPageMetadata({
   title: "FIFA World Cup 2026 · Groups, Fixtures & Quiz",
   description:
-    "Everything for FIFA World Cup 2026 — 48 nations, 12 groups, full schedule, squads, Best XI builder, and football quizzes. Countdown to kickoff.",
+    "Everything for FIFA World Cup 2026 — 48 nations, 12 groups, live schedule, squads, Best XI builder, and football quizzes.",
   path: "/",
   absoluteTitle: true,
   keywords: [

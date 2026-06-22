@@ -46,21 +46,32 @@ interface FixtureDaySectionProps {
   dateKey: string;
   fixtures: Fixture[];
   highlightTeamId?: string;
+  sectionId?: string;
+  isToday?: boolean;
 }
 
 export function FixtureDaySection({
   dateKey,
   fixtures,
   highlightTeamId,
+  sectionId,
+  isToday,
 }: FixtureDaySectionProps) {
   const kickoff = fixtures[0]?.kickoffUtc ?? dateKey;
   const title = daySectionTitle(fixtures);
 
   return (
-    <section>
-      <p className="text-xs text-muted-foreground sm:text-sm">
-        {formatDayShort(kickoff)}
-      </p>
+    <section id={sectionId} className="scroll-mt-24 sm:scroll-mt-28">
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="text-xs text-muted-foreground sm:text-sm">
+          {formatDayShort(kickoff)}
+        </p>
+        {isToday && (
+          <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-300 ring-1 ring-emerald-400/35">
+            Today
+          </span>
+        )}
+      </div>
       <h2 className="mt-0.5 text-base font-bold tracking-tight text-foreground sm:text-lg">
         {title}
       </h2>

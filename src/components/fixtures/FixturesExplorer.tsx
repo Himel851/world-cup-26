@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { GROUPS, TEAMS } from "@/data/teams";
-import { cn, formatKickoffDate } from "@/lib/utils";
+import { cn, FIXTURE_KICKOFF_TIMEZONE, formatKickoffDate } from "@/lib/utils";
 import type { Fixture, GroupLetter, GroupMatchday } from "@/types";
 import Link from "next/link";
 
@@ -24,6 +24,27 @@ type SortMode = "date" | "group";
 type ViewMode = "group" | "knockout";
 
 const MATCHDAYS: (GroupMatchday | "All")[] = ["All", 1, 2, 3];
+
+function bstDateKey(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-CA", { timeZone: FIXTURE_KICKOFF_TIMEZONE });
+}
+
+function pickScrollTargetDateKey(
+  byDate: [string, Fixture[]][],
+  todayKey: string,
+): string | null {
+  if (byDate.length === 0) return null;
+
+  const keys = byDate.map(([, dayFixtures]) => bstDateKey(dayFixtures[0]!.kickoffUtc));
+
+  const todayIndex = keys.indexOf(todayKey);
+  if (todayIndex >= 0) return keys[todayIndex]!;
+
+  const upcoming = keys.find((k) => k >= todayKey);
+  if (upcoming) return upcoming;
+
+  return keys[keys.length - 1] ?? null;
+}
 
 function GroupStageFiltersPanel({
   query,
@@ -247,6 +268,42 @@ export function FixturesExplorer({
     return [...map.entries()];
   }, [filtered]);
 
+  const todayBstKey = React.useMemo(
+    () => new Date().toLocaleDateString("en-CA", { timeZone: FIXTURE_KICKOFF_TIMEZONE }),
+    [],
+  );
+
+  const scrollTargetDateKey = React.useMemo(
+    () => pickScrollTargetDateKey(byDate, todayBstKey),
+    [byDate, todayBstKey],
+  );
+
+  const shouldAutoScroll =
+    initialGroup === "All" && !initialTeamId && !highlightTeamId;
+
+  const hasAutoScrolled = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!shouldAutoScroll || hasAutoScrolled.current || !scrollTargetDateKey) return;
+
+    const id = `fixtures-day-${scrollTargetDateKey}`;
+    const scrollToDay = () => {
+      const el = document.getElementById(id);
+      if (!el) return false;
+      hasAutoScrolled.current = true;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      return true;
+    };
+
+    if (scrollToDay()) return;
+
+    const timer = window.setTimeout(() => {
+      scrollToDay();
+    }, 100);
+
+    return () => window.clearTimeout(timer);
+  }, [shouldAutoScroll, scrollTargetDateKey, byDate.length]);
+
   const clearAll = () => {
     setQuery("");
     setGroup("All");
@@ -389,14 +446,20 @@ export function FixturesExplorer({
           </div>
         ) : (
           <div className="space-y-8 sm:space-y-10">
-            {byDate.map(([dateLabel, dayFixtures]) => (
-              <FixtureDaySection
-                key={dateLabel}
-                dateKey={dateLabel}
-                fixtures={dayFixtures}
-                highlightTeamId={highlightTeamId ?? (teamId || undefined)}
-              />
-            ))}
+            {byDate.map(([dateLabel, dayFixtures]) => {
+              const dayKey = bstDateKey(dayFixtures[0]!.kickoffUtc);
+              const isToday = dayKey === todayBstKey;
+              return (
+                <FixtureDaySection
+                  key={dateLabel}
+                  sectionId={`fixtures-day-${dayKey}`}
+                  dateKey={dateLabel}
+                  fixtures={dayFixtures}
+                  highlightTeamId={highlightTeamId ?? (teamId || undefined)}
+                  isToday={isToday}
+                />
+              );
+            })}
           </div>
         )}
       </div>
