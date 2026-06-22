@@ -37,7 +37,6 @@ export const revalidate = 300;
 export default async function MatchDetailPage({ params }: PageProps) {
   const { id } = await params;
   const detail = await getMatchDetail(id);
-  console.log(detail);
 
   if (!detail) notFound();
 
