@@ -34,13 +34,13 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
   ko("wc26-ko-r32-06", "round_of_32", "2026-07-01T01:00:00+06:00", "att", "M78 · 2E vs 2I"),
   ko("wc26-ko-r32-07", "round_of_32", "2026-07-01T07:00:00+06:00", "mexicoCity", "M79 · 1A vs 3rd"),
   ko("wc26-ko-r32-08", "round_of_32", "2026-07-01T22:00:00+06:00", "mercedes", "M80 · 1L vs 3rd"),
-  ko("wc26-ko-r32-09", "round_of_32", "2026-07-02T01:00:00+06:00", "lumen", "M81 · 1G vs 3rd"),
-  ko("wc26-ko-r32-10", "round_of_32", "2026-07-02T07:00:00+06:00", "levis", "M82 · 1D vs 3rd"),
+  ko("wc26-ko-r32-09", "round_of_32", "2026-07-02T01:00:00+06:00", "lumen", "M81 · 1D vs 3rd"),
+  ko("wc26-ko-r32-10", "round_of_32", "2026-07-02T07:00:00+06:00", "levis", "M82 · 1G vs 3rd"),
   ko("wc26-ko-r32-11", "round_of_32", "2026-07-03T00:00:00+06:00", "toronto", "M83 · 2K vs 2L"),
   ko("wc26-ko-r32-12", "round_of_32", "2026-07-03T04:00:00+06:00", "sofi", "M84 · 1H vs 2J"),
-  ko("wc26-ko-r32-13", "round_of_32", "2026-07-03T08:00:00+06:00", "vancouver", "M85 · 1K vs 3rd"),
+  ko("wc26-ko-r32-13", "round_of_32", "2026-07-03T08:00:00+06:00", "vancouver", "M85 · 1B vs 3rd"),
   ko("wc26-ko-r32-14", "round_of_32", "2026-07-03T23:00:00+06:00", "nrg", "M86 · 1J vs 2H"),
-  ko("wc26-ko-r32-15", "round_of_32", "2026-07-04T02:00:00+06:00", "hardRock", "M87 · 1B vs 3rd"),
+  ko("wc26-ko-r32-15", "round_of_32", "2026-07-04T02:00:00+06:00", "hardRock", "M87 · 1K vs 3rd"),
   ko("wc26-ko-r32-16", "round_of_32", "2026-07-04T07:00:00+06:00", "att", "M88 · 2D vs 2G"),
 
   // Round of 16 — M89–M96
@@ -48,10 +48,10 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
   ko("wc26-ko-r16-02", "round_of_16", "2026-07-05T02:00:00+06:00", "mexicoCity", "M90 · W73 vs W75"),
   ko("wc26-ko-r16-03", "round_of_16", "2026-07-05T06:00:00+06:00", "levis", "M91 · W76 vs W78"),
   ko("wc26-ko-r16-04", "round_of_16", "2026-07-06T04:00:00+06:00", "att", "M92 · W79 vs W80"),
-  ko("wc26-ko-r16-05", "round_of_16", "2026-07-06T08:00:00+06:00", "lumen", "M93 · W82 vs W83"),
-  ko("wc26-ko-r16-06", "round_of_16", "2026-07-07T06:00:00+06:00", "vancouver", "M94 · W81 vs W85"),
-  ko("wc26-ko-r16-07", "round_of_16", "2026-07-07T22:00:00+06:00", "nrg", "M95 · W84 vs W88"),
-  ko("wc26-ko-r16-08", "round_of_16", "2026-07-08T01:00:00+06:00", "mercedes", "M96 · W86 vs W87"),
+  ko("wc26-ko-r16-05", "round_of_16", "2026-07-06T08:00:00+06:00", "lumen", "M93 · W83 vs W84"),
+  ko("wc26-ko-r16-06", "round_of_16", "2026-07-07T06:00:00+06:00", "vancouver", "M94 · W81 vs W82"),
+  ko("wc26-ko-r16-07", "round_of_16", "2026-07-07T22:00:00+06:00", "nrg", "M95 · W86 vs W88"),
+  ko("wc26-ko-r16-08", "round_of_16", "2026-07-08T01:00:00+06:00", "mercedes", "M96 · W85 vs W87"),
 
   // Quarter-finals — M97–M100
   ko("wc26-ko-qf-01", "quarter", "2026-07-10T04:00:00+06:00", "gillette", "M97 · W89 vs W90"),

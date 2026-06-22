@@ -80,16 +80,16 @@ export const R32_MATCHES: R32MatchDef[] = [
   {
     id: "r32-09",
     fifaNumber: 81,
-    home: { kind: "1", group: "G" },
-    away: { kind: "3", vs: "G" },
-    label: "M81 · 1G vs 3rd",
+    home: { kind: "1", group: "D" },
+    away: { kind: "3", vs: "D" },
+    label: "M81 · 1D vs 3rd",
   },
   {
     id: "r32-10",
     fifaNumber: 82,
-    home: { kind: "1", group: "D" },
-    away: { kind: "3", vs: "D" },
-    label: "M82 · 1D vs 3rd",
+    home: { kind: "1", group: "G" },
+    away: { kind: "3", vs: "G" },
+    label: "M82 · 1G vs 3rd",
   },
   {
     id: "r32-11",
@@ -108,9 +108,9 @@ export const R32_MATCHES: R32MatchDef[] = [
   {
     id: "r32-13",
     fifaNumber: 85,
-    home: { kind: "1", group: "K" },
-    away: { kind: "3", vs: "K" },
-    label: "M85 · 1K vs 3rd",
+    home: { kind: "1", group: "B" },
+    away: { kind: "3", vs: "B" },
+    label: "M85 · 1B vs 3rd",
   },
   {
     id: "r32-14",
@@ -122,9 +122,9 @@ export const R32_MATCHES: R32MatchDef[] = [
   {
     id: "r32-15",
     fifaNumber: 87,
-    home: { kind: "1", group: "B" },
-    away: { kind: "3", vs: "B" },
-    label: "M87 · 1B vs 3rd",
+    home: { kind: "1", group: "K" },
+    away: { kind: "3", vs: "K" },
+    label: "M87 · 1K vs 3rd",
   },
   {
     id: "r32-16",
