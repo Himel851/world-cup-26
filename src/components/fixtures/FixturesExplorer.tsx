@@ -223,7 +223,7 @@ export function FixturesExplorer({
               type="button"
               onClick={() => setView("group")}
               className={cn(
-                "shrink-0 rounded-full px-3 py-2 text-xs font-semibold transition-colors sm:px-4 sm:text-sm",
+                "shrink-0 rounded-full px-3 py-2 text-xs font-semibold transition-colors sm:px-4 sm:text-sm cursor-pointer",
                 view === "group"
                   ? "bg-emerald-400/15 text-emerald-300 ring-1 ring-emerald-400/40"
                   : "bg-white/[0.04] text-muted-foreground hover:bg-white/[0.08]",
@@ -235,7 +235,7 @@ export function FixturesExplorer({
               type="button"
               onClick={() => setView("standings")}
               className={cn(
-                "shrink-0 rounded-full px-3 py-2 text-xs font-semibold transition-colors sm:px-4 sm:text-sm",
+                "shrink-0 rounded-full px-3 py-2 text-xs font-semibold transition-colors sm:px-4 sm:text-sm cursor-pointer",
                 view === "standings"
                   ? "bg-sky-400/15 text-sky-300 ring-1 ring-sky-400/40"
                   : "bg-white/[0.04] text-muted-foreground hover:bg-white/[0.08]",
@@ -247,7 +247,7 @@ export function FixturesExplorer({
               type="button"
               onClick={() => setView("knockout")}
               className={cn(
-                "shrink-0 rounded-full px-3 py-2 text-xs font-semibold transition-colors sm:px-4 sm:text-sm",
+                "shrink-0 rounded-full px-3 py-2 text-xs font-semibold transition-colors sm:px-4 sm:text-sm cursor-pointer",
                 view === "knockout"
                   ? "bg-amber-400/15 text-amber-300 ring-1 ring-amber-400/40"
                   : "bg-white/[0.04] text-muted-foreground hover:bg-white/[0.08]",
@@ -261,7 +261,7 @@ export function FixturesExplorer({
             <Button
               variant="secondary"
               size="sm"
-              className="h-9 gap-1.5 px-3 text-xs sm:h-10 sm:px-4 sm:text-sm"
+              className="h-9 gap-1.5 px-3 text-xs sm:h-10 sm:px-4 sm:text-sm cursor-pointer"
             >
               <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               <span className="">Play Quiz</span>
