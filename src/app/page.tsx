@@ -1,5 +1,5 @@
 import { FeaturedTeams } from "@/components/home/FeaturedTeams";
-import { GroupsGrid } from "@/components/home/GroupsGrid";
+import { HomeStandingsSection } from "@/components/home/HomeStandingsSection";
 import { HostStadiums } from "@/components/home/HostStadiums";
 import { TrendingQuizzes } from "@/components/home/TrendingQuizzes";
 import { TournamentHero } from "@/components/home/TournamentHero";
@@ -37,7 +37,7 @@ export default async function HomePage() {
     <>
       <TournamentHero fixtures={fixtures} />
       <TournamentStats />
-      <GroupsGrid />
+      <HomeStandingsSection fixtures={fixtures} />
       <WorldCupWinners />
       <HostStadiums />
       <FeaturedTeams teams={teams} />

@@ -48,6 +48,7 @@ interface FixtureDaySectionProps {
   highlightTeamId?: string;
   sectionId?: string;
   isToday?: boolean;
+  isUpNext?: boolean;
 }
 
 export function FixtureDaySection({
@@ -56,6 +57,7 @@ export function FixtureDaySection({
   highlightTeamId,
   sectionId,
   isToday,
+  isUpNext,
 }: FixtureDaySectionProps) {
   const kickoff = fixtures[0]?.kickoffUtc ?? dateKey;
   const title = daySectionTitle(fixtures);
@@ -69,6 +71,11 @@ export function FixtureDaySection({
         {isToday && (
           <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-300 ring-1 ring-emerald-400/35">
             Today
+          </span>
+        )}
+        {isUpNext && (
+          <span className="rounded-full bg-sky-400/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-300 ring-1 ring-sky-400/35">
+            Up next
           </span>
         )}
       </div>
