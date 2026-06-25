@@ -3,8 +3,9 @@
 import * as React from "react";
 
 import { GroupStandingsTable } from "@/components/fixtures/GroupStandingsTable";
+import { ThirdPlaceStandingsTable } from "@/components/fixtures/ThirdPlaceStandingsTable";
 import { GROUPS } from "@/data/teams";
-import { computeAllGroupStandings } from "@/lib/group-standings";
+import { computeAllGroupStandings, computeThirdPlaceRanking } from "@/lib/group-standings";
 import type { Fixture, GroupLetter } from "@/types";
 
 interface GroupStandingsGridProps {
@@ -23,19 +24,33 @@ export function GroupStandingsGrid({
     [fixtures],
   );
 
+  const thirdPlaceRanking = React.useMemo(
+    () => computeThirdPlaceRanking(fixtures),
+    [fixtures],
+  );
+
   const groups =
     filterGroup === "All" ? [...GROUPS] : [filterGroup];
 
   return (
-    <div className="grid gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-2">
-      {groups.map((group) => (
-        <GroupStandingsTable
-          key={group}
-          group={group}
-          rows={standings[group]}
+    <div className="space-y-4 sm:space-y-5">
+      <div className="grid gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-2">
+        {groups.map((group) => (
+          <GroupStandingsTable
+            key={group}
+            group={group}
+            rows={standings[group]}
+            highlightTeamId={highlightTeamId}
+          />
+        ))}
+      </div>
+
+      {filterGroup === "All" && (
+        <ThirdPlaceStandingsTable
+          rows={thirdPlaceRanking}
           highlightTeamId={highlightTeamId}
         />
-      ))}
+      )}
     </div>
   );
 }

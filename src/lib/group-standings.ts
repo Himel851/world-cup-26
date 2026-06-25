@@ -18,7 +18,16 @@ export interface GroupStandingRow {
   form: (MatchFormResult | null)[];
 }
 
+export interface ThirdPlaceStandingRow extends GroupStandingRow {
+  group: GroupLetter;
+  /** Top 8 third-placed teams advance to the Round of 32. */
+  qualifies: boolean;
+}
+
 export type GroupStandingsMap = Record<GroupLetter, GroupStandingRow[]>;
+
+/** Number of third-placed teams that join the Round of 32. */
+export const THIRD_PLACE_ADVANCERS = 8;
 
 function resultForTeam(
   fixture: Fixture,
@@ -119,4 +128,23 @@ export function computeAllGroupStandings(fixtures: Fixture[]): GroupStandingsMap
   return Object.fromEntries(
     GROUPS.map((group) => [group, computeGroupStandings(fixtures, group)]),
   ) as GroupStandingsMap;
+}
+
+/** Rank all 12 third-placed teams; top 8 advance to the Round of 32. */
+export function computeThirdPlaceRanking(fixtures: Fixture[]): ThirdPlaceStandingRow[] {
+  const all = computeAllGroupStandings(fixtures);
+
+  const thirdPlacers = GROUPS.map((group) => {
+    const row = all[group][2];
+    if (!row) return null;
+    return { ...row, group };
+  }).filter((row): row is GroupStandingRow & { group: GroupLetter } => row != null);
+
+  thirdPlacers.sort(compareRows);
+
+  return thirdPlacers.map((row, index) => ({
+    ...row,
+    rank: index + 1,
+    qualifies: index < THIRD_PLACE_ADVANCERS,
+  }));
 }
