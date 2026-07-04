@@ -19,12 +19,26 @@ const STAGE_LABEL: Record<Fixture["stage"], string> = {
   final: "Final",
 };
 
+function matchWinnerId(fixture: Fixture): string | null {
+  if (fixture.status !== "finished" || !fixture.score) return null;
+  if (fixture.penalties) {
+    if (fixture.penalties.home > fixture.penalties.away) return fixture.homeTeamId;
+    if (fixture.penalties.away > fixture.penalties.home) return fixture.awayTeamId;
+    return null;
+  }
+  if (fixture.score.home > fixture.score.away) return fixture.homeTeamId;
+  if (fixture.score.away > fixture.score.home) return fixture.awayTeamId;
+  return null;
+}
+
 function TeamRow({
   teamId,
   highlight,
+  isWinner,
 }: {
   teamId: string;
   highlight: boolean;
+  isWinner: boolean;
 }) {
   const team = teamId ? TEAMS_BY_ID[teamId] : undefined;
 
@@ -44,13 +58,20 @@ function TeamRow({
       <div
         className={cn(
           "flex items-center gap-2.5 py-2 transition-colors",
-          highlight && "rounded-lg bg-emerald-400/10 px-1 -mx-1",
+          (highlight || isWinner) && "rounded-lg bg-emerald-400/10 px-1 -mx-1",
         )}
       >
         <div className="relative h-8 w-10 shrink-0 overflow-hidden rounded-md ring-1 ring-white/15">
           <Image src={team.flag} alt="" fill sizes="40px" className="object-cover" />
         </div>
-        <span className="min-w-0 truncate text-sm font-semibold text-foreground">{team.name}</span>
+        <span
+          className={cn(
+            "min-w-0 truncate text-sm font-semibold",
+            isWinner ? "text-emerald-200" : "text-foreground",
+          )}
+        >
+          {team.name}
+        </span>
       </div>
     </Link>
   );
@@ -64,19 +85,36 @@ function KnockoutMatchCard({
   highlightTeamId?: string;
 }) {
   const hasBothTeams = Boolean(fixture.homeTeamId && fixture.awayTeamId);
+  const winnerId = matchWinnerId(fixture);
+  const isFinished = fixture.status === "finished";
 
   return (
     <article className="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0d1117]/95">
-      <div className="border-b border-white/8 bg-white/[0.03] px-3 py-2">
+      <div className="flex items-center justify-between gap-2 border-b border-white/8 bg-white/[0.03] px-3 py-2">
         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
           {STAGE_LABEL[fixture.stage]}
         </p>
+        {isFinished && (
+          <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300/90">
+            FT
+            {fixture.wentToExtraTime && !fixture.penalties ? " · AET" : ""}
+            {fixture.penalties ? " · Pens" : ""}
+          </span>
+        )}
       </div>
 
       <div className="flex flex-1 gap-3 p-3 sm:p-4">
         <div className="min-w-0 flex-1 divide-y divide-white/8">
-          <TeamRow teamId={fixture.homeTeamId} highlight={highlightTeamId === fixture.homeTeamId} />
-          <TeamRow teamId={fixture.awayTeamId} highlight={highlightTeamId === fixture.awayTeamId} />
+          <TeamRow
+            teamId={fixture.homeTeamId}
+            highlight={highlightTeamId === fixture.homeTeamId}
+            isWinner={winnerId === fixture.homeTeamId}
+          />
+          <TeamRow
+            teamId={fixture.awayTeamId}
+            highlight={highlightTeamId === fixture.awayTeamId}
+            isWinner={winnerId === fixture.awayTeamId}
+          />
         </div>
 
         <div className="flex shrink-0 flex-col items-end justify-between gap-2 text-right">
@@ -84,12 +122,19 @@ function KnockoutMatchCard({
             <p className="text-[11px] font-medium text-muted-foreground">
               {formatKickoffDate(fixture.kickoffUtc)}
             </p>
-            <p className="text-sm font-bold tabular-nums text-foreground">
-              {formatKickoffTime(fixture.kickoffUtc)}
-            </p>
+            {!isFinished && (
+              <p className="text-sm font-bold tabular-nums text-foreground">
+                {formatKickoffTime(fixture.kickoffUtc)}
+              </p>
+            )}
             {fixture.score && (
               <p className="mt-1 text-base font-black tabular-nums">
                 {fixture.score.home}–{fixture.score.away}
+              </p>
+            )}
+            {fixture.penalties && (
+              <p className="mt-0.5 text-[11px] font-semibold tabular-nums text-amber-200/90">
+                Pens {fixture.penalties.home}–{fixture.penalties.away}
               </p>
             )}
           </div>

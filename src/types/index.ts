@@ -114,6 +114,10 @@ export interface Fixture {
   venue: FixtureVenue;
   status: MatchStatus;
   score?: { home: number; away: number };
+  /** Penalty shoot-out score after a draw in regulation / extra time */
+  penalties?: { home: number; away: number };
+  /** True when the match was decided in extra time (not on penalties alone) */
+  wentToExtraTime?: boolean;
   /** Knockout rounds only — label when teams are TBD */
   label?: string;
 }

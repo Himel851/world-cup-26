@@ -65,6 +65,16 @@ function ScoreHeader({ detail }: { detail: MatchDetail }) {
             {formatKickoffTime(fixture.kickoffUtc)}
           </p>
         )}
+        {fixture.penalties && (
+          <p className="mt-1 text-sm font-semibold tabular-nums text-amber-200">
+            Pens {fixture.penalties.home} – {fixture.penalties.away}
+          </p>
+        )}
+        {fixture.wentToExtraTime && !fixture.penalties && hasScore && (
+          <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            After extra time
+          </p>
+        )}
         {detail.htScore && (
           <p className="mt-1 text-xs text-muted-foreground">
             HT {detail.htScore.home} – {detail.htScore.away}

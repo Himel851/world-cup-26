@@ -20,7 +20,7 @@ export function getFixtureById(id: string): Fixture | undefined {
 }
 
 export function getFixturesForTeam(teamId: string): Fixture[] {
-  return GROUP_STAGE_FIXTURES.filter(
+  return FIXTURES.filter(
     (f) => f.homeTeamId === teamId || f.awayTeamId === teamId,
   );
 }

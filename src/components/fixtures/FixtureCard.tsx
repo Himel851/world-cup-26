@@ -79,11 +79,18 @@ function TimePill({ fixture }: { fixture: Fixture }) {
 
   if (fixture.score) {
     return (
-      <p className="rounded-full bg-white/10 px-3 py-1 text-sm font-black tabular-nums tracking-tight text-foreground sm:px-4 sm:text-base">
-        {fixture.score.home}
-        <span className="mx-1 text-muted-foreground">–</span>
-        {fixture.score.away}
-      </p>
+      <div className="flex flex-col items-center">
+        <p className="rounded-full bg-white/10 px-3 py-1 text-sm font-black tabular-nums tracking-tight text-foreground sm:px-4 sm:text-base">
+          {fixture.score.home}
+          <span className="mx-1 text-muted-foreground">–</span>
+          {fixture.score.away}
+        </p>
+        {fixture.penalties && (
+          <span className="mt-1 text-[9px] font-bold uppercase tracking-wider text-amber-200/90">
+            Pens {fixture.penalties.home}–{fixture.penalties.away}
+          </span>
+        )}
+      </div>
     );
   }
 
