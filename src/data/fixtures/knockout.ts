@@ -232,6 +232,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M89 · W73 vs W75",
     homeTeamId: "can",
     awayTeamId: "mar",
+    status: "finished",
+    score: { home: 0, away: 3 },
   }),
   ko({
     id: "wc26-ko-r16-02",
@@ -241,6 +243,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M90 · W74 vs W77",
     homeTeamId: "par",
     awayTeamId: "fra",
+    status: "finished",
+    score: { home: 0, away: 1 },
   }),
   ko({
     id: "wc26-ko-r16-03",
@@ -250,6 +254,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M91 · W76 vs W78",
     homeTeamId: "bra",
     awayTeamId: "nor",
+    status: "finished",
+    score: { home: 1, away: 2 },
   }),
   ko({
     id: "wc26-ko-r16-04",
@@ -259,6 +265,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M92 · W79 vs W80",
     homeTeamId: "mex",
     awayTeamId: "eng",
+    status: "finished",
+    score: { home: 2, away: 3 },
   }),
   ko({
     id: "wc26-ko-r16-05",
@@ -268,6 +276,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M93 · W83 vs W84",
     homeTeamId: "por",
     awayTeamId: "esp",
+    status: "finished",
+    score: { home: 0, away: 1 },
   }),
   ko({
     id: "wc26-ko-r16-06",
@@ -277,6 +287,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M94 · W82 vs W81",
     homeTeamId: "usa",
     awayTeamId: "bel",
+    status: "finished",
+    score: { home: 1, away: 4 },
   }),
   ko({
     id: "wc26-ko-r16-07",
@@ -286,6 +298,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M95 · W87 vs W86",
     homeTeamId: "arg",
     awayTeamId: "egy",
+    status: "finished",
+    score: { home: 3, away: 2 },
   }),
   ko({
     id: "wc26-ko-r16-08",
@@ -295,6 +309,10 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M96 · W85 vs W88",
     homeTeamId: "swi",
     awayTeamId: "col",
+    status: "finished",
+    score: { home: 0, away: 0 },
+    penalties: { home: 4, away: 3 },
+    wentToExtraTime: true,
   }),
 
   // Quarter-finals — M97–M100
@@ -304,6 +322,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     kickoffUtc: "2026-07-10T04:00:00+06:00",
     venue: "gillette",
     label: "M97 · W89 vs W90",
+    homeTeamId: "fra",
+    awayTeamId: "mar",
   }),
   ko({
     id: "wc26-ko-qf-02",
@@ -311,6 +331,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     kickoffUtc: "2026-07-11T01:00:00+06:00",
     venue: "sofi",
     label: "M98 · W93 vs W94",
+    homeTeamId: "esp",
+    awayTeamId: "bel",
   }),
   ko({
     id: "wc26-ko-qf-03",
@@ -318,6 +340,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     kickoffUtc: "2026-07-11T08:00:00+06:00",
     venue: "hardRock",
     label: "M99 · W91 vs W92",
+    homeTeamId: "nor",
+    awayTeamId: "eng",
   }),
   ko({
     id: "wc26-ko-qf-04",
@@ -325,6 +349,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     kickoffUtc: "2026-07-12T04:00:00+06:00",
     venue: "arrowhead",
     label: "M100 · W95 vs W96",
+    homeTeamId: "arg",
+    awayTeamId: "swi",
   }),
 
   // Semi-finals — M101–M102

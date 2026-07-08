@@ -1,4 +1,4 @@
-import { FIXTURES, getFixtureById } from "@/data/fixtures";
+import { FIXTURES } from "@/data/fixtures";
 import { MANUAL_MATCH_DETAILS } from "@/data/match-results/manual";
 import { TEAMS, TEAMS_BY_ID } from "@/data/teams";
 import { getWorldCupMatches } from "@/lib/football-data";
@@ -83,9 +83,15 @@ function buildFdLookup(matches: FdMatch[]): Map<string, FdMatch> {
 }
 
 function applyFdMatch(fixture: Fixture, fd: FdMatch): Fixture {
+  const status = mapFdStatus(fd.status);
+
+  // Keep regulation score + pen breakdown — API fullTime often reports shootout totals (e.g. 4–3).
+  if (fixture.penalties) {
+    return { ...fixture, status };
+  }
+
   const home = fd.score.fullTime.home;
   const away = fd.score.fullTime.away;
-  const status = mapFdStatus(fd.status);
 
   return {
     ...fixture,
@@ -128,32 +134,17 @@ export async function getEnrichedFixtures(): Promise<Fixture[]> {
 }
 
 export async function getMatchDetail(fixtureId: string): Promise<MatchDetail | null> {
-  const base = getFixtureById(fixtureId);
-  if (!base) return null;
+  const enrichedFixtures = await getEnrichedFixtures();
+  const fixture = enrichedFixtures.find((f) => f.id === fixtureId);
+  if (!fixture) return null;
 
-  const fdMatches = await getWorldCupMatches();
-  const lookup = buildFdLookup(fdMatches);
-  const fd = findFdForFixture(base, lookup);
   const manual = MANUAL_MATCH_DETAILS[fixtureId];
 
-  let fixture = { ...base };
   let scoresSource: MatchDetail["sources"]["scores"] = "scheduled";
+  if (fixture.score && fixture.status === "finished") scoresSource = "football-data";
+  if (manual?.score) scoresSource = "manual";
 
-  if (fd) {
-    fixture = applyFdMatch(fixture, fd);
-    scoresSource = "football-data";
-  }
-  if (manual) {
-    fixture = applyManual(fixture, manual);
-    if (manual.score) scoresSource = "manual";
-  }
-
-  const htScore =
-    manual?.htScore ??
-    (fd?.score.halfTime.home != null && fd?.score.halfTime.away != null
-      ? { home: fd.score.halfTime.home, away: fd.score.halfTime.away }
-      : undefined);
-
+  const htScore = manual?.htScore;
   const events = manual?.events ?? [];
   const stats = manual?.stats ?? null;
 

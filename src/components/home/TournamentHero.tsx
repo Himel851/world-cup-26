@@ -52,11 +52,18 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
 
         <div className="flex shrink-0 flex-col items-center px-1">
           {hasScore ? (
-            <span className="text-sm font-black tabular-nums sm:text-base">
-              {fixture.score!.home}
-              <span className="mx-1 text-muted-foreground">–</span>
-              {fixture.score!.away}
-            </span>
+            <>
+              <span className="text-sm font-black tabular-nums sm:text-base">
+                {fixture.score!.home}
+                <span className="mx-1 text-muted-foreground">–</span>
+                {fixture.score!.away}
+              </span>
+              {fixture.penalties && (
+                <span className="mt-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-200/90 sm:text-[10px]">
+                  Pens {fixture.penalties.home}–{fixture.penalties.away}
+                </span>
+              )}
+            </>
           ) : (
             <span className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-bold tabular-nums text-emerald-200 sm:text-xs">
               {formatKickoffTime(fixture.kickoffUtc)}
