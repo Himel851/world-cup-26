@@ -324,6 +324,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M97 · W89 vs W90",
     homeTeamId: "fra",
     awayTeamId: "mar",
+    status: "finished",
+    score: { home: 2, away: 0 },
   }),
   ko({
     id: "wc26-ko-qf-02",
@@ -333,6 +335,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M98 · W93 vs W94",
     homeTeamId: "esp",
     awayTeamId: "bel",
+    status: "finished",
+    score: { home: 2, away: 1 },
   }),
   ko({
     id: "wc26-ko-qf-03",
@@ -342,6 +346,9 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M99 · W91 vs W92",
     homeTeamId: "nor",
     awayTeamId: "eng",
+    status: "finished",
+    score: { home: 1, away: 2 },
+    wentToExtraTime: true,
   }),
   ko({
     id: "wc26-ko-qf-04",
@@ -351,22 +358,29 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M100 · W95 vs W96",
     homeTeamId: "arg",
     awayTeamId: "swi",
+    status: "finished",
+    score: { home: 3, away: 1 },
+    wentToExtraTime: true,
   }),
 
   // Semi-finals — M101–M102
   ko({
     id: "wc26-ko-sf-01",
     stage: "semi",
-    kickoffUtc: "2026-07-15T05:00:00+06:00",
+    kickoffUtc: "2026-07-15T01:00:00+06:00",
     venue: "att",
     label: "M101 · W97 vs W98",
+    homeTeamId: "fra",
+    awayTeamId: "esp",
   }),
   ko({
     id: "wc26-ko-sf-02",
     stage: "semi",
-    kickoffUtc: "2026-07-16T05:00:00+06:00",
+    kickoffUtc: "2026-07-16T01:00:00+06:00",
     venue: "mercedes",
     label: "M102 · W99 vs W100",
+    homeTeamId: "eng",
+    awayTeamId: "arg",
   }),
 
   // Third place (M103) & Final (M104)
