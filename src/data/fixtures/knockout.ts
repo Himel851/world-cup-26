@@ -372,6 +372,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M101 · W97 vs W98",
     homeTeamId: "fra",
     awayTeamId: "esp",
+    status: "finished",
+    score: { home: 0, away: 2 },
   }),
   ko({
     id: "wc26-ko-sf-02",
@@ -381,22 +383,28 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M102 · W99 vs W100",
     homeTeamId: "eng",
     awayTeamId: "arg",
+    status: "finished",
+    score: { home: 1, away: 2 },
   }),
 
   // Third place (M103) & Final (M104)
   ko({
     id: "wc26-ko-3rd",
     stage: "third_place",
-    kickoffUtc: "2026-07-19T05:00:00+06:00",
+    kickoffUtc: "2026-07-19T03:00:00+06:00",
     venue: "hardRock",
     label: "M103 · Third place play-off",
+    homeTeamId: "fra",
+    awayTeamId: "eng",
   }),
   ko({
     id: "wc26-ko-final",
     stage: "final",
-    kickoffUtc: "2026-07-20T02:00:00+06:00",
+    kickoffUtc: "2026-07-20T01:00:00+06:00",
     venue: "metlife",
     label: "M104 · Final",
+    homeTeamId: "esp",
+    awayTeamId: "arg",
   }),
 ];
 
