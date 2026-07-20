@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronRight, RotateCcw, Sparkles, Trophy } from "lucide-react";
+import { ChevronRight, Sparkles, Trophy } from "lucide-react";
 
 import { GroupStandingsSection } from "@/components/predictions/GroupStandingsSection";
 import { KnockoutBracket } from "@/components/predictions/KnockoutBracket";
@@ -9,18 +9,14 @@ import { ThirdPlacePicker } from "@/components/predictions/ThirdPlacePicker";
 import { getTeamById } from "@/components/predictions/TeamLabel";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { GROUPS } from "@/data/teams";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
 import {
   allGroupsComplete,
   completionPercent,
-  createEmptyPredictions,
   getChampion,
   isKnockoutComplete,
   isThirdPlaceComplete,
-  PREDICTIONS_STORAGE_KEY,
-  pruneKnockoutWinners,
 } from "@/lib/predictions";
+import { buildOfficialTournamentPrediction } from "@/lib/official-tournament-results";
 import { cn } from "@/lib/utils";
 import type { PredictionStep, TournamentPrediction } from "@/types/predictions";
 
@@ -30,10 +26,15 @@ const STEPS: { key: PredictionStep; label: string; short: string }[] = [
   { key: "knockout", label: "Knockout", short: "KO" },
 ];
 
-function stepUnlocked(step: PredictionStep, prediction: TournamentPrediction): boolean {
+const OFFICIAL_PREDICTION = buildOfficialTournamentPrediction();
+
+function stepUnlocked(step: PredictionStep): boolean {
   if (step === "groups") return true;
-  if (step === "third_place") return allGroupsComplete(prediction.groups);
-  return isThirdPlaceComplete(prediction.groups, prediction.thirdPlaceAdvancers);
+  if (step === "third_place") return allGroupsComplete(OFFICIAL_PREDICTION.groups);
+  return isThirdPlaceComplete(
+    OFFICIAL_PREDICTION.groups,
+    OFFICIAL_PREDICTION.thirdPlaceAdvancers,
+  );
 }
 
 /** Desktop: inline centred CTA. Mobile: fixed bar above the tab bar. */
@@ -73,11 +74,8 @@ function StepNextButton({
 }
 
 export function PredictionsClient() {
-  const [prediction, setPrediction, ready] = useLocalStorage<TournamentPrediction>(
-    PREDICTIONS_STORAGE_KEY,
-    createEmptyPredictions(),
-  );
-  const [step, setStep] = React.useState<PredictionStep>("groups");
+  const prediction: TournamentPrediction = OFFICIAL_PREDICTION;
+  const [step, setStep] = React.useState<PredictionStep>("knockout");
 
   const percent = completionPercent(prediction);
   const champion = getChampion(prediction);
@@ -88,55 +86,17 @@ export function PredictionsClient() {
   );
   const knockoutDone = isKnockoutComplete(prediction);
 
-  function updateGroups(groups: TournamentPrediction["groups"]) {
-    setPrediction((prev) => {
-      const next = {
-        ...prev,
-        groups,
-        thirdPlaceAdvancers: prev.thirdPlaceAdvancers.filter((id) =>
-          GROUPS.some((g) => groups[g][2] === id),
-        ),
-      };
-      return { ...next, knockoutWinners: pruneKnockoutWinners(next) };
-    });
-  }
-
-  function updateThirdPlace(advancers: string[]) {
-    setPrediction((prev) => {
-      const next = { ...prev, thirdPlaceAdvancers: advancers };
-      return { ...next, knockoutWinners: pruneKnockoutWinners(next) };
-    });
-  }
-
-  function resetAll() {
-    if (window.confirm("Clear your entire bracket prediction?")) {
-      setPrediction(createEmptyPredictions());
-      setStep("groups");
-    }
-  }
-
-  if (!ready) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-16 text-center text-sm text-muted-foreground">
-        Loading your bracket…
-      </div>
-    );
-  }
-
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <header className="mb-8">
         <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
           <Sparkles className="h-3.5 w-3.5" />
-          Bracket Predictor
+          Tournament Results
         </p>
-        {/* <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-          Your World Cup 2026 Prediction
-        </h1>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Rank every group, pick 8 third-place advancers, then predict every knockout
-          round through the final. Saved automatically in your browser.
-        </p> */}
+          Official World Cup 2026 results from the group stage through the final.
+          This bracket is locked and cannot be edited.
+        </p>
 
         <div className="mt-5 flex flex-wrap items-center gap-4">
           <div className="min-w-[200px] flex-1 max-w-md">
@@ -149,22 +109,18 @@ export function PredictionsClient() {
           {champion && (
             <p className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-sm font-semibold text-emerald-300">
               <Trophy className="h-4 w-4" />
-              {getTeamById(champion)?.name}
+              Champion: {getTeamById(champion)?.name}
             </p>
           )}
-          <Button type="button" variant="outline" size="sm" onClick={resetAll}>
-            <RotateCcw className="h-3.5 w-3.5" />
-            Reset
-          </Button>
         </div>
       </header>
 
       <nav
-        aria-label="Prediction steps"
+        aria-label="Tournament stages"
         className="mb-8 flex flex-wrap gap-2 rounded-2xl border border-white/10 bg-white/[0.02] p-2"
       >
         {STEPS.map((s, i) => {
-          const unlocked = stepUnlocked(s.key, prediction);
+          const unlocked = stepUnlocked(s.key);
           const active = step === s.key;
           const done =
             s.key === "groups"
@@ -198,10 +154,7 @@ export function PredictionsClient() {
 
       {step === "groups" && (
         <section>
-          <GroupStandingsSection
-            groups={prediction.groups}
-            onChange={updateGroups}
-          />
+          <GroupStandingsSection groups={prediction.groups} onChange={() => {}} readOnly />
           <StepNextButton show={groupsDone} onClick={() => setStep("third_place")}>
             Next: 3rd place
             <ChevronRight className="h-4 w-4" />
@@ -214,13 +167,14 @@ export function PredictionsClient() {
           <div className="mb-6 text-center">
             <h2 className="text-xl font-bold">Third-place advancers</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Select 8 teams to complete the Round of 32 field.
+              The eight third-place teams that reached the Round of 32.
             </p>
           </div>
           <ThirdPlacePicker
             groups={prediction.groups}
             advancers={prediction.thirdPlaceAdvancers}
-            onChange={updateThirdPlace}
+            onChange={() => {}}
+            readOnly
           />
           <StepNextButton show={thirdsDone} onClick={() => setStep("knockout")}>
             Next: Knockout
@@ -234,12 +188,12 @@ export function PredictionsClient() {
           <div className="mb-6 px-4 sm:px-6 lg:px-8">
             <h2 className="text-xl font-bold">Knockout bracket</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Tree view by round — use R32, R16, QF, SF, FINAL tabs to jump. Tap a
-              team to predict the winner.
+              Full knockout path from the Round of 32 through the final — winners
+              highlighted in orange.
             </p>
           </div>
           <div className="px-4 sm:px-6 lg:px-8">
-            <KnockoutBracket prediction={prediction} onChange={setPrediction} />
+            <KnockoutBracket prediction={prediction} onChange={() => {}} readOnly />
           </div>
         </section>
       )}

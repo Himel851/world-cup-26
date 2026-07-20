@@ -12,9 +12,15 @@ interface ThirdPlacePickerProps {
   groups: GroupPredictions;
   advancers: string[];
   onChange: (advancers: string[]) => void;
+  readOnly?: boolean;
 }
 
-export function ThirdPlacePicker({ groups, advancers, onChange }: ThirdPlacePickerProps) {
+export function ThirdPlacePicker({
+  groups,
+  advancers,
+  onChange,
+  readOnly = false,
+}: ThirdPlacePickerProps) {
   const candidates = getThirdPlaceCandidates(groups);
   const selected = advancers.length;
 
@@ -28,9 +34,9 @@ export function ThirdPlacePicker({ groups, advancers, onChange }: ThirdPlacePick
               Best third-place teams
             </p>
             <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Pick exactly 8 of the 12 third-place teams to join the Round of 32.
-              Complete all group standings first — each group&apos;s 3rd-place team
-              appears below.
+              {readOnly
+                ? "The eight third-place teams that advanced to the Round of 32."
+                : "Pick exactly 8 of the 12 third-place teams to join the Round of 32. Complete all group standings first — each group's 3rd-place team appears below."}
             </p>
           </div>
           <div
@@ -68,10 +74,11 @@ export function ThirdPlacePicker({ groups, advancers, onChange }: ThirdPlacePick
               <button
                 key={group}
                 type="button"
-                disabled={isFull}
+                disabled={readOnly || isFull}
                 onClick={() => onChange(toggleThirdPlaceAdvancer(advancers, teamId))}
                 className={cn(
                   "flex items-center gap-3 rounded-2xl border p-4 text-left transition-all",
+                  readOnly && "cursor-default",
                   isSelected
                     ? "border-emerald-400/40 bg-emerald-400/10 ring-1 ring-emerald-400/20"
                     : isFull

@@ -26,6 +26,7 @@ interface GroupPredictionCardProps {
   onChange: (groups: GroupPredictions) => void;
   activePosition: number | null;
   onSelectPosition: (position: RankIndex) => void;
+  readOnly?: boolean;
 }
 
 export function GroupPredictionCard({
@@ -34,6 +35,7 @@ export function GroupPredictionCard({
   onChange,
   activePosition,
   onSelectPosition,
+  readOnly = false,
 }: GroupPredictionCardProps) {
   const standing = groups[group];
   const teams = getTeamsByGroup(group);
@@ -75,7 +77,7 @@ export function GroupPredictionCard({
               <button
                 key={team.id}
                 type="button"
-                disabled={isAssigned}
+                disabled={readOnly || isAssigned}
                 onClick={() => assign(team.id)}
                 className={cn(
                   "flex flex-col items-center gap-0.5 rounded-md px-0.5 py-1.5 transition-colors",
@@ -108,7 +110,7 @@ export function GroupPredictionCard({
           return (
             <div
               key={idx}
-              draggable={Boolean(team)}
+              draggable={!readOnly && Boolean(team)}
               onDragStart={(e) => {
                 if (!team) return;
                 setDragFrom(idx);
@@ -129,19 +131,20 @@ export function GroupPredictionCard({
                 handleDrop(idx);
               }}
               onClick={() => {
-                if (!team) onSelectPosition(idx);
+                if (!readOnly && !team) onSelectPosition(idx);
               }}
               onKeyDown={(e) => {
-                if (!team && (e.key === "Enter" || e.key === " ")) {
+                if (!readOnly && !team && (e.key === "Enter" || e.key === " ")) {
                   e.preventDefault();
                   onSelectPosition(idx);
                 }
               }}
-              role={team ? undefined : "button"}
-              tabIndex={team ? undefined : 0}
+              role={!readOnly && !team ? "button" : undefined}
+              tabIndex={!readOnly && !team ? 0 : undefined}
               className={cn(
                 "flex w-full items-center gap-2 border-b border-slate-200 px-2.5 py-2 text-left transition-colors last:border-b-0",
-                team && "cursor-grab active:cursor-grabbing",
+                team && !readOnly && "cursor-grab active:cursor-grabbing",
+                readOnly && team && "cursor-default",
                 isDragging && "opacity-40",
                 isActive && !team && "bg-sky-100 ring-2 ring-inset ring-sky-500",
                 isDropTarget && "bg-emerald-50 ring-2 ring-inset ring-emerald-400",
@@ -166,10 +169,12 @@ export function GroupPredictionCard({
                   <span className="min-w-0 flex-1 truncate text-[11px] font-black uppercase tracking-tight text-slate-900">
                     {team.name}
                   </span>
-                  <GripVertical
-                    className="h-4 w-4 shrink-0 text-slate-400"
-                    aria-hidden
-                  />
+                  {!readOnly && (
+                    <GripVertical
+                      className="h-4 w-4 shrink-0 text-slate-400"
+                      aria-hidden
+                    />
+                  )}
                 </>
               ) : (
                 <span className="text-sm font-bold text-slate-300">–</span>
@@ -179,26 +184,28 @@ export function GroupPredictionCard({
         })}
       </div>
 
-      <footer className="flex items-center justify-center gap-2 bg-[#0b1a33] py-2.5">
-        <button
-          type="button"
-          onClick={() => onChange(resetGroup(groups, group))}
-          className="grid h-9 w-9 place-items-center rounded-full bg-white text-slate-800 shadow-md transition-transform hover:scale-105"
-          aria-label={`Reset group ${group}`}
-        >
-          <RotateCcw className="h-4 w-4" />
-        </button>
-        {!complete && (
+      {!readOnly && (
+        <footer className="flex items-center justify-center gap-2 bg-[#0b1a33] py-2.5">
           <button
             type="button"
-            onClick={() => onChange(autoFillGroup(groups, group))}
-            className="grid h-9 w-9 place-items-center rounded-full bg-orange-500 text-white shadow-md transition-transform hover:scale-105"
-            aria-label={`Auto-fill group ${group}`}
+            onClick={() => onChange(resetGroup(groups, group))}
+            className="grid h-9 w-9 place-items-center rounded-full bg-white text-slate-800 shadow-md transition-transform hover:scale-105"
+            aria-label={`Reset group ${group}`}
           >
-            <Sparkles className="h-4 w-4" />
+            <RotateCcw className="h-4 w-4" />
           </button>
-        )}
-      </footer>
+          {!complete && (
+            <button
+              type="button"
+              onClick={() => onChange(autoFillGroup(groups, group))}
+              className="grid h-9 w-9 place-items-center rounded-full bg-orange-500 text-white shadow-md transition-transform hover:scale-105"
+              aria-label={`Auto-fill group ${group}`}
+            >
+              <Sparkles className="h-4 w-4" />
+            </button>
+          )}
+        </footer>
+      )}
     </article>
   );
 }

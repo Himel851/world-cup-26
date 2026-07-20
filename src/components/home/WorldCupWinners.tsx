@@ -47,7 +47,11 @@ function WinnerRow({ winner }: { winner: (typeof WORLD_CUP_WINNERS)[number] }) {
         {winner.years.map((year) => (
           <span
             key={year}
-            className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-semibold tabular-nums"
+            className={`rounded-md border px-2 py-0.5 text-xs font-semibold tabular-nums ${
+              year === 2026
+                ? "border-amber-400/40 bg-amber-400/15 text-amber-200"
+                : "border-white/10 bg-white/5"
+            }`}
           >
             {year}
           </span>
@@ -69,7 +73,7 @@ export function WorldCupWinners() {
           World Cup Winners
         </h2>
         <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-          Nations ranked by FIFA World Cup titles since the first tournament in 1930.
+          Nations ranked by FIFA World Cup titles — Spain crowned champions in 2026.
         </p>
       </div>
 

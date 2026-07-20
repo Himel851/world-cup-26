@@ -3,13 +3,15 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, MapPin, Radio, Shirt } from "lucide-react";
+import { Calendar, Crown, MapPin, Radio, Shirt, Trophy } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TEAMS_BY_ID } from "@/data/teams";
 import { TOURNAMENT_STATS } from "@/data/tournament";
 import { FIXTURE_KICKOFF_TIMEZONE, formatKickoffTime } from "@/lib/utils";
 import type { Fixture } from "@/types";
+
+const FINAL_FIXTURE_ID = "wc26-ko-final";
 
 function dateKeyInBst(date: Date): string {
   return date.toLocaleDateString("en-CA", { timeZone: FIXTURE_KICKOFF_TIMEZONE });
@@ -23,6 +25,27 @@ function formatTodayHeading(now: Date): string {
     day: "numeric",
     year: "numeric",
   });
+}
+
+function getChampionFromFinal(final: Fixture | undefined) {
+  if (!final || final.status !== "finished" || !final.score) return null;
+
+  const { home, away } = final.score;
+  if (home == null || away == null) return null;
+
+  if (final.penalties) {
+    if (final.penalties.home > final.penalties.away) {
+      return TEAMS_BY_ID[final.homeTeamId] ?? null;
+    }
+    if (final.penalties.away > final.penalties.home) {
+      return TEAMS_BY_ID[final.awayTeamId] ?? null;
+    }
+    return null;
+  }
+
+  if (home > away) return TEAMS_BY_ID[final.homeTeamId] ?? null;
+  if (away > home) return TEAMS_BY_ID[final.awayTeamId] ?? null;
+  return null;
 }
 
 function MatchRow({ fixture }: { fixture: Fixture }) {
@@ -100,6 +123,10 @@ export function TournamentHero({ fixtures }: TournamentHeroProps) {
     return () => window.clearInterval(id);
   }, []);
 
+  const finalFixture = fixtures.find((f) => f.id === FINAL_FIXTURE_ID);
+  const champion = getChampionFromFinal(finalFixture);
+  const tournamentComplete = champion != null;
+
   const todayKey = dateKeyInBst(now);
   const todayFixtures = fixtures
     .filter((f) => dateKeyInBst(new Date(f.kickoffUtc)) === todayKey)
@@ -110,24 +137,78 @@ export function TournamentHero({ fixtures }: TournamentHeroProps) {
     <section className="relative isolate overflow-hidden pt-10 sm:pt-14 lg:pt-20">
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/45 p-6 shadow-[0_16px_60px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-lg sm:p-10">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_400px_at_50%_0%,rgba(34,211,164,0.1),transparent_70%)]" />
+          <div
+            className={`pointer-events-none absolute inset-0 ${
+              tournamentComplete
+                ? "bg-[radial-gradient(900px_400px_at_50%_0%,rgba(251,191,36,0.15),transparent_70%)]"
+                : "bg-[radial-gradient(900px_400px_at_50%_0%,rgba(34,211,164,0.1),transparent_70%)]"
+            }`}
+          />
 
           <div className="relative text-center">
-            <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-400/10 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-300">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-              </span>
-              <Radio className="h-3.5 w-3.5" />
-              Tournament Live
-            </div>
+            {tournamentComplete ? (
+              <>
+                <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-amber-400/50 bg-amber-400/15 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-amber-200">
+                  <Trophy className="h-3.5 w-3.5" />
+                  World Cup Champions 2026
+                </div>
 
-            <h1 className="mt-5 text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
-              FIFA World Cup 2026
-            </h1>
-            <p className="mt-3 text-base text-muted-foreground sm:text-lg">
-              টুর্নামেন্ট চলছে — USA · Mexico · Canada
-            </p>
+                <div className="mx-auto mt-6 flex flex-col items-center">
+                  <div className="relative h-20 w-28 overflow-hidden rounded-xl ring-2 ring-amber-400/40 shadow-lg shadow-amber-500/20 sm:h-24 sm:w-32">
+                    <Image
+                      src={champion.flag}
+                      alt={`${champion.name} flag`}
+                      fill
+                      sizes="128px"
+                      className="object-cover"
+                      priority
+                    />
+                  </div>
+                  <Crown className="mt-4 h-8 w-8 text-amber-300 sm:h-10 sm:w-10" aria-hidden />
+                </div>
+
+                <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
+                  Congratulations, {champion.name}!
+                </h1>
+                <p className="mt-3 text-base text-amber-100/90 sm:text-lg">
+                  FIFA World Cup 2026 champions — USA · Mexico · Canada
+                </p>
+
+                {finalFixture?.score && (
+                  <Link
+                    href={`/fixtures/${finalFixture.id}`}
+                    className="mx-auto mt-6 inline-flex items-center gap-3 rounded-2xl border border-amber-400/25 bg-amber-400/8 px-5 py-3 transition-colors hover:bg-amber-400/12"
+                  >
+                    <span className="text-sm font-semibold text-foreground/90">Final</span>
+                    <span className="text-lg font-black tabular-nums">
+                      {TEAMS_BY_ID[finalFixture.homeTeamId]?.name ?? "Home"}{" "}
+                      {finalFixture.score.home}
+                      <span className="mx-1 text-muted-foreground">–</span>
+                      {finalFixture.score.away}{" "}
+                      {TEAMS_BY_ID[finalFixture.awayTeamId]?.name ?? "Away"}
+                    </span>
+                  </Link>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-400/10 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-300">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                  </span>
+                  <Radio className="h-3.5 w-3.5" />
+                  Tournament Live
+                </div>
+
+                <h1 className="mt-5 text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
+                  FIFA World Cup 2026
+                </h1>
+                <p className="mt-3 text-base text-muted-foreground sm:text-lg">
+                  টুর্নামেন্ট চলছে — USA · Mexico · Canada
+                </p>
+              </>
+            )}
 
             <div className="mx-auto mt-6 flex max-w-lg flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground sm:text-xs">
               <span>{TOURNAMENT_STATS.nations} nations</span>
@@ -137,36 +218,38 @@ export function TournamentHero({ fixtures }: TournamentHeroProps) {
               <span>{TOURNAMENT_STATS.totalMatches} matches</span>
             </div>
 
-            <div className="mt-8 text-left">
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-2 px-1">
-                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
-                  Today&apos;s matches
-                </h2>
-                <span className="text-[10px] text-muted-foreground sm:text-xs">{todayHeading}</span>
+            {!tournamentComplete && (
+              <div className="mt-8 text-left">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2 px-1">
+                  <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
+                    Today&apos;s matches
+                  </h2>
+                  <span className="text-[10px] text-muted-foreground sm:text-xs">{todayHeading}</span>
+                </div>
+
+                {todayFixtures.length > 0 ? (
+                  <div className="space-y-2">
+                    {todayFixtures.map((fixture) => (
+                      <MatchRow key={fixture.id} fixture={fixture} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-2xl border border-dashed border-white/10 bg-black/20 px-4 py-8 text-center">
+                    <p className="text-sm font-medium text-foreground/90">
+                      No matches scheduled for this date.
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Check the full schedule for upcoming kickoffs.
+                    </p>
+                  </div>
+                )}
+
+                <p className="mt-3 flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground sm:text-xs">
+                  <MapPin className="h-3 w-3 shrink-0" />
+                  All times in Bangladesh Standard Time (UTC+6)
+                </p>
               </div>
-
-              {todayFixtures.length > 0 ? (
-                <div className="space-y-2">
-                  {todayFixtures.map((fixture) => (
-                    <MatchRow key={fixture.id} fixture={fixture} />
-                  ))}
-                </div>
-              ) : (
-                <div className="rounded-2xl border border-dashed border-white/10 bg-black/20 px-4 py-8 text-center">
-                  <p className="text-sm font-medium text-foreground/90">
-                    No matches scheduled for this date.
-                  </p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Check the full schedule for upcoming kickoffs.
-                  </p>
-                </div>
-              )}
-
-              <p className="mt-3 flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground sm:text-xs">
-                <MapPin className="h-3 w-3 shrink-0" />
-                All times in Bangladesh Standard Time (UTC+6)
-              </p>
-            </div>
+            )}
 
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button asChild size="lg" variant="default">
@@ -176,9 +259,9 @@ export function TournamentHero({ fixtures }: TournamentHeroProps) {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="secondary">
-                <Link href="/teams">
+                <Link href={tournamentComplete ? `/teams/${champion.id}` : "/teams"}>
                   <Shirt className="h-4 w-4" />
-                  View Squads
+                  {tournamentComplete ? `View ${champion.name}` : "View Squads"}
                 </Link>
               </Button>
             </div>

@@ -44,9 +44,18 @@ function matchTop(roundIndex: number, matchIndex: number): number {
 interface KnockoutBracketTreeProps {
   prediction: TournamentPrediction;
   onPick: (matchId: string, teamId: string) => void;
+  readOnly?: boolean;
+  resolveSides?: (matchId: string) => [string, string];
+  resolveReady?: (matchId: string) => boolean;
 }
 
-export function KnockoutBracketTree({ prediction, onPick }: KnockoutBracketTreeProps) {
+export function KnockoutBracketTree({
+  prediction,
+  onPick,
+  readOnly = false,
+  resolveSides,
+  resolveReady,
+}: KnockoutBracketTreeProps) {
   const finalWinner = prediction.knockoutWinners[FINAL_MATCH_ID];
   const treeWidth = TREE_ROUNDS.length * COL_W + (TREE_ROUNDS.length - 1) * GAP_W + 32;
 
@@ -107,8 +116,12 @@ export function KnockoutBracketTree({ prediction, onPick }: KnockoutBracketTreeP
                 style={{ width: COL_W, height: TREE_H }}
               >
                 {round.matchIds.map((matchId, matchIndex) => {
-                  const sides = getMatchSides(matchId, prediction);
-                  const ready = isKnockoutMatchReady(matchId, prediction);
+                  const sides = resolveSides
+                    ? resolveSides(matchId)
+                    : getMatchSides(matchId, prediction);
+                  const ready = resolveReady
+                    ? resolveReady(matchId)
+                    : isKnockoutMatchReady(matchId, prediction);
                   const winner = prediction.knockoutWinners[matchId];
                   const isFinal = matchId === FINAL_MATCH_ID;
                   const meta = getKnockoutMatchMeta(matchId);
@@ -129,6 +142,7 @@ export function KnockoutBracketTree({ prediction, onPick }: KnockoutBracketTreeP
                         winner={winner}
                         ready={ready}
                         highlight={isFinal}
+                        readOnly={readOnly}
                         onPick={(teamId) => onPick(matchId, teamId)}
                       />
                     </div>
@@ -156,7 +170,9 @@ export function KnockoutBracketTree({ prediction, onPick }: KnockoutBracketTreeP
       </div>
 
       <p className="border-t border-sky-700/50 px-4 py-3 text-center text-[11px] text-white/80">
-        Scroll horizontally · Tap a team to pick the winner
+        {readOnly
+          ? "Scroll horizontally · Official match results — locked"
+          : "Scroll horizontally · Tap a team to pick the winner"}
       </p>
     </div>
   );

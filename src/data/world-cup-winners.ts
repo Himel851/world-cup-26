@@ -55,18 +55,18 @@ const RAW: Omit<WorldCupWinner, "rank">[] = [
     teamId: "uru",
   },
   {
+    country: "Spain",
+    flagCode: "es",
+    titles: 2,
+    years: [2010, 2026],
+    teamId: "esp",
+  },
+  {
     country: "England",
     flagCode: "gb-eng",
     titles: 1,
     years: [1966],
     teamId: "eng",
-  },
-  {
-    country: "Spain",
-    flagCode: "es",
-    titles: 1,
-    years: [2010],
-    teamId: "esp",
   },
 ];
 

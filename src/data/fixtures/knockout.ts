@@ -405,6 +405,8 @@ export const KNOCKOUT_FIXTURES: Fixture[] = [
     label: "M104 · Final",
     homeTeamId: "esp",
     awayTeamId: "arg",
+    status: "finished",
+    score: { home: 1, away: 0 },
   }),
 ];
 

@@ -10,29 +10,60 @@ import {
   isKnockoutMatchReady,
   setKnockoutWinner,
 } from "@/lib/predictions";
+import {
+  getOfficialKnockoutSides,
+  isOfficialKnockoutMatchReady,
+} from "@/lib/official-tournament-results";
 import type { TournamentPrediction } from "@/types/predictions";
 
 interface KnockoutBracketProps {
   prediction: TournamentPrediction;
   onChange: (prediction: TournamentPrediction) => void;
+  readOnly?: boolean;
 }
 
-export function KnockoutBracket({ prediction, onChange }: KnockoutBracketProps) {
+export function KnockoutBracket({
+  prediction,
+  onChange,
+  readOnly = false,
+}: KnockoutBracketProps) {
   function pickWinner(matchId: string, teamId: string) {
+    if (readOnly) return;
     onChange(setKnockoutWinner(prediction, matchId, teamId));
   }
+
+  const resolveSides = readOnly ? getOfficialKnockoutSides : undefined;
+  const resolveReady = readOnly ? isOfficialKnockoutMatchReady : undefined;
 
   return (
     <div className="space-y-4">
       {/* Mobile: round-by-round list */}
       <div className="lg:hidden">
-        <KnockoutRoundList prediction={prediction} onPick={pickWinner} />
+        <KnockoutRoundList
+          prediction={prediction}
+          onPick={pickWinner}
+          readOnly={readOnly}
+          resolveSides={resolveSides}
+          resolveReady={resolveReady}
+        />
       </div>
 
       {/* Desktop: full bracket tree */}
       <div className="hidden lg:block">
-        <KnockoutBracketTree prediction={prediction} onPick={pickWinner} />
-        <ThirdPlaceSection prediction={prediction} onPick={pickWinner} />
+        <KnockoutBracketTree
+          prediction={prediction}
+          onPick={pickWinner}
+          readOnly={readOnly}
+          resolveSides={resolveSides}
+          resolveReady={resolveReady}
+        />
+        <ThirdPlaceSection
+          prediction={prediction}
+          onPick={pickWinner}
+          readOnly={readOnly}
+          resolveSides={resolveSides}
+          resolveReady={resolveReady}
+        />
       </div>
     </div>
   );
@@ -41,13 +72,21 @@ export function KnockoutBracket({ prediction, onChange }: KnockoutBracketProps) 
 function ThirdPlaceSection({
   prediction,
   onPick,
+  readOnly = false,
+  resolveSides,
+  resolveReady,
 }: {
   prediction: TournamentPrediction;
   onPick: (matchId: string, teamId: string) => void;
+  readOnly?: boolean;
+  resolveSides?: (matchId: string) => [string, string];
+  resolveReady?: (matchId: string) => boolean;
 }) {
   const matchId = THIRD_PLACE_MATCH_ID;
-  const sides = getMatchSides(matchId, prediction);
-  const ready = isKnockoutMatchReady(matchId, prediction);
+  const sides = resolveSides ? resolveSides(matchId) : getMatchSides(matchId, prediction);
+  const ready = resolveReady
+    ? resolveReady(matchId)
+    : isKnockoutMatchReady(matchId, prediction);
   const winner = prediction.knockoutWinners[matchId];
   const meta = getKnockoutMatchMeta(matchId);
 
@@ -69,6 +108,7 @@ function ThirdPlaceSection({
           sides={sides}
           winner={winner}
           ready={ready}
+          readOnly={readOnly}
           onPick={(teamId) => onPick(matchId, teamId)}
         />
       </div>

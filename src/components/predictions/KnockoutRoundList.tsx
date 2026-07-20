@@ -67,9 +67,18 @@ function isRoundComplete(
 interface KnockoutRoundListProps {
   prediction: TournamentPrediction;
   onPick: (matchId: string, teamId: string) => void;
+  readOnly?: boolean;
+  resolveSides?: (matchId: string) => [string, string];
+  resolveReady?: (matchId: string) => boolean;
 }
 
-export function KnockoutRoundList({ prediction, onPick }: KnockoutRoundListProps) {
+export function KnockoutRoundList({
+  prediction,
+  onPick,
+  readOnly = false,
+  resolveSides,
+  resolveReady,
+}: KnockoutRoundListProps) {
   const [activeRound, setActiveRound] = React.useState<MobileRoundKey>("r32");
   const lastAutoRound = React.useRef<MobileRoundKey | null>(null);
 
@@ -145,8 +154,12 @@ export function KnockoutRoundList({ prediction, onPick }: KnockoutRoundListProps
 
         <ul className="divide-y divide-white/10 p-3">
           {current.matchIds.map((matchId) => {
-            const sides = getMatchSides(matchId, prediction);
-            const ready = isKnockoutMatchReady(matchId, prediction);
+            const sides = resolveSides
+              ? resolveSides(matchId)
+              : getMatchSides(matchId, prediction);
+            const ready = resolveReady
+              ? resolveReady(matchId)
+              : isKnockoutMatchReady(matchId, prediction);
             const winner = prediction.knockoutWinners[matchId];
             const meta = getKnockoutMatchMeta(matchId);
             const bracketLabel = getBracketMatch(matchId)?.label;
@@ -170,6 +183,7 @@ export function KnockoutRoundList({ prediction, onPick }: KnockoutRoundListProps
                     winner={winner}
                     ready={ready}
                     highlight={matchId === FINAL_MATCH_ID}
+                    readOnly={readOnly}
                     onPick={(teamId) => onPick(matchId, teamId)}
                   />
                 </div>
@@ -179,7 +193,7 @@ export function KnockoutRoundList({ prediction, onPick }: KnockoutRoundListProps
         </ul>
 
         <p className="border-t border-sky-700/50 px-4 py-3 text-center text-[11px] text-white/80">
-          Tap a team to pick the winner
+          {readOnly ? "Official match results — locked" : "Tap a team to pick the winner"}
         </p>
       </div>
     </div>

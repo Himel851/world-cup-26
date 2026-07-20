@@ -16,6 +16,7 @@ interface BracketMatchCardProps {
   fullWidth?: boolean;
   highlight?: boolean;
   variant?: "tree" | "plain";
+  readOnly?: boolean;
   onPick: (teamId: string) => void;
 }
 
@@ -30,6 +31,7 @@ export function BracketMatchCard({
   fullWidth = false,
   highlight = false,
   variant = "tree",
+  readOnly = false,
   onPick,
 }: BracketMatchCardProps) {
   const isTree = variant === "tree";
@@ -76,18 +78,19 @@ export function BracketMatchCard({
           <button
             key={i}
             type="button"
-            disabled={!ready || !teamId}
+            disabled={readOnly || !ready || !teamId}
             onClick={() => teamId && onPick(teamId)}
             className={cn(
-              "flex h-[34px] w-full items-center gap-2 border-b border-slate-200 px-2.5 text-left last:border-b-0 transition-colors cursor-pointer",
+              "flex h-[34px] w-full items-center gap-2 border-b border-slate-200 px-2.5 text-left last:border-b-0 transition-colors",
+              readOnly ? "cursor-default" : "cursor-pointer",
               isTree
                 ? isWinner
                   ? "bg-orange-500 text-slate-900"
                   : "bg-white text-slate-900"
                 : cn(
                     isWinner && "bg-emerald-400/20",
-                    isPicked && !isWinner && teamId && "opacity-50",
-                    ready && teamId && !isWinner && "hover:bg-white/5",
+                    isPicked && !isWinner && teamId && !readOnly && "opacity-50",
+                    ready && teamId && !isWinner && !readOnly && "hover:bg-white/5",
                   ),
               !teamId && "cursor-default bg-sky-50 text-slate-500",
             )}
