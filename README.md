@@ -1,123 +1,144 @@
-# World Cup Challenge ⚽
+# World Cup 2026
 
-A modern interactive football quiz platform built around the FIFA World Cup 2026
-(48 nations · 12 groups). Powered by Next.js 15 (App Router), TypeScript,
-Tailwind CSS v4, custom shadcn-style primitives, Framer Motion and Lucide icons.
+A FIFA World Cup 2026 companion app — **48 nations · 12 groups · full schedule · knockout bracket · quizzes · Best XI**. Built with Next.js (App Router), TypeScript, Tailwind CSS v4, Framer Motion, and Lucide icons.
 
-## ✨ Highlights
+Kickoff times are shown in **Bangladesh Standard Time (UTC+6)**.
 
-- **Dynamic quiz engine** — Every question is procedurally generated from the local
-  `teams.ts` dataset: flag identification, team captain, FIFA ranking, continent
-  and group draw. No hard-coded questions.
-- **Five quiz modes** filterable via `/quiz?type=flag|captain|ranking|continent|group`.
-- **Team-focused quizzes** via `/quiz?team={teamId}` — used on every team profile.
-- **Daily Challenge** — a deterministic 10-question set seeded by the current date,
-  so every visitor gets the same questions today.
-- **Score · Streak · Timer** with combo bonuses (+25 per streak, +4 × seconds left).
-- **High score** persisted to `localStorage` per mode.
-- **Global leaderboard** (demo data) with gold/silver/bronze styling and accuracy bars.
-- **Dark stadium UI** — neon green/cyan/violet accents, glassmorphism, animated
-  floating flags, pitch grid, gradient typography.
-- **Dark / Light theme toggle** persisted to `localStorage`.
-- **Keyboard shortcuts**: `1–4` to answer, `Enter` / `Space` for next.
-- **Confetti** on every 3-question streak. Football loader for async states.
-- **Fully responsive** — mobile sidebar nav, fluid grids, touch-friendly buttons.
+## Features
 
-## 🛠 Tech stack
+### Tournament & fixtures
+- **Home hero** — live/next match focus; when the final is finished, celebrates the champion
+- **Full schedule** — 72 group-stage matches plus knockout (R32 → Final), with venues and BST kickoffs
+- **Match detail pages** — scorelines, AET / penalties when applicable
+- **Group standings** — points, GD, form; third-place ranking table for the best 8 advancers
+- **Knockout fixtures** — Round of 32 through the Final and third-place play-off
+- **Official tournament results** (`/predictions`) — locked read-only bracket: group standings, third-place advancers, and knockout winners through the Final
 
-- [Next.js 15+ App Router](https://nextjs.org/) (React 19)
+### Teams & rankings
+- **48 national teams** — search and filter by group / continent
+- **Team profiles** — squads, World Cup history, and team-focused quizzes
+- **FIFA rankings** — live men’s rankings with confederation filters
+- **Host venues** — USA / Mexico / Canada stadiums
+- **All-time winners** — champions list including WC 2026
+
+### Interactives
+- **Best XI builder** — formations, pitch lineup, squads from all 48 nations (saved in `localStorage`)
+- **Dynamic quiz engine** — questions generated from team data (flag, captain, ranking, continent, group)
+- **Quiz modes** — `/quiz?type=flag|captain|ranking|continent|group` and `/quiz?team={id}`
+- **Daily Challenge** — deterministic 10-question set seeded by the date
+- **Score · streak · timer** with combo bonuses; high scores per mode in `localStorage`
+- **Leaderboard** — demo global rankings UI
+
+### UX
+- Dark stadium UI with theme toggle (persisted)
+- Responsive layout + mobile tab bar
+- Keyboard shortcuts on quizzes (`1–4` answer, `Enter` / `Space` next)
+- Confetti on quiz streaks; SEO metadata and Open Graph
+
+## Tech stack
+
+- [Next.js](https://nextjs.org/) App Router (React 19)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Tailwind CSS v4](https://tailwindcss.com/)
-- Custom shadcn-style UI primitives (Button, Card, Badge, Input, Progress, Select)
-- [Framer Motion](https://www.framer.com/motion/) for transitions, hover, layout
+- Custom shadcn-style UI (Button, Card, Badge, Input, Progress, Select)
+- [Framer Motion](https://www.framer.com/motion/)
 - [Lucide Icons](https://lucide.dev/)
-- [Radix Slot](https://www.radix-ui.com/) (Button `asChild`)
-- [flagcdn.com](https://flagcdn.com/) for placeholder flag images
+- [flagcdn.com](https://flagcdn.com/) for flags
+- Optional live data via football-data / FIFA rankings APIs (with local fixture overrides)
 
-## 📂 Folder structure
+## Pages
+
+| Route | Description |
+| ----- | ----------- |
+| `/` | Home — hero, standings, winners, venues, featured teams, quizzes |
+| `/fixtures` | Full match schedule & standings explorer |
+| `/fixtures/[id]` | Match detail |
+| `/teams` | Browse 48 nations |
+| `/teams/[id]` | Team profile & squad |
+| `/predictions` | Official tournament results (locked bracket) |
+| `/best-11` | Best XI pitch builder |
+| `/rankings` | FIFA world rankings |
+| `/groups` | Group overview |
+| `/venues` | Host stadiums |
+| `/winners` | World Cup champions |
+| `/quiz` | Quiz modes |
+| `/daily-challenge` | Daily 10-question challenge |
+| `/leaderboard` | Quiz leaderboard |
+
+## Folder structure
 
 ```
 src/
-├── app/                       # Next.js App Router pages
-│   ├── layout.tsx             # Root layout (theme, nav, footer)
-│   ├── page.tsx               # Home
-│   ├── teams/
-│   │   ├── page.tsx           # /teams (search + filter)
-│   │   └── [id]/page.tsx      # /teams/[id]
-│   ├── quiz/page.tsx          # /quiz?type=&team=
-│   ├── leaderboard/page.tsx   # /leaderboard
-│   └── daily-challenge/page.tsx
+├── app/                    # App Router pages
 ├── components/
-│   ├── ui/                    # Button, Card, Badge, Input, Progress, Select
-│   ├── layout/                # Navbar, Footer
-│   ├── home/                  # Hero, Featured, Trending, Stats, Daily card
-│   ├── teams/                 # TeamCard, TeamsExplorer, TeamHeroAnimation
-│   ├── quiz/                  # QuizRunner, QuestionCard, ScoreBoard, ...
-│   ├── leaderboard/           # LeaderboardTable, LeaderboardSummary
-│   ├── theme-provider.tsx
-│   ├── FloatingFlags.tsx
-│   ├── FootballLoader.tsx
-│   └── Confetti.tsx
+│   ├── home/               # Hero, standings, winners, venues, quizzes
+│   ├── fixtures/           # Schedule, standings, knockout, match detail
+│   ├── predictions/        # Official results bracket (read-only)
+│   ├── best-eleven/        # Pitch formation builder
+│   ├── teams/              # Team cards, explorer, squads
+│   ├── quiz/               # Quiz runner & daily challenge
+│   ├── rankings/           # Rankings explorer
+│   ├── leaderboard/
+│   ├── layout/             # Navbar, footer, mobile tab bar
+│   └── ui/                 # Shared primitives
 ├── data/
-│   ├── teams.ts               # 48 FIFA WC 2026 nations
-│   └── leaderboard.ts         # demo leaderboard rows
+│   ├── teams.ts            # 48 WC 2026 nations
+│   ├── fixtures/           # Group stage + knockout fixtures
+│   ├── venues.ts           # Host stadiums
+│   ├── world-cup-winners.ts
+│   └── match-results/      # Manual score / detail overrides
 ├── lib/
-│   ├── utils.ts               # cn, shuffle, seededRandom, pickRandom, ...
-│   └── generateQuestions.ts   # all dynamic question generators
+│   ├── match-service.ts    # Fixture enrichment
+│   ├── group-standings.ts  # Standings + third-place ranking
+│   ├── official-tournament-results.ts
+│   ├── predictions.ts      # Bracket helpers
+│   ├── generateQuestions.ts
+│   ├── fifa-rankings.ts
+│   └── seo.ts
 ├── hooks/
-│   ├── useLocalStorage.ts
-│   ├── useCountdown.ts
-│   └── useKeyboardShortcut.ts
 └── types/
-    └── index.ts               # Team, QuizQuestion, LeaderboardEntry, ...
 ```
 
-## 🚀 Getting started
+## Getting started
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000).
 
 ```bash
-npm run build      # production build
-npm start          # serve the build
-npm run lint       # eslint
+npm run build   # production build
+npm start       # serve the build
+npm run lint    # eslint
 ```
 
-## 🧠 How the quiz engine works
+Optional env (see `src/config/`): site URL, Google Analytics, API keys for live rankings / match data.
 
-`src/lib/generateQuestions.ts` exposes generators for every quiz type. Each one
-samples real teams from `src/data/teams.ts`, picks correct/distractor options,
-shuffles them and assigns a per-type time limit.
+## Quiz engine
+
+`src/lib/generateQuestions.ts` builds questions from `src/data/teams.ts` — samples teams, distractors, and per-type timers.
 
 ```ts
 import { generateQuiz, generateDailyChallenge } from "@/lib/generateQuestions";
 
 const random = generateQuiz({ count: 10 });
 const flagsOnly = generateQuiz({ count: 10, types: ["flag"] });
-const daily = generateDailyChallenge(); // deterministic, seeded by today's date
+const daily = generateDailyChallenge(); // same set for everyone today
 ```
 
-The same `QuizRunner` component renders all of them — `/quiz` and
-`/daily-challenge` are just thin wrappers passing different `questions` and
-`storageKey` values.
+## Keyboard shortcuts (quiz)
 
-## 🎮 Keyboard shortcuts
+| Key | Action |
+| --- | ------ |
+| `1` – `4` | Select answer |
+| `Enter` / `Space` | Next question (when locked) |
 
-| Key            | Action                  |
-| -------------- | ----------------------- |
-| `1` – `4`      | Answer options          |
-| `Enter` / `␣`  | Next question (when locked) |
+## Images
 
-## 📷 Image domain
+Flags load from [flagcdn.com](https://flagcdn.com/) (whitelisted in `next.config.ts` under `images.remotePatterns`).
 
-The app uses [flagcdn.com](https://flagcdn.com/) for flag placeholders. The host
-is whitelisted in `next.config.ts` under `images.remotePatterns`.
+## License
 
-## 📝 License
-
-Personal / educational use. Not affiliated with FIFA. Team data and rankings are
-illustrative.
+Personal / educational use. Not affiliated with FIFA. Tournament data may mix official structure, local overrides, and illustrative content.
